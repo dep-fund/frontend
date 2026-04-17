@@ -1,0 +1,144 @@
+/* Hereda todo de Login.css */
+
+.profile-wrapper-wide {
+  max-width: 550px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  text-align: left;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+/* --- ESTILO PARA INPUTS QUE NO SE PUEDEN MODIFICAR --- */
+.read-only-input {
+  background-color: #f3f4f6 !important; /* Gris muy claro para indicar bloqueo */
+  color: var(--text-main) !important;
+  border: 1px solid #e4e7eb !important;
+  cursor: default !important; /* Quita el puntero de texto */
+  pointer-events: none; /* Evita cualquier interacción */
+  font-weight: 600;
+}
+
+/* Eliminamos el efecto naranja (glow) para estos inputs */
+.read-only-input:focus {
+  border-color: #e4e7eb !important;
+  box-shadow: none !important;
+}
+
+/* Si quieres que el usuario resalte en naranja aunque no sea editable */
+.highlight-user {
+  color: var(--primary-orange) !important;
+  font-weight: 700;
+}
+
+/* Alineación de botones */
+.button-group {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.btn-link-muted {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.btn-link-muted:hover {
+  color: var(--dark-navy);
+  text-decoration: underline;
+}
+
+/* Ajuste móvil */
+@media (max-width: 600px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+}
+
+.danger-zone {
+  margin-top: 30px;
+  text-align: center;
+}
+
+/* Línea divisoria sutil */
+.danger-zone .divider {
+  height: 1px;
+  background-color: #e4e7eb;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.delete-account-button {
+  width: 100%;
+  background: transparent;
+  color: #d93025; /* Rojo profesional */
+  padding: 12px;
+  border: 1px solid #d93025;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.delete-account-button:hover {
+  background-color: #fce8e6; /* Fondo rojo muy suave al pasar el mouse */
+  box-shadow: 0 4px 12px rgba(217, 48, 37, 0.1);
+}
+
+/* Si quieres que se vea más agresivo cuando el usuario lo presiona */
+.delete-account-button:active {
+  transform: scale(0.98);
+}
+
+
+.danger-zone {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.danger-zone .divider {
+  height: 1px;
+  background-color: #e4e7eb;
+  margin-bottom: 20px;
+}
+
+.delete-account-button {
+  width: 100%;
+  background: transparent;
+  color: #d93025; /* Rojo de alerta */
+  padding: 12px;
+  border: 1px solid #d93025;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.delete-account-button:hover {
+  background-color: #fce8e6;
+  box-shadow: 0 4px 12px rgba(217, 48, 37, 0.1);
+}

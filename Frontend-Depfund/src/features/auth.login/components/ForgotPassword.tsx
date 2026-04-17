@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Login.css'; 
+import './ForgotPassword.css'; 
 import logoDepFund from '../img/logo_regency.jpg';
 
 const ForgotPassword: React.FC = () => {
@@ -70,11 +70,11 @@ const ForgotPassword: React.FC = () => {
           <div className="form-wrapper">
             <header className="auth-header">
               <h2>{step === 1 ? '¿Olvidaste tu contraseña?' : 'Restablecer contraseña'}</h2>
-              <p>
+              {/* <p>
                 {step === 1 
                   ? 'Ingresa tu correo para recibir un código de verificación.' 
                   : 'Ingresa el código que enviamos a tu mail y tu nueva clave.'}
-              </p>
+              </p> */}
             </header>
 
             {error && <div className="error-message" style={{color: 'red', fontWeight: 'bold', marginBottom: '10px'}}>{error}</div>}

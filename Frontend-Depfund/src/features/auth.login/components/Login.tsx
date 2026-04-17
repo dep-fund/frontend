@@ -48,7 +48,7 @@ const Login: React.FC = () => {
                     type="email" 
                     id="email" 
                     name="email"
-                    placeholder="ejemplo@depfund.com"
+                    placeholder="Correo Electrónico"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required 
@@ -61,7 +61,6 @@ const Login: React.FC = () => {
               <div className="input-group">
                 <div className="label-row">
                   <label htmlFor="password">Contraseña</label>
-                  <a href="#" className="forgot-link">¿Olvidaste tu contraseña?</a>
                 </div>
                 <div className="input-input-wrapper">
                   <input 
@@ -75,6 +74,7 @@ const Login: React.FC = () => {
                   />
                   {/* Barra de sombreado inferior */}
                   <span className="input-highlight"></span>
+                  <a href="#" className="forgot-link">¿Olvidaste tu contraseña?</a>
                 </div>
               </div>
 

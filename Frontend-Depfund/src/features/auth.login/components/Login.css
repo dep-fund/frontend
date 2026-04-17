@@ -71,7 +71,7 @@
   line-height: 1.1;
   letter-spacing: -2px;
   margin-bottom: 20px;
-  background: linear-gradient(180deg, #fff 0%, #aaa 100%);
+  background: linear-gradient(180deg, #9b764e 0%, #aaa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -117,6 +117,7 @@
 
 /* --- ESTILOS DE INPUT ANIMADOS (Glow Bar) --- */
 .input-group {
+
   margin-bottom: 24px;
 }
 
@@ -126,6 +127,7 @@
   font-weight: 600;
   color: var(--text-main);
   margin-bottom: 8px;
+  text-align: left; /* Refuerza la alineación */
 }
 
 .label-row {

@@ -76,7 +76,7 @@ const Login: React.FC = () => {
                   />
                   {/* Barra de sombreado inferior */}
                   <span className="input-highlight"></span>
-                  <a href="#" className="forgot-link">¿Olvidaste tu contraseña?</a>
+                   <Link to="/forgot-password" className="signup-link">¿Olvidaste tu contraseña?</Link>
                 </div>
               </div>
 

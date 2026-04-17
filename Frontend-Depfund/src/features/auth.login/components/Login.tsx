@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { Link } from 'react-router-dom';
+
 // Importa el logo circular DepFund. Asegúrate de que el nombre del archivo coincida.
 import logoDepFund from '../img/logo_regency.jpg';
 const Login: React.FC = () => {
@@ -85,7 +87,8 @@ const Login: React.FC = () => {
             </form>
 
             <footer className="auth-footer">
-              <p>¿No tienes cuenta? <a href="#" className="signup-link">Crea una cuenta</a></p>
+              <p>¿No tienes cuenta? <Link to="/register" className="signup-link">Crea una cuenta</Link></p>
+              
             </footer>
           </div>
         </div>

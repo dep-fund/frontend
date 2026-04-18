@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css'; 
+import '../assets/Login.css'; 
 import './EditProfile.css'; 
-import logoDepFund from '../img/logo_regency.jpg';
-import { API_URL } from '../../../constants';
+import logoDepFund from '../assets/img/logo_regency.jpg';
+import { API_URL } from '../../constants';
 
 const EditProfile: React.FC = () => {
   const navigate = useNavigate();

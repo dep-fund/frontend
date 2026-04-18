@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css';
-import { API_URL } from '../../../constants';
+import '../assets/Login.css';
+import { API_URL } from '../../constants';
 
 // Asegúrate de que la ruta del logo sea la correcta
-import logoDepFund from '../img/logo_regency.jpg';
+import logoDepFund from '../assets/img/logo_regency.jpg';
 
 const Login: React.FC = () => {
   // 1. Estados para el formulario y el feedback

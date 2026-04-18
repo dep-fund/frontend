@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css'; 
-import logoDepFund from '../img/logo_regency.jpg';
-import { API_URL } from '../../../constants';
+import '../assets/Login.css'; 
+import logoDepFund from '../assets/img/logo_regency.jpg';
+import { API_URL } from '../../constants';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();

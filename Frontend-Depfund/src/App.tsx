@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "./features/auth.login/components/Login";
-import Register from "./features/auth.login/components/Register";
-import ForgotPassword from "./features/auth.login/components/ForgotPassword";
-import EditProfile from "./features/auth.login/components/EditProfile";
-import ProfileView from "./features/auth.login/components/ProfileView";
-import Dashboard from "./features/auth.login/components/Dashboard";
+import Login from "./features/auth/Login";
+import Register from "./features/auth/Register";
+import ForgotPassword from "./features/auth/ForgotPassword";
+import EditProfile from "./features/profile/EditProfile";
+import ProfileView from "./features/profile/ProfileView";
+import Dashboard from "./features/dashboard/Dashboard";
 // import RolesManager from "./features/auth.login/components/RolesManager";
 // import RoleEdit from "./features/auth.login/components/RoleEdit";
 // import PermiseManager from "./features/auth.login/components/PermiseManager";

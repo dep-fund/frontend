@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import logoDepFund from '../img/logo_regency.jpg';
+import logoDepFund from '../assets/img/logo_regency.jpg';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './ForgotPassword.css'; 
-import logoDepFund from '../img/logo_regency.jpg';
+import logoDepFund from '../assets/img/logo_regency.jpg';
 
 const ForgotPassword: React.FC = () => {
   // Estado para controlar en qué paso estamos (1: Pedir Mail, 2: Resetear)

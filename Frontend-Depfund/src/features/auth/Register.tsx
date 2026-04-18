@@ -70,6 +70,8 @@ const Register: React.FC = () => {
 
     try {
       // Petición POST al endpoint de registro
+
+      console.log({API_URL});
       const response = await axios.post(`${API_URL}/users/register`, {
         username: formData.usuario,
         name: formData.nombre,

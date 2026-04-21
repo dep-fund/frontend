@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../assets/Login.css';
+import './Login.css';
 import { API_URL } from '../../constants';
 
 // Asegúrate de que la ruta del logo sea la correcta

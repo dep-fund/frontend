@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../assets/Login.css'; 
-import './EditProfile.css'; 
+import './EditProfile.css';
 import logoDepFund from '../assets/img/logo_regency.jpg';
 import { API_URL } from '../../constants';
 
 const EditProfile: React.FC = () => {
   const navigate = useNavigate();
-  
-  // Estado para datos generales
+
   const [formData, setFormData] = useState({
     name: '',
     last_name: '',
@@ -17,89 +15,88 @@ const EditProfile: React.FC = () => {
     email: '',
   });
 
-  // Estado para el cambio de contraseña
   const [passwordData, setPasswordData] = useState({
     old_password: '',
     new_password: '',
     confirm_new_password: ''
   });
 
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'success' | 'error';
+  } | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  // 1. CARGAR DATOS ACTUALES
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
+        if (!token) return navigate('/login');
 
         const response = await axios.get(`${API_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        setFormData({
-          name: response.data.name,
-          last_name: response.data.last_name,
-          birthdate: response.data.birthdate,
-          email: response.data.email,
-        });
-      } catch (err: any) {
+        setFormData(response.data);
+      } catch {
         navigate('/login');
       } finally {
         setLoading(false);
       }
     };
+
     fetchUserData();
   }, [navigate]);
 
-  // 2. MANEJAR CAMBIOS
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    // Si el campo pertenece a la contraseña, actualizar passwordData
+
     if (name.includes('password')) {
       setPasswordData({ ...passwordData, [name]: value.replace(/\s/g, '') });
     } else {
-      setFormData({ ...formData, [name]: value.startsWith(' ') ? value.trimStart() : value });
+      setFormData({ ...formData, [name]: value.trimStart() });
     }
   };
 
-  // 3. GUARDAR CAMBIOS DE PERFIL Y CONTRASEÑA
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
     setUpdating(true);
 
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
 
-      // A. Actualizar datos básicos
       await axios.patch(`${API_URL}/users/me`, formData, { headers });
 
-      // B. Actualizar contraseña (solo si completó los campos)
       if (passwordData.old_password || passwordData.new_password) {
         if (passwordData.new_password !== passwordData.confirm_new_password) {
           throw new Error("Las nuevas contraseñas no coinciden");
         }
-        
+
         await axios.post(`${API_URL}/users/me/change-password`, {
           old_password: passwordData.old_password,
           new_password: passwordData.new_password
         }, { headers });
       }
 
-      setSuccess('¡Perfil y contraseña actualizados!');
-      setTimeout(() => navigate('/dashboard'), 2000);
+      showToast('Perfil actualizado correctamente', 'success');
+
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
 
     } catch (err: any) {
-      setError(err.response?.data?.detail || err.message || 'Error al actualizar');
+      showToast(
+        err.response?.data?.detail || err.message || 'Error al actualizar',
+        'error'
+      );
     } finally {
       setUpdating(false);
     }
@@ -108,73 +105,95 @@ const EditProfile: React.FC = () => {
   if (loading) return <div className="loading-screen">Cargando datos...</div>;
 
   return (
-    <div className="login-page-container">
-      <div className="login-columns">
-        <div className="visual-side" style={{ flex: '0.4' }}>
-          <div className="dark-overlay"></div>
-          <div className="visual-content">
-            <img src={logoDepFund} alt="DepFund Logo" className="brand-logo-visual" />
-            <h2 className="visual-title" style={{ fontSize: '2rem' }}>Ajustes</h2>
-          </div>
+    <>
+      {/* 🔥 TOAST FUERA DEL LAYOUT */}
+      {toast && (
+        <div className={`edit-profile-toast ${toast.type}`}>
+          {toast.message}
         </div>
+      )}
 
-        <div className="form-side" style={{ flex: '0.6' }}>
-          <div className="form-wrapper" style={{ maxWidth: '600px' }}>
-            <header className="auth-header">
-              <h2>Editar Información</h2>
-            </header>
+      <div className="edit-profile-page">
+        <div className="edit-profile-columns">
 
-            {error && <div className="error-box-mini" style={{color: '#c53030', backgroundColor: '#fff5f5', padding: '10px', borderRadius: '8px', marginBottom: '15px'}}>{error}</div>}
-            {success && <div className="success-box-mini" style={{color: '#2d5b63', backgroundColor: '#e6fffa', padding: '10px', borderRadius: '8px', marginBottom: '15px'}}>{success}</div>}
+          {/* LEFT */}
+          <div className="edit-profile-visual">
+            <div className="edit-profile-overlay"></div>
+            <div className="edit-profile-visual-content">
+              <img src={logoDepFund} className="edit-profile-logo" />
+              <h2>Ajustes</h2>
+            </div>
+          </div>
 
-            <form onSubmit={handleSubmit} className="auth-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-              {/* Datos Básicos */}
-              <div className="input-group">
-                <label>Nombre</label>
-                <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-              </div>
-              <div className="input-group">
-                <label>Apellido</label>
-                <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required />
-              </div>
-              <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                <label>Email</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          {/* RIGHT */}
+          <div className="edit-profile-form-side">
+            <div className="edit-profile-wrapper">
+
+              <div className="edit-profile-header">
+                <h2>Editar Información</h2>
               </div>
 
-              {/* SECCIÓN CONTRASEÑA */}
-              <div style={{ gridColumn: 'span 2', marginTop: '10px' }}>
-                <h3 style={{ fontSize: '1rem', borderBottom: '1px solid #eee', paddingBottom: '5px' }}>Seguridad</h3>
-              </div>
+              <form onSubmit={handleSubmit} className="edit-profile-form">
 
-              <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                <label>Contraseña Actual</label>
-                <input type="password" name="old_password" placeholder="Tu contraseña actual" value={passwordData.old_password} onChange={handleChange} />
-              </div>
+                <div className="edit-profile-group">
+                  <label>Nombre</label>
+                  <input name="name" value={formData.name} onChange={handleChange} />
+                </div>
 
-              <div className="input-group">
-                <label>Nueva Contraseña</label>
-                <input type="password" name="new_password" placeholder="Mín. 6 caracteres" value={passwordData.new_password} onChange={handleChange} />
-              </div>
+                <div className="edit-profile-group">
+                  <label>Apellido</label>
+                  <input name="last_name" value={formData.last_name} onChange={handleChange} />
+                </div>
 
-              <div className="input-group">
-                <label>Repetir Nueva</label>
-                <input type="password" name="confirm_new_password" placeholder="Repetir nueva" value={passwordData.confirm_new_password} onChange={handleChange} />
-              </div>
+                <div className="edit-profile-group edit-profile-full">
+                  <label>Email</label>
+                  <input name="email" value={formData.email} onChange={handleChange} />
+                </div>
 
-              <div style={{ gridColumn: 'span 2', display: 'flex', gap: '10px', marginTop: '10px' }}>
-                <button type="submit" className="login-button" style={{ flex: 1 }} disabled={updating}>
-                  {updating ? 'Procesando...' : 'Guardar Cambios'}
-                </button>
-                <Link to="/profile" className="login-button" style={{ flex: 1, backgroundColor: '#718096', textDecoration: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  Cancelar
-                </Link>
-              </div>
-            </form>
+                <div className="edit-profile-section edit-profile-full">
+                  Seguridad
+                </div>
+
+                <div className="edit-profile-group edit-profile-full">
+                  <label>Contraseña actual</label>
+                  <input name="old_password" type="password"
+                    value={passwordData.old_password}
+                    onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-group">
+                  <label>Nueva contraseña</label>
+                  <input name="new_password" type="password"
+                    value={passwordData.new_password}
+                    onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-group">
+                  <label>Repetir</label>
+                  <input name="confirm_new_password" type="password"
+                    value={passwordData.confirm_new_password}
+                    onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-buttons">
+
+                  <button className="edit-profile-primary" disabled={updating}>
+                    {updating ? 'Guardando...' : 'Guardar cambios'}
+                  </button>
+
+                  <Link to="/ProfileView" className="edit-profile-secondary">
+                    Cancelar
+                  </Link>
+
+                </div>
+
+              </form>
+
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,170 +1,303 @@
-/* Reutilizamos la base de Login.css, pero añadimos estos ajustes */
+:root {
+  --primary-orange: #f19204;
+  --dark-navy: #0d1b2a;
+  --text-main: #1a1a1a;
+  --text-muted: #667085;
+  --white: #ffffff;
+  --glow-color: rgba(241, 146, 4, 0.35);
+}
 
-.login-page-container {
+/* RESET */
+.register-page-container * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* CONTAINER */
+.register-page-container {
   min-height: 100vh;
-  width: 100%;
   display: flex;
-  background-color: #F8F4EB; /* Fondo crema */
+  background: var(--white);
 }
 
-.login-columns {
+.register-columns {
   display: flex;
   width: 100%;
 }
 
-/* LADO IZQUIERDO (Visual) */
-.visual-side {
-  flex: 1;
+/* =========================
+   VISUAL SIDE
+========================= */
+
+.register-visual-side {
+  flex: 1.2;
   position: relative;
-  background: url('../img/fondo-deporte.jpg') no-repeat center center; /* Pon aquí tu imagen */
-  background-size: cover;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  padding: 40px;
+  padding: 50px;
+
+  background-image: url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2000&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
 }
 
-.dark-overlay {
+.register-dark-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(10, 37, 51, 0.7); /* Azul oscuro traslúcido */
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 27, 42, 0.95),
+    rgba(13, 27, 42, 0.7)
+  );
 }
 
-.visual-content {
+.register-visual-content {
   position: relative;
   z-index: 2;
   text-align: center;
+  color: var(--white);
+  max-width: 460px;
 }
 
-.brand-logo-visual {
-  width: 80px;
+.register-brand-logo {
+  max-width: 130px;
   border-radius: 50%;
-  margin-bottom: 1.5rem;
-  border: 2px solid white;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
-/* LADO DERECHO (Formulario) */
-.form-side {
+.register-visual-title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.1;
+  background: linear-gradient(180deg, #9b764e, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.register-visual-subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* =========================
+   FORM SIDE (COMPACTO)
+========================= */
+
+.register-form-side {
   flex: 1;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 2rem;
+  justify-content: center;
+  padding: 25px;
 }
 
-/* LA TARJETA (Recuadro con sombra) */
-.form-wrapper {
-  background: white;
-  padding: 2.5rem 3rem; /* Un poco menos de padding vertical para que quepa todo */
-  border-radius: 24px;
+.register-form-wrapper {
   width: 100%;
-  max-width: 480px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
-  border: 1px solid rgba(0, 0, 0, 0.02);
+  max-width: 420px;
 }
 
-.auth-header h2 {
-  font-size: 1.8rem;
+/* HEADER MÁS COMPACTO */
+.register-auth-header {
+  margin-bottom: 18px;
+}
+
+.register-auth-header h2 {
+  font-size: 1.6rem;
   font-weight: 800;
-  color: #0A2533;
-  margin-bottom: 0.5rem;
+  color: var(--text-main);
+  margin-bottom: 4px;
 }
 
-.auth-header p {
-  color: #718096;
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
-}
-
-/* GRUPOS DE INPUT */
-.input-group {
-  margin-bottom: 1.2rem; /* Espacio reducido para que quepan los 5 campos */
-  text-align: left;
-}
-
-.input-group label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #2D5B63;
-  margin-bottom: 0.4rem;
-  text-transform: uppercase;
-}
-
-.input-input-wrapper {
-  position: relative;
-}
-
-.input-input-wrapper input {
-  width: 100%;
-  padding: 0.8rem 0;
-  border: none;
-  border-bottom: 2px solid #E2E8F0;
-  background: transparent;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-.input-input-wrapper input:focus {
-  border-color: #ED8936;
-}
-
-/* Especial para el input de fecha */
-input[type="date"] {
-  color: #4A5568;
-  cursor: pointer;
-}
-
-/* BOTÓN */
-.login-button {
-  width: 100%;
-  padding: 1rem;
-  background-color: #2D5B63;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.login-button:hover {
-  background-color: #1f3f45;
-  transform: translateY(-2px);
-}
-
-.auth-footer {
-  margin-top: 2rem;
-  text-align: center;
+.register-auth-header p {
   font-size: 0.85rem;
-  color: #718096;
+  color: var(--text-muted);
 }
 
-.signup-link {
-  color: #ED8936;
-  text-decoration: none;
+/* =========================
+   INPUTS COMPACTOS
+========================= */
+
+.register-input-group {
+  margin-bottom: 12px; /* 🔥 menos espacio vertical */
+}
+
+/* LABEL A LA IZQUIERDA (como pediste) */
+.register-input-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 4px;
+  text-align: left; /* 🔥 clave */
+}
+
+/* INPUT MÁS BAJO */
+.register-input-wrapper input {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid #e4e7eb;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background: #f9fafb;
+  transition: 0.2s ease;
+  color: var(--text-main);
+}
+
+.register-input-wrapper input:focus {
+  outline: none;
+  background: var(--white);
+  border-color: var(--primary-orange);
+}
+
+/* GLOW BAR */
+.register-input-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--primary-orange);
+  box-shadow: 0 0 10px var(--glow-color);
+  transition: width 0.3s ease;
+}
+
+.register-input-wrapper input:focus + .register-input-highlight {
+  width: 100%;
+}
+
+/* =========================
+   BOTÓN MÁS COMPACTO
+========================= */
+
+.register-button {
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary-orange), #d98303);
+  color: white;
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
   font-weight: 700;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.signup-link:hover {
+.register-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(241,146,4,0.3);
+}
+
+/* =========================
+   FOOTER MÁS CHICO
+========================= */
+
+.register-auth-footer {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.register-signup-link {
+  color: var(--primary-orange);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.register-signup-link:hover {
   text-decoration: underline;
 }
 
-/* MENSAJE DE ERROR */
-.error-message {
-  background-color: #fff5f5;
+/* =========================
+   ERROR MÁS COMPACTO
+========================= */
+
+.register-error-message {
+  background: #fff5f5;
   color: #c53030;
-  padding: 0.8rem;
+  padding: 10px;
   border-radius: 8px;
-  border-left: 4px solid #c53030;
+  margin-bottom: 14px;
   font-size: 0.8rem;
-  margin-bottom: 1.5rem;
+  font-weight: 600;
+  border-left: 4px solid #c53030;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .register-visual-side {
+    display: none;
+  }
+
+  .register-form-side {
+    padding: 18px;
+  }
+}
+
+/* =========================
+   TOAST (FIX TOTAL)
+========================= */
+
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%); /* 👈 clave */
+
+  min-width: 260px;
+  max-width: 320px;
+
+  padding: 12px 16px;
+  border-radius: 10px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  z-index: 9999;
+
+  animation: toastSlideIn 0.25s ease, toastFadeOut 0.3s ease 2.7s;
+}
+
+/* SUCCESS */
+.toast.success {
+  background: #f0fdf4;
+  color: #166534;
+  border-left: 4px solid #22c55e;
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+}
+
+/* ERROR */
+.toast.error {
+  background: #fff5f5;
+  color: #c53030;
+  border-left: 4px solid #ef4444;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2);
+}
+
+/* ANIMACIONES */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastFadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
 }

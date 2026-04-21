@@ -4,51 +4,61 @@
   --text-main: #1a1a1a;
   --text-muted: #667085;
   --white: #ffffff;
-  --glow-color: rgba(241, 146, 4, 0.4); /* Brillo naranja */
+  --glow-color: rgba(241, 146, 4, 0.35);
 }
 
-/* Reset básico para el componente */
-.login-page-container * {
+/* RESET SOLO MODULO */
+.edit-profile-page * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
 }
 
-.login-page-container {
+.edit-profile-page {
   min-height: 100vh;
   display: flex;
-  background-color: var(--white);
+  background: var(--white);
+  overflow: hidden;
 }
 
-.login-columns {
+/* =========================
+   LAYOUT GENERAL
+========================= */
+.edit-profile-columns {
   display: flex;
   width: 100%;
+  height: 100vh;
 }
 
-/* --- SECCIÓN VISUAL (IZQUIERDA) --- */
-.visual-side {
-  flex: 1.2; /* Toma un poco más de espacio */
+/* =========================
+   LEFT SIDE (COPIADO Y CONSERVADO)
+========================= */
+.edit-profile-visual {
+  flex: 1.2;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px;
-  /* Imagen de fondo de cancha de baloncesto de alta calidad */
+  padding: 40px;
+
   background-image: url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2000&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
 }
 
-/* Overlay oscuro para legibilidad */
-.dark-overlay {
+.edit-profile-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(13, 27, 42, 0.7) 100%);
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 27, 42, 0.95),
+    rgba(13, 27, 42, 0.7)
+  );
   z-index: 1;
 }
 
-.visual-content {
+.edit-profile-visual-content {
   position: relative;
   z-index: 2;
   text-align: center;
@@ -56,195 +66,199 @@
   color: var(--white);
 }
 
-.brand-logo-visual {
-  max-width: 160px; /* Ajusta el tamaño del logo circular */
-  height: auto;
-  border-radius: 50%; /* Mantiene la forma circular del logo */
-  margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 4px solid rgba(255, 255, 255, 0.1);
+.edit-profile-logo {
+  max-width: 140px;
+  border-radius: 50%;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 4px solid rgba(255,255,255,0.1);
 }
 
-.visual-title {
-  font-size: 3.5rem;
+.edit-profile-visual-content h2 {
+  font-size: 2.8rem;
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -2px;
-  margin-bottom: 20px;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
   background: linear-gradient(180deg, #9b764e 0%, #aaa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.visual-subtitle {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  opacity: 0.8;
-  font-weight: 400;
-}
-
-/* --- SECCIÓN FORMULARIO (DERECHA) --- */
-.form-side {
+/* =========================
+   RIGHT SIDE (OPTIMIZADO)
+========================= */
+.edit-profile-form-side {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  background-color: var(--white);
+  padding: 24px;
 }
 
-.form-wrapper {
+.edit-profile-wrapper {
   width: 100%;
-  max-width: 420px;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
 }
 
-.auth-header {
-  margin-bottom: 40px;
+/* HEADER */
+.edit-profile-header {
+  margin-bottom: 12px;
 }
 
-.auth-header h2 {
-  font-size: 2rem;
+.edit-profile-header h2 {
+  font-size: 1.6rem;
   font-weight: 800;
   color: var(--text-main);
-  letter-spacing: -1px;
-  margin-bottom: 8px;
 }
 
-.auth-header p {
-  color: var(--text-muted);
-  font-size: 1rem;
+/* GRID MÁS COMPACTO */
+.edit-profile-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
-/* --- ESTILOS DE INPUT ANIMADOS (Glow Bar) --- */
-.input-group {
-
-  margin-bottom: 24px;
+.edit-profile-full {
+  grid-column: span 2;
 }
 
-.input-group label {
+/* =========================
+   INPUTS MÁS LIVIANOS
+========================= */
+.edit-profile-group label {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 600;
+  margin-bottom: 4px;
   color: var(--text-main);
-  margin-bottom: 8px;
-  text-align: left; /* Refuerza la alineación */
+  text-align: left;
 }
 
-.label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.input-input-wrapper {
-  position: relative;
-}
-
-.input-group input {
+.edit-profile-group input {
   width: 100%;
-  padding: 14px 16px;
+  padding: 8px 10px;
+  border-radius: 8px;
   border: 1px solid #e4e7eb;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #f9fafb;
-  transition: all 0.2s ease;
+  background: #f9fafb;
+  font-size: 0.82rem;
+  color: var(--text-main);
+  transition: 0.2s ease;
+}
+
+.edit-profile-group input:focus {
+  outline: none;
+  border-color: var(--primary-orange);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(241,146,4,0.12);
+}
+
+/* =========================
+   SECTIONS
+========================= */
+.edit-profile-section {
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-top: 4px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #eee;
   color: var(--text-main);
 }
 
-/* Estilo al escribir/focus */
-.input-group input:focus {
-  outline: none;
-  background-color: var(--white);
-  border-color: var(--primary-orange);
-}
-
-/* La barra de sombreado inferior (Glow bar) */
-.input-highlight {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  width: 0; /* Empieza con ancho 0 */
-  background: var(--primary-orange);
-  box-shadow: 0 0 10px var(--glow-color); /* Efecto Neón/Glow */
-  transition: width 0.3s ease;
-  z-index: 2;
-}
-
-/* Animación cuando el input tiene focus */
-.input-group input:focus + .input-highlight {
-  width: 100%; /* Se expande a todo el ancho */
-}
-
-/* --- BOTONES Y LINKS --- */
-.login-button {
-  width: 100%;
-  background: linear-gradient(180deg, var(--primary-orange) 0%, #d98303 100%);
-  color: var(--white);
-  padding: 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
+/* =========================
+   BOTONES COMPACTOS
+========================= */
+.edit-profile-buttons {
+  grid-column: 1 / -1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  transition: all 0.2s ease;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
 }
 
-.login-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(241, 146, 4, 0.3);
-}
-
-.button-arrow {
-  transition: transform 0.2s ease;
-}
-
-.login-button:hover .button-arrow {
-  transform: translateX(5px);
-}
-
-.signup-link {
-  color: var(--primary-orange);
-  text-decoration: none;
+.edit-profile-primary {
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary-orange), #d98303);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.forgot-link {
-  color: var(--primary-orange);
+.edit-profile-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(241,146,4,0.22);
+}
+
+.edit-profile-secondary {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.signup-link:hover, .forgot-link:hover {
+.edit-profile-secondary:hover {
+  color: var(--dark-navy);
   text-decoration: underline;
 }
 
-.auth-footer {
-  text-align: center;
-  margin-top: 32px;
-  font-size: 0.95rem;
-  color: var(--text-muted);
+/* =========================
+   TOASTS
+========================= */
+.edit-profile-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  z-index: 9999;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  animation: fadeInDown 0.3s ease;
 }
 
-/* --- RESPONSIVIDAD (Móviles) --- */
-@media (max-width: 1024px) {
-  .visual-title {
-    font-size: 2.8rem;
+.edit-profile-toast.success {
+  background: #e6fffa;
+  color: #2d5b63;
+}
+
+.edit-profile-toast.error {
+  background: #fff5f5;
+  color: #c53030;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 }
 
-@media (max-width: 768px) {
-  .visual-side {
-    display: none; /* Esconde el panel visual en móviles */
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .edit-profile-visual {
+    display: none;
   }
-  
-  .form-side {
-    padding: 20px;
+
+  .edit-profile-form {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-profile-wrapper {
+    max-width: 100%;
   }
 }

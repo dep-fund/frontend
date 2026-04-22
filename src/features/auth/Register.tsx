@@ -103,8 +103,6 @@ const Register: React.FC = () => {
 } 
 
 catch (err: any) {
-  console.log("ERROR COMPLETO:", err.response);
-  console.log("DATA:", err.response?.data);
 
   let message = 'Error al conectar con el servidor';
 

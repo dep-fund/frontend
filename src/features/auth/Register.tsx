@@ -100,22 +100,39 @@ const Register: React.FC = () => {
         navigate('/login');
       }, 2000);
 
-    } catch (err: any) {
-      const serverMessage =
-        err.response?.data?.message ||
-        err.response?.data?.detail ||
-        'Error al conectar con el servidor';
+} 
 
-      setToast({
-        message: serverMessage,
-        type: 'error'
-      });
+catch (err: any) {
+  console.log("ERROR COMPLETO:", err.response);
+  console.log("DATA:", err.response?.data);
 
-      setTimeout(() => setToast(null), 3000);
-    } finally {
-      setLoading(false);
+  let message = 'Error al conectar con el servidor';
+
+  const data = err.response?.data;
+
+  if (data?.detail) {
+    if (Array.isArray(data.detail)) {
+      message = data.detail[0]?.msg || message;
+    } else if (typeof data.detail === 'string') {
+      message = data.detail;
     }
-  };
+  } else if (data?.message) {
+    message = data.message;
+  }
+
+  setToast({
+    message,
+    type: 'error'
+  });
+
+  setTimeout(() => setToast(null), 3000);
+
+} finally {
+  setLoading(false);
+}
+
+
+};
 
   return (
     <div className="register-page-container">

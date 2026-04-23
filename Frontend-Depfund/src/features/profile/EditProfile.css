@@ -7,47 +7,48 @@
   --glow-color: rgba(241, 146, 4, 0.35);
 }
 
-/* RESET SOLO MODULO */
-.edit-profile-page * {
+/* =========================
+   RESET
+========================= */
+.ep-page-container * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
 }
 
-.edit-profile-page {
+/* =========================
+   LAYOUT
+========================= */
+.ep-page-container {
   min-height: 100vh;
   display: flex;
   background: var(--white);
   overflow: hidden;
 }
 
-/* =========================
-   LAYOUT GENERAL
-========================= */
-.edit-profile-columns {
+.ep-columns {
   display: flex;
   width: 100%;
   height: 100vh;
 }
 
 /* =========================
-   LEFT SIDE (COPIADO Y CONSERVADO)
+   LEFT SIDE
 ========================= */
-.edit-profile-visual {
+.ep-visual-side {
   flex: 1.2;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
-
   background-image: url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2000&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
 }
 
-.edit-profile-overlay {
+.ep-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -58,15 +59,22 @@
   z-index: 1;
 }
 
-.edit-profile-visual-content {
+/* CONTENIDO IZQUIERDA */
+.ep-visual-content {
   position: relative;
   z-index: 2;
   text-align: center;
   max-width: 480px;
   color: var(--white);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
-.edit-profile-logo {
+.ep-logo {
   max-width: 140px;
   border-radius: 50%;
   margin-bottom: 24px;
@@ -74,20 +82,24 @@
   border: 4px solid rgba(255,255,255,0.1);
 }
 
-.edit-profile-visual-content h2 {
+/* TÍTULO IZQUIERDA */
+.ep-visual-content h2 {
   font-size: 2.8rem;
   font-weight: 800;
   letter-spacing: -1px;
-  margin-bottom: 12px;
+
   background: linear-gradient(180deg, #9b764e 0%, #aaa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  line-height: 1.2;
+  padding: 4px 0;
 }
 
 /* =========================
-   RIGHT SIDE (OPTIMIZADO)
+   RIGHT SIDE
 ========================= */
-.edit-profile-form-side {
+.ep-form-side {
   flex: 1;
   display: flex;
   align-items: center;
@@ -95,7 +107,7 @@
   padding: 24px;
 }
 
-.edit-profile-wrapper {
+.ep-wrapper {
   width: 100%;
   max-width: 460px;
   display: flex;
@@ -103,40 +115,41 @@
 }
 
 /* HEADER */
-.edit-profile-header {
+.ep-header {
   margin-bottom: 12px;
 }
 
-.edit-profile-header h2 {
+.ep-header h2 {
   font-size: 1.6rem;
   font-weight: 800;
   color: var(--text-main);
 }
 
-/* GRID MÁS COMPACTO */
-.edit-profile-form {
+/* =========================
+   FORM
+========================= */
+.ep-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 12px;
 }
 
-.edit-profile-full {
+.ep-full {
   grid-column: span 2;
 }
 
 /* =========================
-   INPUTS MÁS LIVIANOS
+   INPUTS
 ========================= */
-.edit-profile-group label {
+.ep-group label {
   display: block;
   font-size: 0.78rem;
   font-weight: 600;
   margin-bottom: 4px;
   color: var(--text-main);
-  text-align: left;
 }
 
-.edit-profile-group input {
+.ep-group input {
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
@@ -147,7 +160,7 @@
   transition: 0.2s ease;
 }
 
-.edit-profile-group input:focus {
+.ep-group input:focus {
   outline: none;
   border-color: var(--primary-orange);
   background: #fff;
@@ -155,9 +168,9 @@
 }
 
 /* =========================
-   SECTIONS
+   SECTION
 ========================= */
-.edit-profile-section {
+.ep-section {
   font-size: 0.78rem;
   font-weight: 700;
   margin-top: 4px;
@@ -167,9 +180,9 @@
 }
 
 /* =========================
-   BOTONES COMPACTOS
+   BUTTONS
 ========================= */
-.edit-profile-buttons {
+.ep-buttons {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
@@ -177,7 +190,7 @@
   margin-top: 6px;
 }
 
-.edit-profile-primary {
+.ep-primary-button {
   width: 100%;
   background: linear-gradient(180deg, var(--primary-orange), #d98303);
   color: white;
@@ -190,12 +203,12 @@
   transition: 0.2s ease;
 }
 
-.edit-profile-primary:hover {
+.ep-primary-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(241,146,4,0.22);
 }
 
-.edit-profile-secondary {
+.ep-secondary-button {
   text-align: center;
   font-size: 0.82rem;
   color: var(--text-muted);
@@ -203,39 +216,52 @@
   font-weight: 600;
 }
 
-.edit-profile-secondary:hover {
+.ep-secondary-button:hover {
   color: var(--dark-navy);
   text-decoration: underline;
 }
 
-/* =========================
-   TOASTS
-========================= */
-.edit-profile-toast {
+/* TOAST */
+.ep-toast {
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 600;
+
+  min-width: 260px;
+  max-width: 320px;
+
+  padding: 12px 16px;
+  border-radius: 10px;
+
   font-size: 0.85rem;
+  font-weight: 600;
+
   z-index: 9999;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  animation: fadeInDown 0.3s ease;
+
+  opacity: 1;
+  background: #ffffff;
+
+  animation: ep-toast-in 0.25s ease, ep-toast-out 0.3s ease 2.7s;
 }
 
-.edit-profile-toast.success {
-  background: #e6fffa;
-  color: #2d5b63;
+.ep-toast.ep-toast--success {
+  background: #f0fdf4;
+  color: #166534;
+  border-left: 4px solid #22c55e;
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
 }
 
-.edit-profile-toast.error {
+.ep-toast.ep-toast--error {
   background: #fff5f5;
   color: #c53030;
+  border-left: 4px solid #ef4444;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2);
 }
 
-@keyframes fadeInDown {
+
+/* ANIMACIONES */
+@keyframes ep-toast-in {
   from {
     opacity: 0;
     transform: translate(-50%, -10px);
@@ -246,19 +272,38 @@
   }
 }
 
+@keyframes ep-toast-out {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+}
+
+/* =========================
+   LOADING
+========================= */
+.ep-loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 900px) {
-  .edit-profile-visual {
+  .ep-visual-side {
     display: none;
   }
 
-  .edit-profile-form {
+  .ep-form {
     grid-template-columns: 1fr;
   }
 
-  .edit-profile-wrapper {
+  .ep-wrapper {
     max-width: 100%;
   }
 }

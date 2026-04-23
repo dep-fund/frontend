@@ -7,22 +7,28 @@
   --glow-color: rgba(241, 146, 4, 0.35);
 }
 
-/* RESET */
-.register-page-container * {
+/* =========================
+   RESET SOLO REGISTER
+========================= */
+
+.register-register-page-container * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
 }
 
-/* CONTAINER */
-.register-page-container {
+/* =========================
+   LAYOUT PRINCIPAL
+========================= */
+
+.register-register-page-container {
   min-height: 100vh;
   display: flex;
   background: var(--white);
 }
 
-.register-columns {
+.register-register-columns {
   display: flex;
   width: 100%;
 }
@@ -74,6 +80,7 @@
   font-weight: 800;
   margin-bottom: 12px;
   line-height: 1.1;
+
   background: linear-gradient(180deg, #9b764e, #aaa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -85,7 +92,7 @@
 }
 
 /* =========================
-   FORM SIDE (COMPACTO)
+   FORM SIDE
 ========================= */
 
 .register-form-side {
@@ -101,7 +108,10 @@
   max-width: 420px;
 }
 
-/* HEADER MÁS COMPACTO */
+/* =========================
+   HEADER
+========================= */
+
 .register-auth-header {
   margin-bottom: 18px;
 }
@@ -119,24 +129,27 @@
 }
 
 /* =========================
-   INPUTS COMPACTOS
+   INPUTS
 ========================= */
 
 .register-input-group {
-  margin-bottom: 12px; /* 🔥 menos espacio vertical */
+  margin-bottom: 12px;
 }
 
-/* LABEL A LA IZQUIERDA (como pediste) */
 .register-input-group label {
   display: block;
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-main);
   margin-bottom: 4px;
-  text-align: left; /* 🔥 clave */
+  text-align: left;
 }
 
-/* INPUT MÁS BAJO */
+/* WRAPPER IMPORTANTE */
+.register-input-wrapper {
+  position: relative;
+}
+
 .register-input-wrapper input {
   width: 100%;
   padding: 9px 11px;
@@ -154,7 +167,10 @@
   border-color: var(--primary-orange);
 }
 
-/* GLOW BAR */
+/* =========================
+   GLOW BAR (FIX REAL)
+========================= */
+
 .register-input-highlight {
   position: absolute;
   bottom: 0;
@@ -166,15 +182,16 @@
   transition: width 0.3s ease;
 }
 
+/* ⚠️ FIX IMPORTANTE: ahora depende del wrapper */
 .register-input-wrapper input:focus + .register-input-highlight {
   width: 100%;
 }
 
 /* =========================
-   BOTÓN MÁS COMPACTO
+   BOTÓN
 ========================= */
 
-.register-button {
+.register-register-button {
   width: 100%;
   background: linear-gradient(180deg, var(--primary-orange), #d98303);
   color: white;
@@ -188,13 +205,13 @@
   transition: 0.2s ease;
 }
 
-.register-button:hover {
+.register-register-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(241,146,4,0.3);
 }
 
 /* =========================
-   FOOTER MÁS CHICO
+   FOOTER
 ========================= */
 
 .register-auth-footer {
@@ -215,7 +232,7 @@
 }
 
 /* =========================
-   ERROR MÁS COMPACTO
+   ERROR BOX
 ========================= */
 
 .register-error-message {
@@ -230,28 +247,14 @@
 }
 
 /* =========================
-   RESPONSIVE
+   TOAST (AISLADO Y SEGURO)
 ========================= */
 
-@media (max-width: 768px) {
-  .register-visual-side {
-    display: none;
-  }
-
-  .register-form-side {
-    padding: 18px;
-  }
-}
-
-/* =========================
-   TOAST (FIX TOTAL)
-========================= */
-
-.toast {
+.register-toast {
   position: fixed;
   top: 20px;
   left: 50%;
-  transform: translateX(-50%); /* 👈 clave */
+  transform: translateX(-50%);
 
   min-width: 260px;
   max-width: 320px;
@@ -264,19 +267,17 @@
 
   z-index: 9999;
 
-  animation: toastSlideIn 0.25s ease, toastFadeOut 0.3s ease 2.7s;
+  animation: register-toast-in 0.25s ease, register-toast-out 0.3s ease 2.7s;
 }
 
-/* SUCCESS */
-.toast.success {
+.register-success {
   background: #f0fdf4;
   color: #166534;
   border-left: 4px solid #22c55e;
   box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
 }
 
-/* ERROR */
-.toast.error {
+.register-error {
   background: #fff5f5;
   color: #c53030;
   border-left: 4px solid #ef4444;
@@ -284,20 +285,34 @@
 }
 
 /* ANIMACIONES */
-@keyframes toastSlideIn {
+@keyframes register-toast-in {
   from {
     opacity: 0;
-    transform: translateX(40px);
+    transform: translate(-50%, -10px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate(-50%, 0);
   }
 }
 
-@keyframes toastFadeOut {
+@keyframes register-toast-out {
   to {
     opacity: 0;
-    transform: translateX(40px);
+    transform: translate(-50%, -10px);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .register-visual-side {
+    display: none;
+  }
+
+  .register-form-side {
+    padding: 18px;
   }
 }

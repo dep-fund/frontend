@@ -40,6 +40,7 @@ const EditProfile: React.FC = () => {
         });
 
         setFormData(response.data);
+
       } catch {
         navigate('/login');
       } finally {
@@ -54,9 +55,15 @@ const EditProfile: React.FC = () => {
     const { name, value } = e.target;
 
     if (name.includes('password')) {
-      setPasswordData({ ...passwordData, [name]: value.replace(/\s/g, '') });
+      setPasswordData({
+        ...passwordData,
+        [name]: value.replace(/\s/g, '')
+      });
     } else {
-      setFormData({ ...formData, [name]: value.trimStart() });
+      setFormData({
+        ...formData,
+        [name]: value.trimStart()
+      });
     }
   };
 
@@ -71,19 +78,26 @@ const EditProfile: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
+
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
 
       await axios.patch(`${API_URL}/users/me`, formData, { headers });
 
       if (passwordData.old_password || passwordData.new_password) {
         if (passwordData.new_password !== passwordData.confirm_new_password) {
-          throw new Error("Las nuevas contraseñas no coinciden");
+          throw new Error('Las nuevas contraseñas no coinciden');
         }
 
-        await axios.post(`${API_URL}/users/me/change-password`, {
-          old_password: passwordData.old_password,
-          new_password: passwordData.new_password
-        }, { headers });
+        await axios.post(
+          `${API_URL}/users/me/change-password`,
+          {
+            old_password: passwordData.old_password,
+            new_password: passwordData.new_password
+          },
+          { headers }
+        );
       }
 
       showToast('Perfil actualizado correctamente', 'success');
@@ -94,94 +108,106 @@ const EditProfile: React.FC = () => {
 
     } catch (err: any) {
       showToast(
-        err.response?.data?.detail || err.message || 'Error al actualizar',
+        err.response?.data?.detail ||
+        err.message ||
+        'Error al actualizar',
         'error'
       );
+
     } finally {
       setUpdating(false);
     }
   };
 
-  if (loading) return <div className="loading-screen">Cargando datos...</div>;
+  if (loading) {
+    return <div className="ep-loading-screen">Cargando datos...</div>;
+  }
 
   return (
     <>
-      {/* 🔥 TOAST FUERA DEL LAYOUT */}
       {toast && (
-        <div className={`edit-profile-toast ${toast.type}`}>
+        <div className={`ep-toast ep-toast--${toast.type}`}>
           {toast.message}
         </div>
       )}
 
-      <div className="edit-profile-page">
-        <div className="edit-profile-columns">
+      <div className="ep-page-container">
+        <div className="ep-columns">
 
           {/* LEFT */}
-          <div className="edit-profile-visual">
-            <div className="edit-profile-overlay"></div>
-            <div className="edit-profile-visual-content">
-              <img src={logoDepFund} className="edit-profile-logo" />
+          <div className="ep-visual-side">
+            <div className="ep-overlay"></div>
+
+            <div className="ep-visual-content">
+              <img src={logoDepFund} className="ep-logo" alt="DepFund" />
               <h2>Ajustes</h2>
             </div>
           </div>
 
           {/* RIGHT */}
-          <div className="edit-profile-form-side">
-            <div className="edit-profile-wrapper">
+          <div className="ep-form-side">
+            <div className="ep-wrapper">
 
-              <div className="edit-profile-header">
+              <header className="ep-header">
                 <h2>Editar Información</h2>
-              </div>
+              </header>
 
-              <form onSubmit={handleSubmit} className="edit-profile-form">
+              <form onSubmit={handleSubmit} className="ep-form">
 
-                <div className="edit-profile-group">
+                <div className="ep-group">
                   <label>Nombre</label>
                   <input name="name" value={formData.name} onChange={handleChange} />
                 </div>
 
-                <div className="edit-profile-group">
+                <div className="ep-group">
                   <label>Apellido</label>
                   <input name="last_name" value={formData.last_name} onChange={handleChange} />
                 </div>
 
-                <div className="edit-profile-group edit-profile-full">
+                <div className="ep-group ep-full">
                   <label>Email</label>
                   <input name="email" value={formData.email} onChange={handleChange} />
                 </div>
 
-                <div className="edit-profile-section edit-profile-full">
-                  Seguridad
-                </div>
+                <div className="ep-section ep-full">Seguridad</div>
 
-                <div className="edit-profile-group edit-profile-full">
+                <div className="ep-group ep-full">
                   <label>Contraseña actual</label>
-                  <input name="old_password" type="password"
+                  <input
+                    type="password"
+                    name="old_password"
                     value={passwordData.old_password}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                  />
                 </div>
 
-                <div className="edit-profile-group">
+                <div className="ep-group">
                   <label>Nueva contraseña</label>
-                  <input name="new_password" type="password"
+                  <input
+                    type="password"
+                    name="new_password"
                     value={passwordData.new_password}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                  />
                 </div>
 
-                <div className="edit-profile-group">
+                <div className="ep-group">
                   <label>Repetir</label>
-                  <input name="confirm_new_password" type="password"
+                  <input
+                    type="password"
+                    name="confirm_new_password"
                     value={passwordData.confirm_new_password}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                  />
                 </div>
 
-                <div className="edit-profile-buttons">
+                <div className="ep-buttons">
 
-                  <button className="edit-profile-primary" disabled={updating}>
+                  <button className="ep-primary-button" disabled={updating}>
                     {updating ? 'Guardando...' : 'Guardar cambios'}
                   </button>
 
-                  <Link to="/ProfileView" className="edit-profile-secondary">
+                  <Link to="/ProfileView" className="ep-secondary-button">
                     Cancelar
                   </Link>
 
@@ -191,6 +217,7 @@ const EditProfile: React.FC = () => {
 
             </div>
           </div>
+
         </div>
       </div>
     </>

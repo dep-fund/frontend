@@ -8,7 +8,6 @@ import { API_URL } from '../../constants';
 const Register: React.FC = () => {
   const navigate = useNavigate();
 
-  // Estados del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -21,45 +20,51 @@ const Register: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // 👉 TOAST
   const [toast, setToast] = useState<{
     message: string;
     type: 'success' | 'error';
   } | null>(null);
 
-  // Validación edad
   const isOlderThan18 = (dateString: string) => {
     if (!dateString) return false;
+
     const today = new Date();
     const birthDate = new Date(dateString);
+
     let age = today.getFullYear() - birthDate.getFullYear();
     const month = today.getMonth() - birthDate.getMonth();
+
     if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
+
     return age >= 18;
   };
 
-  // Manejo inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     let cleanValue = value;
 
-    if (cleanValue.startsWith(' ')) cleanValue = cleanValue.trimStart();
+    if (cleanValue.startsWith(' ')) {
+      cleanValue = cleanValue.trimStart();
+    }
 
-    const fieldsWithoutSpaces = ['usuario', 'email', 'password', 'confirmPassword'];
-    if (fieldsWithoutSpaces.includes(name)) {
+    const noSpaces = ['usuario', 'email', 'password', 'confirmPassword'];
+
+    if (noSpaces.includes(name)) {
       cleanValue = cleanValue.replace(/\s/g, '');
     }
 
-    setFormData({ ...formData, [name]: cleanValue });
+    setFormData({
+      ...formData,
+      [name]: cleanValue
+    });
   };
 
-  // Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validaciones
     if (!isOlderThan18(formData.fechaNacimiento)) {
       setToast({ message: 'Debes ser mayor de 18 años.', type: 'error' });
       setTimeout(() => setToast(null), 3000);
@@ -84,12 +89,10 @@ const Register: React.FC = () => {
         password: formData.password
       });
 
-      // Guardar token si viene
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
       }
 
-      // 👉 Toast success
       setToast({
         message: '¡Cuenta creada correctamente!',
         type: 'success'
@@ -112,51 +115,55 @@ const Register: React.FC = () => {
       });
 
       setTimeout(() => setToast(null), 3000);
+
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="register-page-container">
+    <div className="register-register-page-container">
 
       {toast && (
-        <div className={`toast ${toast.type}`}>
+        <div className={`register-toast register-${toast.type}`}>
           {toast.message}
         </div>
       )}
 
-      <div className="register-columns">
-        
-        {/* LADO VISUAL */}
+      <div className="register-register-columns">
+
+        {/* VISUAL */}
         <div className="register-visual-side">
           <div className="register-dark-overlay"></div>
+
           <div className="register-visual-content">
-            <img 
-              src={logoDepFund} 
-              alt="DepFund Logo" 
-              className="register-brand-logo" 
+            <img
+              src={logoDepFund}
+              alt="DepFund Logo"
+              className="register-brand-logo"
             />
+
             <h1 className="register-visual-title">
               Comienza tu viaje deportivo hoy.
             </h1>
+
             <p className="register-visual-subtitle">
               Sé parte de la nueva era de inversión.
             </p>
           </div>
         </div>
-  
-        {/* FORMULARIO */}
+
+        {/* FORM */}
         <div className="register-form-side">
           <div className="register-form-wrapper">
-            
+
             <header className="register-auth-header">
               <h2>Crea tu cuenta</h2>
               <p>Únete a DepFund y empieza a invertir.</p>
             </header>
-  
-            <form onSubmit={handleSubmit}>
-  
+
+            <form onSubmit={handleSubmit} className="register-form">
+
               <div className="register-input-group">
                 <label>Nombre</label>
                 <div className="register-input-wrapper">
@@ -170,7 +177,7 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-  
+
               <div className="register-input-group">
                 <label>Apellido</label>
                 <div className="register-input-wrapper">
@@ -184,7 +191,7 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-  
+
               <div className="register-input-group">
                 <label>Usuario</label>
                 <div className="register-input-wrapper">
@@ -198,7 +205,7 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-  
+
               <div className="register-input-group">
                 <label>Fecha de Nacimiento</label>
                 <div className="register-input-wrapper">
@@ -211,7 +218,7 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-  
+
               <div className="register-input-group">
                 <label>Email</label>
                 <div className="register-input-wrapper">
@@ -225,7 +232,7 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-  
+
               <div className="register-input-group">
                 <label>Contraseña</label>
                 <div className="register-input-wrapper">
@@ -239,7 +246,7 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-  
+
               <div className="register-input-group">
                 <label>Repetir Contraseña</label>
                 <div className="register-input-wrapper">
@@ -253,17 +260,17 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-  
-              <button 
-                type="submit" 
-                className="register-button" 
+
+              <button
+                type="submit"
+                className="register-register-button"
                 disabled={loading}
               >
                 {loading ? 'Procesando...' : 'Registrarse'}
               </button>
-  
+
             </form>
-  
+
             <footer className="register-auth-footer">
               <p>
                 ¿Ya tienes cuenta?{' '}
@@ -272,10 +279,10 @@ const Register: React.FC = () => {
                 </Link>
               </p>
             </footer>
-  
+
           </div>
         </div>
-  
+
       </div>
     </div>
   );

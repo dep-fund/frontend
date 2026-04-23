@@ -7,31 +7,32 @@
   --glow-color: rgba(241, 146, 4, 0.4);
 }
 
-/* RESET SOLO PARA ESTE MODULO */
-.profile-page-container * {
+/* RESET */
+.pw-profile-page-container * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
 }
 
-.profile-page-container {
+/* 🔥 FIX IMPORTANTE: NO cortar modales */
+.pw-profile-page-container {
   min-height: 100vh;
   display: flex;
   background-color: var(--white);
-  overflow: hidden;
+  overflow-x: hidden; /* SOLO horizontal */
+  overflow-y: auto;
 }
 
-/* ===== LAYOUT PRINCIPAL ===== */
-.profile-columns {
+/* LAYOUT */
+.pw-profile-columns {
   display: flex;
   width: 100%;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
-/* ===== PANEL IZQUIERDO ===== */
-.visual-side {
+/* LEFT */
+.pw-visual-side {
   flex: 1.2;
   position: relative;
   display: flex;
@@ -43,26 +44,28 @@
   background-position: center;
 }
 
-.dark-overlay {
+.pw-dark-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(13, 27, 42, 0.95),
-    rgba(13, 27, 42, 0.7)
-  );
+  background: linear-gradient(135deg, rgba(13,27,42,0.95), rgba(13,27,42,0.7));
   z-index: 1;
 }
 
-.visual-content {
+.pw-visual-content {
   position: relative;
   z-index: 2;
   text-align: center;
   max-width: 480px;
   color: var(--white);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
-.brand-logo-visual {
+.pw-brand-logo-visual {
   max-width: 140px;
   border-radius: 50%;
   margin-bottom: 24px;
@@ -70,24 +73,28 @@
   border: 4px solid rgba(255,255,255,0.1);
 }
 
-.visual-title {
+.pw-visual-title {
   font-size: 2.8rem;
   font-weight: 800;
   letter-spacing: -1px;
   margin-bottom: 12px;
+
   background: linear-gradient(180deg, #9b764e 0%, #aaa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  line-height: 1.2;
+  padding: 4px 0;
+  display: inline-block;
 }
 
-.visual-subtitle {
+.pw-visual-subtitle {
   font-size: 1rem;
   opacity: 0.8;
-  line-height: 1.5;
 }
 
-/* ===== PANEL DERECHO ===== */
-.form-side {
+/* RIGHT */
+.pw-form-side {
   flex: 1;
   display: flex;
   align-items: center;
@@ -95,288 +102,141 @@
   padding: 24px;
 }
 
-.form-wrapper {
+.pw-form-wrapper {
   width: 100%;
   max-width: 460px;
-  display: flex;
-  flex-direction: column;
 }
 
-/* ===== HEADER ===== */
-.auth-header {
-  margin-bottom: 12px;
-}
-
-.auth-header h2 {
+/* HEADER */
+.pw-auth-header h2 {
   font-size: 1.6rem;
   font-weight: 800;
   color: var(--text-main);
 }
 
-.auth-header p {
+.pw-auth-header p {
   color: var(--text-muted);
   font-size: 0.78rem;
 }
 
-/* ===== GRID FORM ===== */
-.profile-grid {
+/* GRID */
+.pw-profile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 12px;
 }
 
-.full-width {
+.pw-full-width {
   grid-column: span 2;
 }
 
-/* ===== INPUTS READ ONLY ===== */
-.input-group label {
-  display: block;
+/* INPUTS */
+.pw-input-group label {
   font-size: 0.78rem;
   font-weight: 600;
-  margin-bottom: 4px;
-  color: var(--text-main);
-  text-align: left;
 }
 
-.input-input-wrapper {
-  position: relative;
-}
-
-.read-only-input {
+.pw-read-only-input {
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid #e4e7eb;
   background: #f9fafb;
-  color: var(--text-main);
-  font-weight: 400;
   font-size: 0.82rem;
   pointer-events: none;
 }
 
-.read-only-input:focus {
-  outline: none;
-}
-
-.highlight-user {
+.pw-highlight-user {
   color: var(--primary-orange);
 }
 
-/* ===== BOTONES ===== */
-.button-group {
-  margin-top: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-}
-
-.login-button {
+/* BUTTONS */
+.pw-login-button {
   width: 100%;
   background: linear-gradient(180deg, var(--primary-orange), #d98303);
   color: white;
   padding: 10px;
   border-radius: 8px;
   font-weight: 700;
-  font-size: 0.9rem;
   text-decoration: none;
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 10px;
-  transition: 0.2s ease;
 }
 
-.login-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(241, 146, 4, 0.22);
-}
-
-.button-arrow {
-  transition: transform 0.2s ease;
-}
-
-.login-button:hover .button-arrow {
-  transform: translateX(4px);
-}
-
-.btn-link-muted {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.btn-link-muted:hover {
-  color: var(--dark-navy);
-  text-decoration: underline;
-}
-
-/* ===== DANGER ZONE ===== */
-.danger-zone {
-  margin-top: 4px;
-  width: 100%;
-}
-
-.delete-account-button {
+/* DELETE */
+.pw-delete-account-button {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #d93025;
   background: transparent;
   color: #d93025;
-  font-size: 0.82rem;
   font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s ease;
 }
 
-.delete-account-button:hover {
-  background: #fce8e6;
-}
-
-.back-home {
-  margin-top: 4px;
-  text-align: center;
-}
-
-/* ===== LOADING ===== */
-.loading-screen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  font-weight: 600;
+/* LINKS */
+.pw-btn-link-muted {
   font-size: 0.82rem;
   color: var(--text-muted);
 }
 
-/* ===== MODALES ===== */
-.pv-modal-backdrop {
+/* =========================
+   🔥 MODAL FIX REAL
+========================= */
+
+.pw-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(13, 27, 42, 0.6);
-  backdrop-filter: blur(4px);
-  z-index: 1000;
+  background: rgba(13, 27, 42, 0.65);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  z-index: 99999; /* CLAVE */
 }
 
-.pv-modal {
-  background: var(--white);
-  border-radius: 16px;
-  padding: 32px 28px;
-  max-width: 380px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  animation: pv-modal-in 0.2s ease;
+.pw-modal {
+  background: white;
+  padding: 20px 22px;   /* ↓ menos padding */
+  border-radius: 14px;
+
+  max-width: 320px;     /* ↓ más chico */
+  width: 90%;           /* responsive */
+
+  z-index: 100000;
+  position: relative;
 }
 
-@keyframes pv-modal-in {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.pv-modal-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 800;
-  margin: 0 auto 14px;
-}
-
-.pv-modal-icon--warning {
-  background: #fff7ed;
-  color: #d97706;
-  border: 2px solid #fcd34d;
-}
-
-.pv-modal-icon--success {
-  background: #e6fffa;
-  color: #2d5b63;
-  border: 2px solid #81e6d9;
-}
-
-.pv-modal-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text-main);
+.pw-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
   margin-bottom: 6px;
+  color: var(--dark-navy);
 }
 
-.pv-modal-text {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.pv-modal-error {
-  font-size: 0.78rem;
-  color: #c53030;
-  background: #fff5f5;
-  border-left: 3px solid #c53030;
-  padding: 8px 12px;
-  border-radius: 6px;
+.pw-modal-text {
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: #444;
   margin-bottom: 14px;
-  text-align: left;
 }
 
-.pv-modal-buttons {
+.pw-modal-buttons {
   display: flex;
   gap: 8px;
 }
 
-.pv-btn-cancel {
+.pw-btn-cancel,
+.pw-btn-confirm {
   flex: 1;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #e4e7eb;
-  background: transparent;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: 0.2s ease;
 }
 
-.pv-btn-cancel:hover {
-  background: #f3f4f6;
-  color: var(--dark-navy);
-}
-
-.pv-btn-confirm {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
+.pw-btn-confirm {
   background: #d93025;
   color: white;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.pv-btn-confirm:hover {
-  background: #b91c1c;
-  transform: translateY(-1px);
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
-  .visual-side {
-    display: none;
-  }
-
-  .form-wrapper {
-    max-width: 100%;
-  }
+  border: none;
 }

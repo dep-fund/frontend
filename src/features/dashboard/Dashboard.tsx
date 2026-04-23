@@ -8,7 +8,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard-container">
-      {/* HEADER / NAVBAR */}
       <header className="dashboard-header">
         <div className="header-brand" onClick={() => navigate('/dashboard')}>
           <img src={logoDepFund} alt="DepFund Logo" className="header-logo" />
@@ -26,7 +25,6 @@ const Dashboard: React.FC = () => {
         </nav>
       </header>
 
-      {/* CONTENIDO PRINCIPAL */}
       <main className="dashboard-content">
         <section className="welcome-banner">
           <div className="welcome-text">
@@ -38,7 +36,6 @@ const Dashboard: React.FC = () => {
               <h3>Ver mi Perfil</h3>
               <p>Revisa y edita tu información personal.</p>
             </Link>
-            {/* Aquí podrías agregar más tarjetas como "Ver Inversiones", etc. */}
           </div>
         </section>
       </main>

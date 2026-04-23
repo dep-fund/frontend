@@ -4,7 +4,7 @@
   --text-main: #1a1a1a;
   --text-muted: #667085;
   --white: #ffffff;
-  --glow-color: rgba(241, 146, 4, 0.4); /* Brillo naranja */
+  --glow-color: rgba(241, 146, 4, 0.4);
 }
 
 /* Reset básico para el componente */
@@ -28,13 +28,12 @@
 
 /* --- SECCIÓN VISUAL (IZQUIERDA) --- */
 .visual-side {
-  flex: 1.2; /* Toma un poco más de espacio */
+  flex: 1.2;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 60px;
-  /* Imagen de fondo de cancha de baloncesto de alta calidad */
   background-image: url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2000&auto=format&fit=crop');
   background-size: cover;
   background-position: center;

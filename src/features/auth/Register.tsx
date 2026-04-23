@@ -8,7 +8,6 @@ import { API_URL } from '../../constants';
 const Register: React.FC = () => {
   const navigate = useNavigate();
 
-  // Estados del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -21,13 +20,11 @@ const Register: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // 👉 TOAST
   const [toast, setToast] = useState<{
     message: string;
     type: 'success' | 'error';
   } | null>(null);
 
-  // Validación edad
   const isOlderThan18 = (dateString: string) => {
     if (!dateString) return false;
     const today = new Date();
@@ -40,7 +37,6 @@ const Register: React.FC = () => {
     return age >= 18;
   };
 
-  // Manejo inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let cleanValue = value;
@@ -55,11 +51,9 @@ const Register: React.FC = () => {
     setFormData({ ...formData, [name]: cleanValue });
   };
 
-  // Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validaciones
     if (!isOlderThan18(formData.fechaNacimiento)) {
       setToast({ message: 'Debes ser mayor de 18 años.', type: 'error' });
       setTimeout(() => setToast(null), 3000);
@@ -84,12 +78,10 @@ const Register: React.FC = () => {
         password: formData.password
       });
 
-      // Guardar token si viene
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
       }
 
-      // 👉 Toast success
       setToast({
         message: '¡Cuenta creada correctamente!',
         type: 'success'
@@ -143,7 +135,6 @@ catch (err: any) {
 
       <div className="register-columns">
         
-        {/* LADO VISUAL */}
         <div className="register-visual-side">
           <div className="register-dark-overlay"></div>
           <div className="register-visual-content">
@@ -161,7 +152,6 @@ catch (err: any) {
           </div>
         </div>
   
-        {/* FORMULARIO */}
         <div className="register-form-side">
           <div className="register-form-wrapper">
             

@@ -106,7 +106,6 @@ const EditProfile: React.FC = () => {
 
   return (
     <>
-      {/* 🔥 TOAST FUERA DEL LAYOUT */}
       {toast && (
         <div className={`edit-profile-toast ${toast.type}`}>
           {toast.message}
@@ -116,7 +115,6 @@ const EditProfile: React.FC = () => {
       <div className="edit-profile-page">
         <div className="edit-profile-columns">
 
-          {/* LEFT */}
           <div className="edit-profile-visual">
             <div className="edit-profile-overlay"></div>
             <div className="edit-profile-visual-content">
@@ -125,7 +123,6 @@ const EditProfile: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT */}
           <div className="edit-profile-form-side">
             <div className="edit-profile-wrapper">
 

@@ -123,7 +123,7 @@
 ========================= */
 
 .register-input-group {
-  margin-bottom: 12px; /* 🔥 menos espacio vertical */
+  margin-bottom: 12px;
 }
 
 /* LABEL A LA IZQUIERDA (como pediste) */
@@ -133,7 +133,7 @@
   font-weight: 600;
   color: var(--text-main);
   margin-bottom: 4px;
-  text-align: left; /* 🔥 clave */
+  text-align: left;
 }
 
 /* INPUT MÁS BAJO */
@@ -251,7 +251,7 @@
   position: fixed;
   top: 20px;
   left: 50%;
-  transform: translateX(-50%); /* 👈 clave */
+  transform: translateX(-50%);
 
   min-width: 260px;
   max-width: 320px;

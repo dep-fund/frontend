@@ -67,7 +67,6 @@ const ProfileView: React.FC = () => {
   return (
     <div className="profile-page-container">
 
-      {/* MODAL CONFIRMACIÓN */}
       {showConfirmModal && (
         <div className="pv-modal-backdrop">
           <div className="pv-modal">
@@ -87,7 +86,6 @@ const ProfileView: React.FC = () => {
         </div>
       )}
 
-      {/* MODAL ÉXITO */}
       {showSuccessModal && (
         <div className="pv-modal-backdrop">
           <div className="pv-modal">

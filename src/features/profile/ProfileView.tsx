@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../assets/Login.css'; 
 import './ProfileView.css'; 
 import logoDepFund from '../assets/img/logo_regency.jpg';
 import { API_URL } from '../../constants';
@@ -9,7 +8,6 @@ import { API_URL } from '../../constants';
 const ProfileView: React.FC = () => {
   const navigate = useNavigate();
 
-  // 1. Estado para los datos que vienen del servidor
   const [userData, setUserData] = useState({
     name: '',
     last_name: '',
@@ -19,26 +17,22 @@ const ProfileView: React.FC = () => {
   });
 
   const [loading, setLoading] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
+        if (!token) { navigate('/login'); return; }
 
         const response = await axios.get(`${API_URL}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}` // Enviamos el JWT
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
 
         setUserData(response.data);
       } catch (error) {
-        console.error("Error cargando perfil", error);
-        // Si el token expiró o es inválido, mandamos al login
         navigate('/login');
       } finally {
         setLoading(false);
@@ -48,38 +42,61 @@ const ProfileView: React.FC = () => {
     fetchProfile();
   }, [navigate]);
 
-  // 3. Función para dar de baja en el Backend
   const handleDeleteAccount = async () => {
-    const confirmed = window.confirm(
-      "¿Estás seguro de que deseas dar de baja tu cuenta? Esta acción es permanente."
-    );
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API_URL}/users/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-    if (confirmed) {
-      try {
-        const token = localStorage.getItem('token');
-        
-        await axios.delete(`${API_URL}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+      setShowConfirmModal(false);
+      setShowSuccessModal(true);
 
-        alert("Cuenta eliminada correctamente.");
-        localStorage.removeItem('token'); // Limpiamos el token
+      setTimeout(() => {
+        localStorage.removeItem('token');
         navigate('/login');
-      } catch (error: any) {
-        alert("Error al intentar eliminar la cuenta: " + (error.response?.data?.detail || "Intente más tarde"));
-      }
+      }, 2500);
+
+    } catch (error: any) {
+      setDeleteError(error.response?.data?.detail || 'Intente más tarde');
     }
   };
 
-  if (loading) {
-    return <div className="loading-screen">Cargando perfil...</div>;
-  }
+  if (loading) return <div className="loading-screen">Cargando perfil...</div>;
 
   return (
-    <div className="login-page-container">
-      <div className="login-columns">
+    <div className="profile-page-container">
+
+      {showConfirmModal && (
+        <div className="pv-modal-backdrop">
+          <div className="pv-modal">
+            <div className="pv-modal-icon pv-modal-icon--warning">⚠</div>
+            <h3 className="pv-modal-title">¿Dar de baja tu cuenta?</h3>
+            <p className="pv-modal-text">Esta acción es <strong>permanente</strong> y no se puede deshacer. Perderás todos tus datos.</p>
+            {deleteError && <p className="pv-modal-error">{deleteError}</p>}
+            <div className="pv-modal-buttons">
+              <button className="pv-btn-cancel" onClick={() => { setShowConfirmModal(false); setDeleteError(''); }}>
+                Cancelar
+              </button>
+              <button className="pv-btn-confirm" onClick={handleDeleteAccount}>
+                Sí, dar de baja
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSuccessModal && (
+        <div className="pv-modal-backdrop">
+          <div className="pv-modal">
+            <div className="pv-modal-icon pv-modal-icon--success">✓</div>
+            <h3 className="pv-modal-title">Cuenta eliminada</h3>
+            <p className="pv-modal-text">Tu cuenta fue dada de baja correctamente. Redirigiendo...</p>
+          </div>
+        </div>
+      )}
+
+      <div className="profile-columns">
         
         <div className="visual-side">
           <div className="dark-overlay"></div>
@@ -137,14 +154,22 @@ const ProfileView: React.FC = () => {
                 <Link to="/edit-profile" className="login-button">
                   Editar Información <span className="button-arrow">→</span>
                 </Link>
-                <Link to="/dashboard" className="btn-link-muted">Volver al Inicio</Link>
               </div>
 
               <div className="danger-zone full-width">
-                <div className="divider"></div>
-                <button type="button" className="delete-account-button" onClick={handleDeleteAccount}>
+                <button
+                  type="button"
+                  className="delete-account-button"
+                  onClick={() => setShowConfirmModal(true)}
+                >
                   Dar de baja cuenta
                 </button>
+              </div>
+
+              <div className="back-home full-width">
+                <Link to="/dashboard" className="btn-link-muted">
+                  Volver al Inicio
+                </Link>
               </div>
             </form>
           </div>

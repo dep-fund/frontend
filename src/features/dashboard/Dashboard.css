@@ -1,8 +1,6 @@
-/* Heredamos las variables de Login.css */
-
 .dashboard-container {
   min-height: 100vh;
-  background-color: #f9fafb; /* Fondo gris muy claro para el dashboard */
+  background-color: #f9fafb;
 }
 
 /* --- HEADER --- */

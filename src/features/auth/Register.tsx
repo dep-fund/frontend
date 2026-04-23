@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../assets/Login.css'; 
+import './Register.css';
 import logoDepFund from '../assets/img/logo_regency.jpg';
 import { API_URL } from '../../constants';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
 
-  // 1. Estados
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -19,10 +18,13 @@ const Register: React.FC = () => {
     confirmPassword: ''
   });
 
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // 2. Validación de mayoría de edad
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'success' | 'error';
+  } | null>(null);
+
   const isOlderThan18 = (dateString: string) => {
     if (!dateString) return false;
     const today = new Date();
@@ -35,7 +37,6 @@ const Register: React.FC = () => {
     return age >= 18;
   };
 
-  // 3. Manejador de cambios (Inputs)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let cleanValue = value;
@@ -50,28 +51,24 @@ const Register: React.FC = () => {
     setFormData({ ...formData, [name]: cleanValue });
   };
 
-  // 4. Lógica de conexión con el Backend (JWT)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
-    // Validaciones locales antes de pegarle a la API
     if (!isOlderThan18(formData.fechaNacimiento)) {
-      setError('Debes ser mayor de 18 años para registrarte.');
+      setToast({ message: 'Debes ser mayor de 18 años.', type: 'error' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden.');
+      setToast({ message: 'Las contraseñas no coinciden.', type: 'error' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Petición POST al endpoint de registro
-
-      console.log({API_URL});
       const response = await axios.post(`${API_URL}/users/register`, {
         username: formData.usuario,
         name: formData.nombre,
@@ -81,123 +78,209 @@ const Register: React.FC = () => {
         password: formData.password
       });
 
-      // Si el backend responde con JWT inmediatamente tras el registro:
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        // Opcional: axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
       }
 
-      console.log('Registro exitoso:', response.data);
-      alert('¡Cuenta creada correctamente!');
-      navigate('/login');
+      setToast({
+        message: '¡Cuenta creada correctamente!',
+        type: 'success'
+      });
 
-    } catch (err: any) {
-      // Captura el error del backend (ej: "El email ya existe")
-      const serverMessage = err.response?.data?.message || 'Error al conectar con el servidor';
-      setError(serverMessage);
-    } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setToast(null);
+        navigate('/login');
+      }, 2000);
+
+} 
+
+catch (err: any) {
+
+  let message = 'Error al conectar con el servidor';
+
+  const data = err.response?.data;
+
+  if (data?.detail) {
+    if (Array.isArray(data.detail)) {
+      message = data.detail[0]?.msg || message;
+    } else if (typeof data.detail === 'string') {
+      message = data.detail;
     }
-  };
+  } else if (data?.message) {
+    message = data.message;
+  }
+
+  setToast({
+    message,
+    type: 'error'
+  });
+
+  setTimeout(() => setToast(null), 3000);
+
+} finally {
+  setLoading(false);
+}
+
+
+};
 
   return (
-    <div className="login-page-container">
-      <div className="login-columns">
+    <div className="register-page-container">
+
+      {toast && (
+        <div className={`toast ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+
+      <div className="register-columns">
         
-        <div className="visual-side">
-          <div className="dark-overlay"></div>
-          <div className="visual-content">
-            <img src={logoDepFund} alt="DepFund Logo" className="brand-logo-visual" />
-            <h1 className="visual-title">Comienza tu viaje deportivo hoy.</h1>
-            <p className="visual-subtitle">Sé parte de la nueva era de inversión.</p>
+        <div className="register-visual-side">
+          <div className="register-dark-overlay"></div>
+          <div className="register-visual-content">
+            <img 
+              src={logoDepFund} 
+              alt="DepFund Logo" 
+              className="register-brand-logo" 
+            />
+            <h1 className="register-visual-title">
+              Comienza tu viaje deportivo hoy.
+            </h1>
+            <p className="register-visual-subtitle">
+              Sé parte de la nueva era de inversión.
+            </p>
           </div>
         </div>
-
-        <div className="form-side">
-          <div className="form-wrapper">
-            <header className="auth-header">
+  
+        <div className="register-form-side">
+          <div className="register-form-wrapper">
+            
+            <header className="register-auth-header">
               <h2>Crea tu cuenta</h2>
               <p>Únete a DepFund y empieza a invertir.</p>
             </header>
-
-            {error && (
-              <div className="error-box" style={{ 
-                backgroundColor: '#fff5f5', color: '#c53030', padding: '12px', 
-                borderRadius: '8px', marginBottom: '20px', fontSize: '0.85rem', 
-                fontWeight: 'bold', borderLeft: '4px solid #c53030' 
-              }}>
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="auth-form">
-              <div className="input-group">
+  
+            <form onSubmit={handleSubmit}>
+  
+              <div className="register-input-group">
                 <label>Nombre</label>
-                <div className="input-input-wrapper">
-                  <input type="text" name="nombre" placeholder="Tu nombre" value={formData.nombre} onChange={handleChange} required />
-                  <span className="input-highlight"></span>
+                <div className="register-input-wrapper">
+                  <input
+                    type="text"
+                    name="nombre"
+                    placeholder="Tu nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
-
-              <div className="input-group">
+  
+              <div className="register-input-group">
                 <label>Apellido</label>
-                <div className="input-input-wrapper">
-                  <input type="text" name="apellido" placeholder="Tu apellido" value={formData.apellido} onChange={handleChange} required />
-                  <span className="input-highlight"></span>
+                <div className="register-input-wrapper">
+                  <input
+                    type="text"
+                    name="apellido"
+                    placeholder="Tu apellido"
+                    value={formData.apellido}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
-
-              <div className="input-group">
+  
+              <div className="register-input-group">
                 <label>Usuario</label>
-                <div className="input-input-wrapper">
-                  <input type="text" name="usuario" placeholder="Nombre de usuario" value={formData.usuario} onChange={handleChange} required />
-                  <span className="input-highlight"></span>
+                <div className="register-input-wrapper">
+                  <input
+                    type="text"
+                    name="usuario"
+                    placeholder="Nombre de usuario"
+                    value={formData.usuario}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
-
-              <div className="input-group">
+  
+              <div className="register-input-group">
                 <label>Fecha de Nacimiento</label>
-                <div className="input-input-wrapper">
-                  <input type="date" name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleChange} required />
-                  <span className="input-highlight"></span>
+                <div className="register-input-wrapper">
+                  <input
+                    type="date"
+                    name="fechaNacimiento"
+                    value={formData.fechaNacimiento}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
-
-              <div className="input-group">
+  
+              <div className="register-input-group">
                 <label>Email</label>
-                <div className="input-input-wrapper">
-                  <input type="email" name="email" placeholder="correo@ejemplo.com" value={formData.email} onChange={handleChange} required />
-                  <span className="input-highlight"></span>
+                <div className="register-input-wrapper">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="correo@ejemplo.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
-
-              <div className="input-group">
+  
+              <div className="register-input-group">
                 <label>Contraseña</label>
-                <div className="input-input-wrapper">
-                  <input type="password" name="password" placeholder="••••••••••••" value={formData.password} onChange={handleChange} required />
-                  <span className="input-highlight"></span>
+                <div className="register-input-wrapper">
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
-
-              <div className="input-group">
+  
+              <div className="register-input-group">
                 <label>Repetir Contraseña</label>
-                <div className="input-input-wrapper">
-                  <input type="password" name="confirmPassword" placeholder="••••••••••••" value={formData.confirmPassword} onChange={handleChange} required />
-                  <span className="input-highlight"></span>
+                <div className="register-input-wrapper">
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="••••••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
-
-              <button type="submit" className="login-button" disabled={loading}>
+  
+              <button 
+                type="submit" 
+                className="register-button" 
+                disabled={loading}
+              >
                 {loading ? 'Procesando...' : 'Registrarse'}
-                {!loading && <span className="button-arrow">→</span>}
               </button>
+  
             </form>
-
-            <footer className="auth-footer">
-              <p>¿Ya tienes cuenta? <Link to="/login" className="signup-link">Inicia sesión</Link></p>
+  
+            <footer className="register-auth-footer">
+              <p>
+                ¿Ya tienes cuenta?{' '}
+                <Link to="/login" className="register-signup-link">
+                  Inicia sesión
+                </Link>
+              </p>
             </footer>
+  
           </div>
         </div>
+  
       </div>
     </div>
   );

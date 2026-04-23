@@ -4,7 +4,6 @@ import './ForgotPassword.css';
 import logoDepFund from '../assets/img/logo_regency.jpg';
 
 const ForgotPassword: React.FC = () => {
-  // Estado para controlar en qué paso estamos (1: Pedir Mail, 2: Resetear)
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     email: '',
@@ -19,7 +18,6 @@ const ForgotPassword: React.FC = () => {
     const { name, value } = e.target;
     let cleanValue = value;
 
-    // No permitir espacios en ninguno de estos campos
     if (cleanValue.startsWith(' ')) cleanValue = cleanValue.trimStart();
     cleanValue = cleanValue.replace(/\s/g, '');
 
@@ -30,8 +28,7 @@ const ForgotPassword: React.FC = () => {
     e.preventDefault();
     setError('');
     console.log('Enviando código a:', formData.email);
-    // Aquí iría la llamada al backend para enviar el mail
-    setStep(2); // Pasamos al siguiente paso
+    setStep(2);
   };
 
   const handleResetPassword = (e: React.FormEvent) => {
@@ -50,7 +47,6 @@ const ForgotPassword: React.FC = () => {
 
     console.log('Restableciendo con código:', formData.code);
     setSuccess(true);
-    // Aquí iría la llamada final al backend
   };
 
   return (
@@ -90,7 +86,6 @@ const ForgotPassword: React.FC = () => {
               <form onSubmit={step === 1 ? handleSendCode : handleResetPassword} className="auth-form">
                 
                 {step === 1 ? (
-                  /* PASO 1: MAIL */
                   <div className="input-group">
                     <label htmlFor="email">Email</label>
                     <div className="input-input-wrapper">
@@ -105,7 +100,6 @@ const ForgotPassword: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  /* PASO 2: CÓDIGO Y PASSWORDS */
                   <>
                     <div className="input-group">
                       <label htmlFor="code">Código de Verificación</label>

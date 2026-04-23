@@ -1,57 +1,211 @@
-/* Hereda todo de Login.css */
-
-.profile-wrapper-wide {
-  max-width: 550px;
+:root {
+  --primary-orange: #f19204;
+  --dark-navy: #0d1b2a;
+  --text-main: #1a1a1a;
+  --text-muted: #667085;
+  --white: #ffffff;
+  --glow-color: rgba(241, 146, 4, 0.4);
 }
 
+/* RESET SOLO PARA ESTE MODULO */
+.profile-page-container * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.profile-page-container {
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--white);
+  overflow: hidden;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.profile-columns {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== PANEL IZQUIERDO ===== */
+.visual-side {
+  flex: 1.2;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-image: url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2000&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+}
+
+.dark-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 27, 42, 0.95),
+    rgba(13, 27, 42, 0.7)
+  );
+  z-index: 1;
+}
+
+.visual-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 480px;
+  color: var(--white);
+}
+
+.brand-logo-visual {
+  max-width: 140px;
+  border-radius: 50%;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 4px solid rgba(255,255,255,0.1);
+}
+
+.visual-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  background: linear-gradient(180deg, #9b764e 0%, #aaa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.visual-subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+/* ===== PANEL DERECHO ===== */
+.form-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+.auth-header {
+  margin-bottom: 12px;
+}
+
+.auth-header h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.auth-header p {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+/* ===== GRID FORM ===== */
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  text-align: left;
+  gap: 8px;
 }
 
 .full-width {
   grid-column: span 2;
 }
 
-/* --- ESTILO PARA INPUTS QUE NO SE PUEDEN MODIFICAR --- */
-.read-only-input {
-  background-color: #f3f4f6 !important; /* Gris muy claro para indicar bloqueo */
-  color: var(--text-main) !important;
-  border: 1px solid #e4e7eb !important;
-  cursor: default !important; /* Quita el puntero de texto */
-  pointer-events: none; /* Evita cualquier interacción */
+/* ===== INPUTS READ ONLY ===== */
+.input-group label {
+  display: block;
+  font-size: 0.78rem;
   font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-main);
+  text-align: left;
 }
 
-/* Eliminamos el efecto naranja (glow) para estos inputs */
+.input-input-wrapper {
+  position: relative;
+}
+
+.read-only-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e4e7eb;
+  background: #f9fafb;
+  color: var(--text-main);
+  font-weight: 400;
+  font-size: 0.82rem;
+  pointer-events: none;
+}
+
 .read-only-input:focus {
-  border-color: #e4e7eb !important;
-  box-shadow: none !important;
+  outline: none;
 }
 
-/* Si quieres que el usuario resalte en naranja aunque no sea editable */
 .highlight-user {
-  color: var(--primary-orange) !important;
-  font-weight: 700;
+  color: var(--primary-orange);
 }
 
-/* Alineación de botones */
+/* ===== BOTONES ===== */
 .button-group {
-  margin-top: 30px;
+  margin-top: 4px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 6px;
   align-items: center;
 }
 
+.login-button {
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary-orange), #d98303);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: 0.2s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(241, 146, 4, 0.22);
+}
+
+.button-arrow {
+  transition: transform 0.2s ease;
+}
+
+.login-button:hover .button-arrow {
+  transform: translateX(4px);
+}
+
 .btn-link-muted {
+  font-size: 0.82rem;
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
   font-weight: 600;
-  margin-top: 10px;
 }
 
 .btn-link-muted:hover {
@@ -59,86 +213,170 @@
   text-decoration: underline;
 }
 
-/* Ajuste móvil */
-@media (max-width: 600px) {
-  .profile-grid {
-    grid-template-columns: 1fr;
-  }
-  .full-width {
-    grid-column: span 1;
-  }
+/* ===== DANGER ZONE ===== */
+.danger-zone {
+  margin-top: 4px;
+  width: 100%;
 }
 
-.danger-zone {
-  margin-top: 30px;
+.delete-account-button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d93025;
+  background: transparent;
+  color: #d93025;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-account-button:hover {
+  background: #fce8e6;
+}
+
+.back-home {
+  margin-top: 4px;
   text-align: center;
 }
 
-/* Línea divisoria sutil */
-.danger-zone .divider {
-  height: 1px;
-  background-color: #e4e7eb;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.delete-account-button {
-  width: 100%;
-  background: transparent;
-  color: #d93025; /* Rojo profesional */
-  padding: 12px;
-  border: 1px solid #d93025;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* ===== LOADING ===== */
+.loading-screen {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  height: 100vh;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
-.delete-account-button:hover {
-  background-color: #fce8e6; /* Fondo rojo muy suave al pasar el mouse */
-  box-shadow: 0 4px 12px rgba(217, 48, 37, 0.1);
-}
-
-/* Si quieres que se vea más agresivo cuando el usuario lo presiona */
-.delete-account-button:active {
-  transform: scale(0.98);
-}
-
-
-.danger-zone {
-  margin-top: 30px;
-  width: 100%;
-}
-
-.danger-zone .divider {
-  height: 1px;
-  background-color: #e4e7eb;
-  margin-bottom: 20px;
-}
-
-.delete-account-button {
-  width: 100%;
-  background: transparent;
-  color: #d93025; /* Rojo de alerta */
-  padding: 12px;
-  border: 1px solid #d93025;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* ===== MODALES ===== */
+.pv-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.pv-modal {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px 28px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: pv-modal-in 0.2s ease;
+}
+
+@keyframes pv-modal-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.pv-modal-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0 auto 14px;
+}
+
+.pv-modal-icon--warning {
+  background: #fff7ed;
+  color: #d97706;
+  border: 2px solid #fcd34d;
+}
+
+.pv-modal-icon--success {
+  background: #e6fffa;
+  color: #2d5b63;
+  border: 2px solid #81e6d9;
+}
+
+.pv-modal-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.pv-modal-text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.pv-modal-error {
+  font-size: 0.78rem;
+  color: #c53030;
+  background: #fff5f5;
+  border-left: 3px solid #c53030;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.pv-modal-buttons {
+  display: flex;
   gap: 8px;
 }
 
-.delete-account-button:hover {
-  background-color: #fce8e6;
-  box-shadow: 0 4px 12px rgba(217, 48, 37, 0.1);
+.pv-btn-cancel {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e4e7eb;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pv-btn-cancel:hover {
+  background: #f3f4f6;
+  color: var(--dark-navy);
+}
+
+.pv-btn-confirm {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #d93025;
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pv-btn-confirm:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .visual-side {
+    display: none;
+  }
+
+  .form-wrapper {
+    max-width: 100%;
+  }
 }

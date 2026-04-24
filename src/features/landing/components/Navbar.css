@@ -1,0 +1,114 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 40px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--orange-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.navbar-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.brand-dep {
+  color: var(--orange);
+}
+
+.brand-fund {
+  color: #2C7176;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 32px;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  transition: color 0.2s;
+}
+
+.navbar-links a:hover {
+  color: var(--orange);
+}
+
+.navbar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #ea6c0a;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--orange);
+  border: 1.5px solid var(--orange);
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  background: var(--orange-pale);
+}
+
+.btn-cyan {
+  color: #2C7176;
+  border-color: #2C7176;
+}
+
+.btn-cyan:hover {
+  background: #f0f8f8;
+}

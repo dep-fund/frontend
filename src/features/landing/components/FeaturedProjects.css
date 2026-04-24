@@ -1,0 +1,152 @@
+.projects-section {
+  padding: 80px 40px;
+  background: var(--bg);
+}
+
+.projects-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.projects-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.projects-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.projects-see-all {
+  font-size: 0.9rem;
+  color: var(--orange);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.projects-see-all:hover {
+  opacity: 0.75;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.project-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: white;
+  transition: box-shadow 0.2s;
+}
+
+.project-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.project-img-wrapper {
+  position: relative;
+}
+
+.project-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-section);
+}
+
+.project-roi-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.project-body {
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.project-location {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.project-progress-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.project-progress-pct {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.project-progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 4px 0 12px;
+}
+
+.project-progress-fill {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 99px;
+}
+
+.project-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.project-meta {
+  display: flex;
+  gap: 20px;
+}
+
+.project-meta-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.project-meta-value {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.project-btn {
+  padding: 8px 18px;
+  font-size: 0.88rem;
+}

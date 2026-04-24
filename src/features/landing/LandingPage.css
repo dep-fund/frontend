@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --orange: #f97316;
+  --orange-light: #fdba74;
+  --orange-pale: #fff7ed;
+  --dark: #1a1a1a;
+  --text: #374151;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --bg: #ffffff;
+  --bg-section: #f9fafb;
+  --card-bg: #fdfaf6;
+  --radius: 14px;
+  --font-display: "Sora", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+}
+
+.landing-root {
+  overflow-x: hidden;
+}

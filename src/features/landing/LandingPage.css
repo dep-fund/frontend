@@ -16,6 +16,22 @@
   --font-body: "DM Sans", sans-serif;
 }
 
+@media (prefers-color-scheme: dark) {
+  .landing-root,
+  .landing-root * {
+    --orange: #f97316;
+    --orange-light: #fdba74;
+    --orange-pale: #fff7ed;
+    --dark: #1a1a1a;
+    --text: #374151;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #ffffff;
+    --bg-section: #f9fafb;
+    --card-bg: #fdfaf6;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -24,13 +40,11 @@
   padding: 0;
 }
 
-body {
+.landing-root {
   font-family: var(--font-body);
   color: var(--text);
   background: var(--bg);
   line-height: 1.6;
-}
-
-.landing-root {
   overflow-x: hidden;
+  color-scheme: light;
 }

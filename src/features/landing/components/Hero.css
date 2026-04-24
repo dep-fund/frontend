@@ -8,11 +8,84 @@
   margin: 0 auto;
 }
 
-.hero-content {
+.hero-left {
   flex: 1;
-  max-width: 480px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 580px;
 }
 
+.hero-content {
+  flex: 1;
+}
+
+/* ── Soccer Ball ── */
+.hero-ball-wrapper {
+  flex-shrink: 0;
+  width: 150px;
+  height: 150px;
+  animation: ballEntrance 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.hero-ball {
+  width: 100%;
+  height: 100%;
+  fill: #ffffff;
+  stroke: #000;
+  stroke-width: 12px;
+  paint-order: stroke;
+  filter: drop-shadow(4px 6px 14px rgba(0,0,0,0.2));
+  animation: ballSpin 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Basketball ── */
+.hero-basket-wrapper {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  animation: basketEntrance 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+  opacity: 0;
+  align-self: flex-end;
+}
+
+.hero-basket {
+  width: 100%;
+  height: 100%;
+  fill: #f97316;
+  stroke: #1a1a1a;
+  stroke-width: 10px;
+  paint-order: stroke;
+  filter: drop-shadow(4px 6px 14px rgba(0,0,0,0.2));
+  animation: basketSpin 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+
+/* ── Animations ── */
+@keyframes ballEntrance {
+  0%   { transform: translateX(-300px) scale(0.2); opacity: 0; }
+  50%  { opacity: 1; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes basketEntrance {
+  0%   { transform: translateX(300px) scale(0.2); opacity: 0; }
+  60%  { opacity: 1; }
+  80%  { transform: translateX(-10px) scale(1.05); }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes ballSpin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(-400deg); }
+}
+
+@keyframes basketSpin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Text ── */
 .hero-title {
   font-family: var(--font-display);
   font-size: 3rem;
@@ -20,6 +93,7 @@
   color: var(--dark);
   line-height: 1.1;
   margin-bottom: 20px;
+  text-align: left;
 }
 
 .hero-subtitle {
@@ -32,7 +106,11 @@
 .hero-buttons {
   display: flex;
   gap: 14px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+}
+
+.hero-buttons button {
+  white-space: nowrap;
 }
 
 .hero-btn-main {
@@ -57,6 +135,7 @@
   background: var(--orange-pale);
 }
 
+/* ── Image ── */
 .hero-image-wrapper {
   flex: 1;
   position: relative;
@@ -115,70 +194,77 @@
   color: var(--muted);
 }
 
-/* Responsive adjustments */
+/* ── Responsive ── */
 @media (max-width: 992px) {
   .hero {
-    flex-direction: column; /* Stack content and image */
+    flex-direction: column;
     text-align: center;
     padding: 50px 40px 40px;
     gap: 40px;
   }
+
+  .hero-left {
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+  }
+
   .hero-content {
     max-width: 100%;
   }
+
+  .hero-title {
+    text-align: left;
+  }
+
   .hero-buttons {
     justify-content: center;
   }
+
   .hero-image-wrapper {
-    max-width: 80%; /* Adjust image size */
+    max-width: 80%;
   }
+
   .hero-roi-badge {
-    bottom: 10px; /* Adjust position */
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
   }
 }
 
 @media (max-width: 768px) {
-  .hero {
-    padding: 40px 20px 30px;
-  }
-  .hero-title {
-    font-size: 2.4rem;
-  }
+  .hero { padding: 40px 20px 30px; }
+  .hero-title { font-size: 2.4rem; }
+  .hero-ball-wrapper { width: 110px; height: 110px; }
+  .hero-basket-wrapper { width: 85px; height: 85px; }
 }
 
 @media (max-width: 480px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  .hero-subtitle {
-    font-size: 0.9rem;
-  }
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 0.9rem; }
+
   .hero-buttons {
-    flex-direction: column; /* Stack buttons */
+    flex-direction: column;
     gap: 10px;
   }
+
   .hero-btn-main,
   .btn-hero-secondary {
-    width: 100%; /* Full width buttons */
+    width: 100%;
     padding: 10px 20px;
     font-size: 0.95rem;
   }
-  .hero-image-wrapper {
-    max-width: 100%;
-  }
+
+  .hero-image-wrapper { max-width: 100%; }
+
   .hero-roi-badge {
     padding: 10px 15px;
     gap: 8px;
   }
-  .hero-roi-value {
-    font-size: 1.1rem;
-  }
-  .hero-roi-arrow {
-    width: 30px;
-    height: 30px;
-    font-size: 1.1rem;
-  }
-}
 
+  .hero-roi-value { font-size: 1.1rem; }
+  .hero-roi-arrow { width: 30px; height: 30px; font-size: 1.1rem; }
+
+  .hero-ball-wrapper { width: 90px; height: 90px; }
+  .hero-basket-wrapper { width: 70px; height: 70px; }
+}

@@ -1,5 +1,6 @@
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
+import { logo } from "../../assets";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-brand">
         <div className="navbar-logo">
-          <img src="src/features/assets/img/logo_regency.jpg" alt="DepFund" />
+          <img src={logo} alt="DepFund" />
         </div>
         <span className="navbar-name">
           <span className="brand-dep">Dep</span><span className="brand-fund">Fund</span>

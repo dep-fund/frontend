@@ -1,8 +1,13 @@
 import "./FeaturedProjects.css";
+import {
+  complejogym,
+  complejomardelplata,
+  complejobariloche,
+} from "../../assets";
 
-const projects = [
+export const projects = [
   {
-    image: "src/features/assets/img/complejogym.jpg",
+    image: complejogym,
     imageAlt: "imagen 2",
     roi: "14.2% ROI",
     title: "Gimnasio Deportivo",
@@ -12,7 +17,7 @@ const projects = [
     investors: 234,
   },
   {
-    image: "src/features/assets/img/complejomardelplata.png",
+    image: complejomardelplata,
     imageAlt: "imagen 3",
     roi: "11.8% ROI",
     title: "Complejo de Tenis Costa",
@@ -22,7 +27,7 @@ const projects = [
     investors: 156,
   },
   {
-    image: "src/features/assets/img/complejobariloche.png",
+    image: complejobariloche,
     imageAlt: "imagen 4",
     roi: "16.5% ROI",
     title: "Resort de Esquí Montaña",

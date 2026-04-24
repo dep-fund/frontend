@@ -1,5 +1,7 @@
 import "./Hero.css";
 
+import { imagenROI } from "../../assets";
+
 export default function Hero() {
   return (
     <section className="hero">
@@ -27,7 +29,7 @@ export default function Hero() {
       <div className="hero-image-wrapper">
         <div className="hero-image-container">
           <img
-            src="src/features/assets/img/imagenROI.png"
+            src={imagenROI}
             alt="Complejo deportivo en crecimiento"
             className="hero-img"
           />

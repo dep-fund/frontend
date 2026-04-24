@@ -50,45 +50,40 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="login-page-container">
-      <div className="login-columns">
+    <div className="fp-page-container">
+      <div className="fp-columns">
         
-        <div className="visual-side">
-          <div className="dark-overlay"></div>
-          <div className="visual-content">
-            <img src={logoDepFund} alt="DepFund Logo" className="brand-logo-visual" />
-            <h1 className="visual-title">Recupera tu acceso.</h1>
-            <p className="visual-subtitle">Protegemos tu inversión y tu seguridad.</p>
+        <div className="fp-visual-side">
+          <div className="fp-dark-overlay"></div>
+          <div className="fp-visual-content">
+            <img src={logoDepFund} alt="DepFund Logo" className="fp-brand-logo-visual" />
+            <h1 className="fp-visual-title">Recupera tu acceso.</h1>
+            <p className="fp-visual-subtitle">Protegemos tu inversión y tu seguridad.</p>
           </div>
         </div>
 
-        <div className="form-side">
-          <div className="form-wrapper">
-            <header className="auth-header">
+        <div className="fp-form-side">
+          <div className="fp-form-wrapper">
+            <header className="fp-auth-header">
               <h2>{step === 1 ? '¿Olvidaste tu contraseña?' : 'Restablecer contraseña'}</h2>
-              {/* <p>
-                {step === 1 
-                  ? 'Ingresa tu correo para recibir un código de verificación.' 
-                  : 'Ingresa el código que enviamos a tu mail y tu nueva clave.'}
-              </p> */}
             </header>
 
-            {error && <div className="error-message" style={{color: 'red', fontWeight: 'bold', marginBottom: '10px'}}>{error}</div>}
+            {error && <div className="fp-error-message">{error}</div>}
             
             {success ? (
-              <div className="success-content">
-                <p style={{color: '#2D5B63', fontWeight: 'bold'}}>¡Contraseña actualizada con éxito!</p>
-                <Link to="/login" className="login-button" style={{textDecoration: 'none', display: 'block', textAlign: 'center'}}>
+              <div className="fp-success-content">
+                <p>¡Contraseña actualizada con éxito!</p>
+                <Link to="/login" className="fp-button">
                   Volver al Login
                 </Link>
               </div>
             ) : (
-              <form onSubmit={step === 1 ? handleSendCode : handleResetPassword} className="auth-form">
+              <form onSubmit={step === 1 ? handleSendCode : handleResetPassword} className="fp-auth-form">
                 
                 {step === 1 ? (
-                  <div className="input-group">
+                  <div className="fp-input-group">
                     <label htmlFor="email">Email</label>
-                    <div className="input-input-wrapper">
+                    <div className="fp-input-wrapper">
                       <input 
                         type="email" id="email" name="email"
                         placeholder="correo@ejemplo.com"
@@ -96,14 +91,14 @@ const ForgotPassword: React.FC = () => {
                         onChange={handleChange}
                         required 
                       />
-                      <span className="input-highlight"></span>
+                      <span className="fp-input-highlight"></span>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <div className="input-group">
+                    <div className="fp-input-group">
                       <label htmlFor="code">Código de Verificación</label>
-                      <div className="input-input-wrapper">
+                      <div className="fp-input-wrapper">
                         <input 
                           type="text" id="code" name="code"
                           placeholder="Ingresa el código"
@@ -111,13 +106,13 @@ const ForgotPassword: React.FC = () => {
                           onChange={handleChange}
                           required 
                         />
-                        <span className="input-highlight"></span>
+                        <span className="fp-input-highlight"></span>
                       </div>
                     </div>
 
-                    <div className="input-group">
+                    <div className="fp-input-group">
                       <label htmlFor="newPassword">Nueva Contraseña</label>
-                      <div className="input-input-wrapper">
+                      <div className="fp-input-wrapper">
                         <input 
                           type="password" id="newPassword" name="newPassword"
                           placeholder="••••••••••••"
@@ -125,13 +120,13 @@ const ForgotPassword: React.FC = () => {
                           onChange={handleChange}
                           required 
                         />
-                        <span className="input-highlight"></span>
+                        <span className="fp-input-highlight"></span>
                       </div>
                     </div>
 
-                    <div className="input-group">
+                    <div className="fp-input-group">
                       <label htmlFor="confirmPassword">Repetir Nueva Contraseña</label>
-                      <div className="input-input-wrapper">
+                      <div className="fp-input-wrapper">
                         <input 
                           type="password" id="confirmPassword" name="confirmPassword"
                           placeholder="••••••••••••"
@@ -139,21 +134,21 @@ const ForgotPassword: React.FC = () => {
                           onChange={handleChange}
                           required 
                         />
-                        <span className="input-highlight"></span>
+                        <span className="fp-input-highlight"></span>
                       </div>
                     </div>
                   </>
                 )}
 
-                <button type="submit" className="login-button">
+                <button type="submit" className="fp-button">
                   {step === 1 ? 'Enviar Código' : 'Restablecer Contraseña'}
-                  <span className="button-arrow">→</span>
+                  <span className="fp-button-arrow">→</span>
                 </button>
               </form>
             )}
 
-            <footer className="auth-footer">
-              <p>¿Recordaste tu contraseña? <Link to="/login" className="signup-link">Inicia sesión</Link></p>
+            <footer className="fp-auth-footer">
+              <p>¿Recordaste tu contraseña? <Link to="/login" className="fp-signup-link">Inicia sesión</Link></p>
             </footer>
           </div>
         </div>

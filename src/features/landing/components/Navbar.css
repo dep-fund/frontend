@@ -112,3 +112,26 @@
 .btn-cyan:hover {
   background: #f0f8f8;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+
+  .navbar-links {
+    display: none; /* Hide navigation links on smaller screens */
+  }
+
+  .navbar-actions {
+    gap: 8px;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+  /* You might want to add a hamburger menu icon here and toggle the navbar-links visibility with JavaScript */
+  /* For CSS-only, you could make the links stack or hide them entirely. */
+}

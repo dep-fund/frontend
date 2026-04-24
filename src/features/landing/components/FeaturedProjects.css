@@ -150,3 +150,30 @@
   padding: 8px 18px;
   font-size: 0.88rem;
 }
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for larger tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-section {
+    padding: 60px 20px;
+  }
+  .projects-grid {
+    grid-template-columns: 1fr; /* Single column for tablets */
+  }
+  .projects-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

@@ -38,3 +38,23 @@
   font-size: 0.85rem;
   color: var(--muted);
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stats {
+    padding: 32px 20px;
+  }
+  .stats-inner {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for tablets */
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-inner {
+    grid-template-columns: 1fr; /* Single column for mobile */
+  }
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}

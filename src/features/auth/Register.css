@@ -243,6 +243,13 @@
   }
 }
 
+@media (max-width: 480px) {
+  .register-form-side {
+    padding: 15px;
+  }
+  /* Further adjustments for smaller fonts or tighter spacing if needed */
+}
+
 /* =========================
    TOAST (FIX TOTAL)
 ========================= */

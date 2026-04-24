@@ -29,6 +29,35 @@
   gap: 12px;
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .how-section {
+    padding: 60px 20px;
+  }
+
+  .how-steps {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for tablets */
+  }
+}
+@media (max-width: 480px) {
+  .how-steps {
+    grid-template-columns: 1fr; /* Single column for mobile */
+  }
+  .how-title {
+    font-size: 1.6rem;
+    margin-bottom: 40px;
+  }
+  .how-step-number {
+    font-size: 1.8rem;
+  }
+  .how-step-title {
+    font-size: 1rem;
+  }
+  .how-step-desc {
+    font-size: 0.85rem;
+  }
+}
+
 .how-step-header {
   display: flex;
   align-items: center;

@@ -1,29 +1,38 @@
 import "./Hero.css";
-
 import { imagenROI } from "../../assets";
+import { GiSoccerBall, GiBasketballBall } from "react-icons/gi";
 
 export default function Hero() {
   return (
     <section className="hero">
-      <div className="hero-content">
-        <h1 className="hero-title">
-          Invertí en el futuro<br />del deporte
-        </h1>
+      <div className="hero-left">
 
-        <p className="hero-subtitle">
-          Invertí en proyectos deportivos reales o creá tu propio complejo
-          para recibir financiamiento. Generá ingresos a través de dividendos
-          y valorización de tokens.
-        </p>
-
-        <div className="hero-buttons">
-          <button className="btn-primary hero-btn-main">
-            Comenzar ahora →
-          </button>
-          <button className="btn-hero-secondary">
-            Ver proyectos
-          </button>
+        <div className="hero-ball-wrapper">
+          <GiSoccerBall className="hero-ball" />
         </div>
+
+        <div className="hero-content">
+          <h1 className="hero-title">
+            Invertí en el futuro del deporte
+          </h1>
+          <p className="hero-subtitle">
+            Invertí en proyectos deportivos reales o creá tu propio complejo
+            para recibir financiamiento. Generá ingresos a través de dividendos
+            y valorización de tokens.
+          </p>
+          <div className="hero-buttons">
+            <button className="btn-primary hero-btn-main">
+              Comenzar ahora →
+            </button>
+            <button className="btn-hero-secondary">
+              Ver proyectos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="hero-basket-wrapper">
+          <GiBasketballBall className="hero-basket" />
       </div>
 
       <div className="hero-image-wrapper">
@@ -34,7 +43,6 @@ export default function Hero() {
             className="hero-img"
           />
         </div>
-
         <div className="hero-roi-badge">
           <span className="hero-roi-arrow">↗</span>
           <div>

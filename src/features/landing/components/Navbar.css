@@ -1,15 +1,25 @@
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 14px 40px;
   border-bottom: 1px solid var(--border);
   background: var(--bg);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+
+  z-index: 1000;
 }
 
+body {
+  padding-top: 72px;
+}
+
+/* ── Brand ── */
 .navbar-brand {
   display: flex;
   align-items: center;
@@ -47,6 +57,7 @@
   color: #2C7176;
 }
 
+/* ── Links ── */
 .navbar-links {
   list-style: none;
   display: flex;
@@ -65,6 +76,7 @@
   color: var(--orange);
 }
 
+/* ── Actions ── */
 .navbar-actions {
   display: flex;
   gap: 10px;
@@ -113,14 +125,14 @@
   background: #f0f8f8;
 }
 
-/* Responsive adjustments */
+/* ── Responsive ── */
 @media (max-width: 768px) {
   .navbar {
     padding: 12px 20px;
   }
 
   .navbar-links {
-    display: none; /* Hide navigation links on smaller screens */
+    display: none;
   }
 
   .navbar-actions {
@@ -132,6 +144,8 @@
     padding: 8px 16px;
     font-size: 0.85rem;
   }
-  /* You might want to add a hamburger menu icon here and toggle the navbar-links visibility with JavaScript */
-  /* For CSS-only, you could make the links stack or hide them entirely. */
+
+  body {
+    padding-top: 64px;
+  }
 }

@@ -22,3 +22,16 @@
   color: var(--muted);
   line-height: 1.75;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .what-section {
+    padding: 60px 20px;
+  }
+  .what-inner {
+    max-width: 90%;
+  }
+  .what-title {
+    font-size: 1.6rem;
+  }
+}

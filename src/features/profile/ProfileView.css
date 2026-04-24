@@ -380,3 +380,10 @@
     max-width: 100%;
   }
 }
+
+@media (max-width: 480px) {
+  .form-side {
+    padding: 15px;
+  }
+  /* Further adjustments for smaller fonts or tighter spacing if needed */
+}

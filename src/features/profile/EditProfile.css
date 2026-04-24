@@ -262,3 +262,10 @@
     max-width: 100%;
   }
 }
+
+@media (max-width: 480px) {
+  .edit-profile-form-side {
+    padding: 15px;
+  }
+  /* Further adjustments for smaller fonts or tighter spacing if needed */
+}

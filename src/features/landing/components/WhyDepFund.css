@@ -33,6 +33,27 @@
   gap: 10px;
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .why-section {
+    padding: 60px 20px;
+  }
+
+  .why-grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .why-grid {
+    grid-template-columns: 1fr; /* Single column for mobile */
+  }
+  .why-title {
+    font-size: 1.6rem;
+    margin-bottom: 32px;
+  }
+}
+
 .why-icon {
   font-size: 1.5rem;
   color: var(--orange);

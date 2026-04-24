@@ -47,3 +47,24 @@
 .cta-btn:hover {
   background: rgba(255, 255, 255, 0.15);
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cta-section {
+    padding: 30px 20px 60px;
+  }
+  .cta-inner {
+    padding: 40px 24px;
+  }
+  .cta-title {
+    font-size: 1.8rem;
+  }
+  .cta-sub {
+    font-size: 0.9rem;
+    max-width: 90%;
+  }
+  .cta-btn {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+}

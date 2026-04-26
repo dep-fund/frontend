@@ -40,7 +40,7 @@ export const projects = [
 
 export default function FeaturedProjects() {
   return (
-    <section className="projects-section">
+    <section id="explorar" className="projects-section">
       <div className="projects-inner">
         <div className="projects-header">
           <h2 className="projects-title">Proyectos Destacados</h2>

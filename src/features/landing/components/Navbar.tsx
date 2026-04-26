@@ -2,7 +2,12 @@ import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { logo } from "../../assets";
 
-export default function Navbar() {
+interface NavbarProps {
+  onLoginClick: () => void;
+  onRegisterClick: () => void; // Nuevo prop
+}
+
+export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps) {
   const navigate = useNavigate();
 
   return (
@@ -16,13 +21,13 @@ export default function Navbar() {
         </span>
       </div>
       <ul className="navbar-links">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Explorar</a></li>
-        <li><a href="#">Cómo funciona</a></li>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#explorar">Explorar</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
       </ul>
       <div className="navbar-actions">
-        <button className="btn-outline btn-cyan" onClick={() => navigate("/login")}>Acceder</button>
-        <button className="btn-primary" onClick={() => navigate("/register")}>Comenzar</button>
+        <button className="btn-outline btn-cyan" onClick={onLoginClick}>Acceder</button>
+        <button className="btn-primary" onClick={onRegisterClick}>Comenzar</button>
       </div>
     </nav>
   );

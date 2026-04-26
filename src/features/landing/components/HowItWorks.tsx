@@ -25,7 +25,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="how-section">
+    <section id="como-funciona" className="how-section">
       <div className="how-inner">
         <h2 className="how-title">Cómo Funciona</h2>
         <div className="how-steps">

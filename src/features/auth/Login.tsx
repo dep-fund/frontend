@@ -3,10 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import { API_URL } from '../../constants';
+ 
+// No longer needed for the panel version
+// import logoDepFund from '../assets/img/logo_regency.jpg';
 
-import logoDepFund from '../assets/img/logo_regency.jpg';
+interface LoginPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onRegisterClick: () => void; // Nuevo prop para abrir el panel de registro
+  onForgotPasswordClick: () => void; // Nuevo prop para abrir el panel de olvidar contraseña
+}
 
-const Login: React.FC = () => {
+const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, onForgotPasswordClick }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,7 +39,8 @@ const Login: React.FC = () => {
         console.log('Login exitoso');
         
         navigate('/dashboard');
-      } else {
+        onClose(); // Cierra el panel al iniciar sesión exitosamente
+      } else { 
         setError('El servidor no devolvió un token de acceso.');
       }
 
@@ -43,43 +52,20 @@ const Login: React.FC = () => {
     }
   };
 
-  return (
-    <div className="login-page-container">
-      <div className="login-columns">
-        
-        <div className="visual-side">
-          <div className="dark-overlay"></div>
-          <div className="visual-content">
-            <img 
-              src={logoDepFund} 
-              alt="DepFund Logo" 
-              className="brand-logo-visual" 
-            />
-            <h1 className="visual-title">Invierte en el futuro del deporte.</h1>
-            <p className="visual-subtitle">
-              Únete a la mayor red de inversión deportiva.
-            </p>
-          </div>
-        </div>
+  if (!isOpen) return null; // Don't render the panel if it's not open
 
-        <div className="form-side">
-          <div className="form-wrapper">
+  return (
+    <div className={`login-panel-container ${isOpen ? 'open' : ''}`}>
+      <div className="login-backdrop" onClick={onClose}></div> {/* Click outside to close */}
+      <div className="login-panel">
+        <button className="login-close-button" onClick={onClose}>×</button> {/* Close button */}
             <header className="auth-header">
               <h2>Bienvenido de nuevo</h2>
               <p>Introduce tus credenciales para acceder a tu panel.</p>
             </header>
 
             {error && (
-              <div style={{ 
-                backgroundColor: '#fff5f5', 
-                color: '#c53030', 
-                padding: '12px', 
-                borderRadius: '8px', 
-                marginBottom: '20px',
-                fontSize: '0.85rem',
-                fontWeight: 'bold',
-                borderLeft: '4px solid #c53030'
-              }}>
+              <div className="error-message"> {/* Usar clase para el estilo del error */}
                 {error}
               </div>
             )}
@@ -113,7 +99,7 @@ const Login: React.FC = () => {
                   />
                   <span className="input-highlight"></span>
                 </div>
-                <Link to="/forgot-password" style={{fontSize: '0.85rem', color: 'var(--primary-orange)', textDecoration: 'none', marginTop: '5px', display: 'block'}}>
+                <Link to="#" onClick={() => { onClose(); onForgotPasswordClick(); }} className="forgot-link">
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -133,12 +119,11 @@ const Login: React.FC = () => {
             </form>
 
             <footer className="auth-footer">
-              <p>¿No tienes cuenta? <Link to="/register" className="signup-link">Crea una cuenta</Link></p>
+              <p>¿No tienes cuenta? <Link to="#" onClick={() => { onClose(); onRegisterClick(); }} className="signup-link">Crea una cuenta</Link></p>
             </footer>
-          </div>
         </div>
       </div>
-    </div>
+
   );
 };
 

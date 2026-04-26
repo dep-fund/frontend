@@ -7,102 +7,98 @@
   --glow-color: rgba(241, 146, 4, 0.4);
 }
 
-/* Reset básico para el componente */
-.login-page-container * {
+/* Reset básico para el panel */
+.login-panel-container * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
 }
 
-.login-page-container {
-  min-height: 100vh;
-  display: flex;
-  background-color: var(--white);
+/* Contenedor principal para el panel y el backdrop */
+.login-panel-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* Permite interactuar con el contenido de abajo por defecto */
+  z-index: 999; /* Asegura que esté por encima del contenido de la landing */
 }
 
-.login-columns {
-  display: flex;
-  width: 100%;
+.login-panel-container.open {
+  pointer-events: auto; /* Habilita la interacción cuando está abierto */
 }
 
-/* --- SECCIÓN VISUAL (IZQUIERDA) --- */
-.visual-side {
-  flex: 1.2;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px;
-  background-image: url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2000&auto=format&fit=crop');
-  background-size: cover;
-  background-position: center;
-}
-
-/* Overlay oscuro para legibilidad */
-.dark-overlay {
+/* Backdrop oscuro */
+.login-backdrop {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(13, 27, 42, 0.7) 100%);
-  z-index: 1;
-}
-
-.visual-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 480px;
-  color: var(--white);
-}
-
-.brand-logo-visual {
-  max-width: 160px; /* Ajusta el tamaño del logo circular */
-  height: auto;
-  border-radius: 50%; /* Mantiene la forma circular del logo */
-  margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 4px solid rgba(255, 255, 255, 0.1);
-}
-
-.visual-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -2px;
-  margin-bottom: 20px;
-  background: linear-gradient(180deg, #9b764e 0%, #aaa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.visual-subtitle {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  opacity: 0.8;
-  font-weight: 400;
-}
-
-/* --- SECCIÓN FORMULARIO (DERECHA) --- */
-.form-side {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  background-color: var(--white);
-}
-
-.form-wrapper {
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 420px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  backdrop-filter: blur(0px); /* Inicia sin desenfoque */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
+.login-panel-container.open .login-backdrop {
+  opacity: 1;
+  visibility: visible;
+  backdrop-filter: blur(5px); /* Aplica el desenfoque cuando está abierto */
+}
+
+/* Panel lateral de login */
+.login-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 100%; /* Por defecto, ocupa todo el ancho en móviles */
+  max-width: 450px; /* Ancho máximo en pantallas más grandes */
+  background-color: var(--white);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Por encima del backdrop */
+  transform: translateX(100%); /* Inicia fuera de la pantalla a la derecha */
+  transition: transform 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 25px; /* Ajuste de padding para el panel */
+  overflow-y: auto; /* Para permitir scroll si el contenido es largo */
+}
+
+.login-panel-container.open .login-panel {
+  transform: translateX(0); /* Se desliza hacia adentro */
+}
+
+/* Botón de cerrar para el panel */
+.login-close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  z-index: 1001;
+}
+
+.login-close-button:hover {
+  color: var(--primary-orange);
+}
+
+/* Los siguientes estilos se mantienen, pero se ajustan para el contexto del panel */
 .auth-header {
-  margin-bottom: 40px;
+  margin-bottom: 25px; /* Ajuste de margen */
+  text-align: center; /* Centrar el texto del encabezado en el panel */
 }
 
 .auth-header h2 {
-  font-size: 2rem;
+  font-size: 1.8rem; /* Tamaño de fuente ligeramente menor para el panel */
   font-weight: 800;
   color: var(--text-main);
   letter-spacing: -1px;
@@ -111,40 +107,46 @@
 
 .auth-header p {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.9rem; /* Tamaño de fuente ligeramente menor para el panel */
 }
 
-/* --- ESTILOS DE INPUT ANIMADOS (Glow Bar) --- */
-.input-group {
+.error-message {
+  background: #fff5f5;
+  color: #c53030;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border-left: 4px solid #c53030;
+  text-align: left;
+}
 
-  margin-bottom: 24px;
+/* INPUTS */
+.input-group {
+  margin-bottom: 18px; /* Ajuste de margen */
 }
 
 .input-group label {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* Tamaño de fuente ligeramente menor para el panel */
   font-weight: 600;
   color: var(--text-main);
-  margin-bottom: 8px;
-  text-align: left; /* Refuerza la alineación */
-}
-
-.label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-bottom: 6px; /* Ajuste de margen */
+  text-align: left;
 }
 
 .input-input-wrapper {
   position: relative;
 }
 
+
 .input-group input {
   width: 100%;
-  padding: 14px 16px;
+  padding: 12px 14px; /* Ajuste de padding */
   border: 1px solid #e4e7eb;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem; /* Tamaño de fuente ligeramente menor para el panel */
   background-color: #f9fafb;
   transition: all 0.2s ease;
   color: var(--text-main);
@@ -179,7 +181,7 @@
 .login-button {
   width: 100%;
   background: linear-gradient(180deg, var(--primary-orange) 0%, #d98303 100%);
-  color: var(--white);
+  color: white;
   padding: 16px;
   border: none;
   border-radius: 8px;
@@ -188,7 +190,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Centrar el contenido del botón */
   gap: 12px;
   transition: all 0.2s ease;
   margin-top: 10px;
@@ -211,13 +213,16 @@
   color: var(--primary-orange);
   text-decoration: none;
   font-weight: 700;
+  white-space: nowrap; /* Evita que el enlace se rompa en varias líneas */
 }
 
 .forgot-link {
   color: var(--primary-orange);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.8rem; /* Tamaño de fuente ligeramente menor para el panel */
   font-weight: 500;
+  display: block; /* Asegura que ocupe su propia línea si es necesario */
+  margin-top: 5px; /* Espacio superior */
 }
 
 .signup-link:hover, .forgot-link:hover {
@@ -226,8 +231,8 @@
 
 .auth-footer {
   text-align: center;
-  margin-top: 32px;
-  font-size: 0.95rem;
+  margin-top: 25px; /* Ajuste de margen */
+  font-size: 0.85rem; /* Tamaño de fuente ligeramente menor para el panel */
   color: var(--text-muted);
 }
 
@@ -238,12 +243,10 @@
   }
 }
 
-@media (max-width: 768px) {
-  .visual-side {
-    display: none; /* Esconde el panel visual en móviles */
-  }
-  
-  .form-side {
+@media (max-width: 768px) { /* Ajustes para el panel en pantallas más pequeñas */
+  .login-panel {
+    width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    max-width: 100%;
     padding: 20px;
   }
 }

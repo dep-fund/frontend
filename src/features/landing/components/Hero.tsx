@@ -4,7 +4,7 @@ import { GiSoccerBall, GiBasketballBall } from "react-icons/gi";
 
 export default function Hero() {
   return (
-    <section className="hero">
+    <section id="inicio" className="hero">
       <div className="hero-left">
 
         <div className="hero-ball-wrapper">

@@ -1,5 +1,6 @@
 .hero {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: space-between;
   padding: 64px 40px 48px;
@@ -61,6 +62,56 @@
   animation: basketSpin 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
 }
 
+/* ── Tennis Ball ── */
+/* ── Tennis Ball ── */
+.hero-tennis-wrapper {
+  position: absolute;
+  top: 40px;
+  left: 10%;
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+  /* Mantenemos la animación */
+  animation: tennisEntrance 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+  z-index: 10; /* Aseguramos que esté arriba */
+}
+
+.hero-tennis {
+  width: 100%;
+  height: 100%;
+  
+  /* AJUSTE 1: Color verde más fuerte y vibrante */
+  fill: #228B22; /* Un verde bosque más oscuro */
+  
+  /* Mantenemos las líneas */
+  stroke: #ffffff;
+  stroke-width: 8px;
+  paint-order: stroke;
+
+  /* Mantenemos la animación */
+  animation: tennisSpin 20s linear infinite;
+}
+
+/* ── Dumbbell ── */
+.hero-dumbbell-wrapper {
+  position: absolute;
+  bottom: 40px;
+  right: 10%;
+  width: 70px;
+  height: 70px;
+  opacity: 0;
+  animation: dumbbellEntrance 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+}
+
+.hero-dumbbell {
+  width: 100%;
+  height: 100%;
+  fill: #4b5563; /* Dumbbell color */
+  filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.15));
+  transform: rotate(-45deg);
+  animation: dumbbellWobble 5s ease-in-out infinite 2s;
+}
+
 /* ── Animations ── */
 @keyframes ballEntrance {
   0%   { transform: translateX(-300px) scale(0.2); opacity: 0; }
@@ -83,6 +134,28 @@
 @keyframes basketSpin {
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes tennisEntrance {
+  0% { transform: translateY(-100px) scale(0.2); opacity: 0; }
+  60% { opacity: 0.6; }
+  100% { transform: translateY(0) scale(1); opacity: 0.8; }
+}
+
+@keyframes tennisSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dumbbellEntrance {
+  0% { transform: translateY(100px) scale(0.2); opacity: 0; }
+  60% { opacity: 0.6; }
+  100% { transform: translateY(0) scale(1); opacity: 0.8; }
+}
+
+@keyframes dumbbellWobble {
+  0%, 100% { transform: rotate(-45deg); }
+  50% { transform: rotate(-35deg) scale(1.05); }
 }
 
 /* ── Text ── */
@@ -230,6 +303,18 @@
     left: 50%;
     transform: translateX(-50%);
   }
+
+  .hero-tennis-wrapper {
+    top: 20px;
+    left: 5%;
+    width: 40px;
+  }
+
+  .hero-dumbbell-wrapper {
+    bottom: 20px;
+    right: 5%;
+    width: 60px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -237,6 +322,26 @@
   .hero-title { font-size: 2.4rem; }
   .hero-ball-wrapper { width: 110px; height: 110px; }
   .hero-basket-wrapper { width: 85px; height: 85px; }
+
+  .hero-tennis-wrapper {
+    display: block;
+    top: 60px; /* La bajamos un poquito más del borde superior */
+    left: 4%;  /* La separamos un poquito del borde izquierdo */
+    width: 45px;
+    z-index: 10;
+  }
+
+  .hero-dumbbell-wrapper {
+    display: block;
+    /* Tu posición personalizada: */
+    bottom: 350px;
+    left: 8%;
+    right: auto;
+    width: 60px;
+    height: 60px;
+    z-index: 10;
+    /* No se necesita 'opacity' aquí para que la animación funcione */
+  }
 }
 
 @media (max-width: 480px) {
@@ -268,4 +373,3 @@
   .hero-ball-wrapper { width: 90px; height: 90px; }
   .hero-basket-wrapper { width: 70px; height: 70px; }
 }
-

@@ -1,10 +1,22 @@
 import "./Hero.css";
 import { imagenROI } from "../../assets";
-import { GiSoccerBall, GiBasketballBall } from "react-icons/gi";
+import {
+  GiSoccerBall,
+  GiBasketballBall,
+  GiTennisBall,
+} from "react-icons/gi";
+import { FaDumbbell } from "react-icons/fa";
 
 export default function Hero() {
   return (
     <section id="inicio" className="hero">
+      <div className="hero-tennis-wrapper">
+        <GiTennisBall className="hero-tennis" />
+      </div>
+      <div className="hero-dumbbell-wrapper">
+        <FaDumbbell className="hero-dumbbell" />
+      </div>
+
       <div className="hero-left">
 
         <div className="hero-ball-wrapper">

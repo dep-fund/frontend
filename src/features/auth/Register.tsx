@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Register.css';
-import logoDepFund from '../assets/img/logo_regency.jpg';
 import { API_URL } from '../../constants';
  
-// No longer needed for the panel version
-// import logoDepFund from '../assets/img/logo_regency.jpg';
-
 interface RegisterPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginClick: () => void; // Para permitir navegar de vuelta al login
+  onLoginClick: () => void; 
 }
 
 export default function Register({ isOpen, onClose, onLoginClick }: RegisterPanelProps) {
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -98,8 +93,8 @@ export default function Register({ isOpen, onClose, onLoginClick }: RegisterPane
 
       setTimeout(() => {
         setToast(null);
-        onClose(); // Cierra el panel de registro
-        onLoginClick(); // Abre el panel de login
+        onClose();
+        onLoginClick();
       }, 2000);
 
 } 

@@ -3,15 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import { API_URL } from '../../constants';
- 
-// No longer needed for the panel version
-// import logoDepFund from '../assets/img/logo_regency.jpg';
+
 
 interface LoginPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegisterClick: () => void; // Nuevo prop para abrir el panel de registro
-  onForgotPasswordClick: () => void; // Nuevo prop para abrir el panel de olvidar contraseña
+  onRegisterClick: () => void;
+  onForgotPasswordClick: () => void;
 }
 
 const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, onForgotPasswordClick }) => {
@@ -39,7 +37,7 @@ const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, on
         console.log('Login exitoso');
         
         navigate('/dashboard');
-        onClose(); // Cierra el panel al iniciar sesión exitosamente
+        onClose();
       } else { 
         setError('El servidor no devolvió un token de acceso.');
       }
@@ -52,7 +50,7 @@ const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, on
     }
   };
 
-  if (!isOpen) return null; // Don't render the panel if it's not open
+  if (!isOpen) return null;
 
   return (
     <div className={`login-panel-container ${isOpen ? 'open' : ''}`}>
@@ -65,7 +63,7 @@ const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, on
             </header>
 
             {error && (
-              <div className="error-message"> {/* Usar clase para el estilo del error */}
+              <div className="error-message">
                 {error}
               </div>
             )}

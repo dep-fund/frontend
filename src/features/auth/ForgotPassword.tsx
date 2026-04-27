@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './ForgotPassword.css';
 import { API_URL } from '../../constants';
@@ -7,7 +7,7 @@ import { API_URL } from '../../constants';
 interface ForgotPasswordPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginClick: () => void; // Para permitir navegar de vuelta al login
+  onLoginClick: () => void;
 }
 
 export default function ForgotPassword({ isOpen, onClose, onLoginClick }: ForgotPasswordPanelProps) {
@@ -15,7 +15,6 @@ export default function ForgotPassword({ isOpen, onClose, onLoginClick }: Forgot
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,13 +22,9 @@ export default function ForgotPassword({ isOpen, onClose, onLoginClick }: Forgot
     setLoading(true);
 
     try {
-      // This is a placeholder for the actual API call
       await axios.post(`${API_URL}/auth/forgot-password`, { email });
       setSuccessMessage('Si tu email está registrado, recibirás un enlace para restablecer tu contraseña.');
     } catch (err: any) {
-      // For security, don't reveal if the email exists or not.
-      // setError('Ocurrió un error. Por favor, intenta de nuevo.');
-      // For development, it's okay to show the real error.
       const serverMessage = err.response?.data?.detail || 'Error al procesar la solicitud.';
       setError(serverMessage);
     } finally {
@@ -37,7 +32,7 @@ export default function ForgotPassword({ isOpen, onClose, onLoginClick }: Forgot
     }
   };
 
-  if (!isOpen) return null; // No renderizar el panel si no está abierto
+  if (!isOpen) return null;
 
   return (
     <div className={`fp-panel-container ${isOpen ? 'open' : ''}`}>

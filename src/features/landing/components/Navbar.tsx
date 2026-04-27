@@ -1,15 +1,12 @@
 import "./Navbar.css";
-import { useNavigate } from "react-router-dom";
 import { logo } from "../../assets";
 
 interface NavbarProps {
   onLoginClick: () => void;
-  onRegisterClick: () => void; // Nuevo prop
+  onRegisterClick: () => void; 
 }
 
 export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps) {
-  const navigate = useNavigate();
-
   return (
     <nav className="navbar">
       <div className="navbar-brand">

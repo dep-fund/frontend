@@ -8,6 +8,8 @@ import ProfileView from "./features/profile/ProfileView";
 import Dashboard from "./features/dashboard/Dashboard";
 import LandingPage from "./features/landing/LandingPage";
 
+import ResetPassword from "./features/auth/ResetPassword";
+
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [showForgot, setShowForgot] = useState(false);
@@ -57,6 +59,17 @@ const ForgotPasswordPage: React.FC = () => {
   );
 };
 
+const ResetPasswordPage: React.FC = () => {
+  const navigate = useNavigate();
+  return (
+    <ResetPassword
+      isOpen={true}
+      onClose={() => navigate('/')}
+      onLoginClick={() => navigate('/login')}
+    />
+  );
+};
+
 const App: React.FC = () => {
   return (
     <Routes>
@@ -65,6 +78,7 @@ const App: React.FC = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/edit-profile" element={<EditProfile />} />
       <Route path="/ProfileView" element={<ProfileView />} />
       <Route path="/dashboard" element={<Dashboard />} />

@@ -1,16 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --primary-orange: #f19204;
+  --dark-navy: #0d1b2a;
+  --text-main: #1a1a1a;
+  --text-muted: #2C7176;
+  --white: #ffffff;
+  --glow-color: rgba(241, 146, 4, 0.4);
+}
+
 .dashboard-container {
   min-height: 100vh;
   background-color: #f9fafb;
+  font-family: 'Inter', sans-serif;
 }
 
 /* --- HEADER --- */
 .dashboard-header {
-  height: 80px;
-  background-color: var(--white);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 80px;
   padding: 0 5%;
+  background-color: var(--white);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
@@ -25,8 +37,8 @@
 }
 
 .header-logo {
-  height: 45px;
   width: 45px;
+  height: 45px;
   border-radius: 50%;
   border: 2px solid var(--primary-orange);
 }
@@ -39,7 +51,7 @@
 }
 
 .header-title span {
-  color: var(--dark-navy);
+  color: var(--text-muted);
 }
 
 /* --- NAVEGACIÓN --- */
@@ -50,13 +62,13 @@
 }
 
 .nav-item {
-  text-decoration: none;
-  color: var(--text-main);
-  font-weight: 600;
-  font-size: 1rem;
   display: flex;
   align-items: center;
   gap: 8px;
+  text-decoration: none;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 1rem;  
   transition: color 0.2s;
 }
 
@@ -65,10 +77,10 @@
 }
 
 .logout-button {
+  padding: 8px 16px;
   background-color: #f3f4f6;
   color: var(--text-muted);
   border: none;
-  padding: 8px 16px;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
@@ -82,9 +94,9 @@
 
 /* --- CONTENIDO --- */
 .dashboard-content {
-  padding: 40px 5%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 40px 5%;
 }
 
 .welcome-banner {
@@ -93,8 +105,8 @@
 
 .welcome-text h1 {
   font-size: 2.5rem;
-  color: var(--dark-navy);
   margin-bottom: 10px;
+  color: var(--dark-navy);
 }
 
 .welcome-text p {
@@ -111,11 +123,11 @@
 }
 
 .action-card {
-  background-color: var(--white);
   padding: 24px;
+  background-color: var(--white);
   border-radius: 12px;
-  text-decoration: none;
   border: 1px solid #e4e7eb;
+  text-decoration: none;  
   transition: all 0.3s ease;
 }
 
@@ -125,8 +137,8 @@
 }
 
 .action-card p {
-  color: var(--text-muted);
   font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
 .action-card:hover {

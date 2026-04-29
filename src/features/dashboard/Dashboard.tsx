@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
             <span className="nav-icon"></span>
             Mi Perfil
           </Link>
-          <button className="logout-button" onClick={() => navigate('/login')}>
+          <button className="logout-button" onClick={() => navigate('/')}>
             Cerrar Sesión
           </button>
         </nav>

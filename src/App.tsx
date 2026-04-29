@@ -7,6 +7,7 @@ import EditProfile from "./features/profile/EditProfile";
 import ProfileView from "./features/profile/ProfileView";
 import Dashboard from "./features/dashboard/Dashboard";
 import LandingPage from "./features/landing/LandingPage";
+import GoogleCallback from './features/oauth/Googlecallback';
 
 import ResetPassword from "./features/auth/ResetPassword";
 
@@ -82,6 +83,7 @@ const App: React.FC = () => {
       <Route path="/edit-profile" element={<EditProfile />} />
       <Route path="/ProfileView" element={<ProfileView />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/auth/callback" element={<GoogleCallback />} />
     </Routes>
   );
 };

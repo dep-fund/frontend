@@ -48,3 +48,7 @@
   overflow-x: hidden;
   color-scheme: light;
 }
+
+body {
+  background-color: var(--bg); /* Asegura que el fondo del body sea blanco */
+}

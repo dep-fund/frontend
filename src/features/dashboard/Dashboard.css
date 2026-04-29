@@ -146,3 +146,64 @@
   border-color: var(--primary-orange);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
+
+/* --- RESPONSIVIDAD --- */
+@media (max-width: 768px) {
+  .dashboard-header {
+    height: 70px; /* Ligeramente más pequeño en móviles */
+    padding: 0 4%; /* Ajuste de padding horizontal */
+  }
+
+  .header-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .header-title {
+    font-size: 1.3rem;
+  }
+
+  .header-nav {
+    gap: 20px; /* Reduce el espacio entre elementos de navegación */
+  }
+
+  .nav-item {
+    font-size: 0.9rem;
+  }
+
+  .logout-button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .dashboard-content {
+    padding: 30px 4%; /* Ajusta el padding del contenido principal */
+  }
+
+  .welcome-text h1 {
+    font-size: 2rem; /* Reduce el tamaño del título de bienvenida */
+  }
+
+  .welcome-text p {
+    font-size: 1rem; /* Reduce el tamaño del subtítulo de bienvenida */
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: 0 3%;
+  }
+
+  .header-nav {
+    gap: 15px; /* Más reducción de espacio */
+  }
+
+  .dashboard-content {
+    padding: 20px 3%;
+  }
+
+  .welcome-text h1 {
+    font-size: 1.8rem;
+  }
+}

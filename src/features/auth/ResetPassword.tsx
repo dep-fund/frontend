@@ -3,17 +3,11 @@ import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import './ResetPassword.css';
 import { API_URL } from '../../constants';
-import { complejogym } from '../assets';
 
-interface ResetPasswordPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onLoginClick: () => void;
-}
-
-export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPasswordPanelProps) {
+export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  //const navigate = useNavigate();
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -38,7 +32,10 @@ export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPa
     setLoading(true);
 
     try {
-      await axios.post(`${API_URL}/auth/reset-password`, { token, new_password: newPassword });
+      await axios.post(`${API_URL}/auth/reset-password/`, {
+        token,
+        new_password: newPassword
+      });
       setSuccessMessage('Tu contraseña ha sido restablecida exitosamente.');
     } catch (err: any) {
       const serverMessage = err.response?.data?.detail || 'Error al procesar la solicitud.';
@@ -48,25 +45,12 @@ export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPa
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className={`rp-panel-container ${isOpen ? 'open' : ''}`}>
-      <div 
-        className="rp-backdrop" 
-        onClick={onClose}
-        style={{ 
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${complejogym})`, 
-          backgroundSize: 'cover', 
-          backgroundPosition: 'center' 
-        }}
-      ></div> {/* Click outside to close */}
-      <div className="rp-panel">
-        <button className="rp-close-button" onClick={onClose}>×</button> {/* Close button */}
-
+    <div className="rp-page-container">
+      <div className="rp-card">
         <header className="rp-auth-header">
           <h2>Restablecer Contraseña</h2>
-          <p>Ingresa tu nueva contraseña a continuación.</p>
+          <p>Ingresa tu nueva contraseña a continuación para asegurar tu cuenta.</p>
         </header>
 
         {error && (
@@ -75,10 +59,16 @@ export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPa
           </div>
         )}
 
+        {!token && !successMessage && (
+          <div className="rp-error-message">
+            El enlace de recuperación es inválido o ha expirado. Por favor, solicita uno nuevo.
+          </div>
+        )}
+
         {successMessage ? (
           <div className="rp-success-content">
             <p>{successMessage}</p>
-            <Link to="#" onClick={() => { onClose(); onLoginClick(); }} className="rp-signup-link">Ir a Iniciar Sesión</Link>
+            <Link to="/login" className="rp-signup-link">Ir a Iniciar Sesión</Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -92,6 +82,7 @@ export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPa
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
+                  disabled={!token}
                 />
                 <span className="rp-input-highlight"></span>
               </div>
@@ -107,6 +98,7 @@ export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPa
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
+                  disabled={!token}
                 />
                 <span className="rp-input-highlight"></span>
               </div>
@@ -115,11 +107,11 @@ export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPa
             <button
               type="submit"
               className="rp-button"
-              disabled={loading}
+              disabled={loading || !token}
             >
               {loading ? 'Guardando...' : (
                 <>
-                  Restablecer
+                  Restablecer Contraseña
                   <span className="rp-button-arrow">→</span>
                 </>
               )}
@@ -128,7 +120,7 @@ export default function ResetPassword({ isOpen, onClose, onLoginClick }: ResetPa
         )}
 
         <footer className="rp-auth-footer">
-          <p>¿Recordaste tu contraseña? <Link to="#" onClick={() => { onClose(); onLoginClick(); }} className="rp-signup-link">Inicia sesión</Link></p>
+          <p>¿Recordaste tu contraseña? <Link to="/login" className="rp-signup-link">Inicia sesión</Link></p>
         </footer>
       </div>
     </div>

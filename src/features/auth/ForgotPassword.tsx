@@ -4,17 +4,12 @@ import axios from 'axios';
 import './ForgotPassword.css';
 import { API_URL } from '../../constants';
 
-interface ForgotPasswordPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onLoginClick: () => void;
-}
-
-export default function ForgotPassword({ isOpen, onClose, onLoginClick }: ForgotPasswordPanelProps) {
+export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  //const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,13 +27,9 @@ export default function ForgotPassword({ isOpen, onClose, onLoginClick }: Forgot
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className={`fp-panel-container ${isOpen ? 'open' : ''}`}>
-      <div className="fp-backdrop" onClick={onClose}></div> {/* Click outside to close */}
-      <div className="fp-panel">
-        <button className="fp-close-button" onClick={onClose}>×</button> {/* Close button */}
+    <div className="fp-page-container">
+      <div className="fp-card">
         <header className="fp-auth-header">
           <h2>Recuperar Contraseña</h2>
           <p>Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.</p>
@@ -53,7 +44,7 @@ export default function ForgotPassword({ isOpen, onClose, onLoginClick }: Forgot
         {successMessage ? (
           <div className="fp-success-content">
             <p>{successMessage}</p>
-            <Link to="#" onClick={() => { onClose(); onLoginClick(); }} className="fp-signup-link">Volver al inicio de sesión</Link>
+            <Link to="/login" className="fp-signup-link">Volver al inicio de sesión</Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -88,7 +79,7 @@ export default function ForgotPassword({ isOpen, onClose, onLoginClick }: Forgot
         )}
 
         <footer className="fp-auth-footer">
-          <p>¿Recordaste tu contraseña? <Link to="#" onClick={() => { onClose(); onLoginClick(); }} className="fp-signup-link">Inicia sesión</Link></p>
+          <p>¿Recordaste tu contraseña? <Link to="/login" className="fp-signup-link">Inicia sesión</Link></p>
         </footer>
       </div>
     </div>

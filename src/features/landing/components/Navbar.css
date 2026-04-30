@@ -16,7 +16,6 @@
 }
 
 body {
-  padding-top: 72px;
   scroll-behavior: smooth;
 }
 
@@ -146,7 +145,5 @@ body {
     font-size: 0.85rem;
   }
 
-  body {
-    padding-top: 64px;
-  }
+
 }

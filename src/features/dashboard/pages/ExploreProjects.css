@@ -1,0 +1,156 @@
+.explore-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.explore-filters {
+  width: 220px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+  position: sticky;
+  top: 80px;
+}
+
+.explore-filters-title {
+  font-family: "Sora", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 16px;
+}
+
+.explore-filter-group {
+  margin-bottom: 20px;
+}
+
+.explore-filter-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  font-family: "DM Sans", sans-serif;
+}
+
+.explore-search {
+  position: relative;
+}
+
+.explore-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.explore-search input {
+  width: 100%;
+  padding: 8px 10px 8px 30px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.85rem;
+  color: #1a1a1a;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.explore-search input:focus {
+  border-color: #EC8F41;
+}
+
+.explore-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.explore-cat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.85rem;
+  color: #6b7280;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.explore-cat::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d1d5db;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.explore-cat:hover {
+  background: #f9fafb;
+  color: #374151;
+}
+
+.explore-cat--active {
+  color: #EC8F41;
+  font-weight: 600;
+}
+
+.explore-cat--active::before {
+  background: #EC8F41;
+}
+
+.explore-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.explore-count {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0 0 16px;
+  font-family: "DM Sans", sans-serif;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.explore-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #9ca3af;
+  padding: 48px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1200px) {
+  .explore-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .explore-layout {
+    flex-direction: column;
+  }
+  .explore-filters {
+    width: 100%;
+    position: static;
+  }
+  .explore-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

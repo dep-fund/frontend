@@ -4,7 +4,6 @@ import Login from "./features/auth/Login";
 import Register from "./features/auth/Register";
 import ForgotPassword from "./features/auth/ForgotPassword";
 import EditProfile from "./features/profile/EditProfile";
-import ProfileView from "./features/profile/ProfileView";
 import Dashboard from "./features/dashboard/Dashboard";
 import LandingPage from "./features/landing/LandingPage";
 import GoogleCallback from './features/oauth/Googlecallback';
@@ -52,8 +51,7 @@ const App: React.FC = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/edit-profile" element={<EditProfile />} />
-      <Route path="/ProfileView" element={<ProfileView />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard/*" element={<Dashboard />} />
       <Route path="/auth/callback" element={<GoogleCallback />} />
     </Routes>
   );

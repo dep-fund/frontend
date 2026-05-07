@@ -24,10 +24,10 @@
 }
 
 .sidebar-logo {
-  width: 36px;
-  height: 36px;
+  width: 18px;
+  height: 18px;
   border-radius: 8px;
-  object-fit: contain;
+  object-fit: cover;
   flex-shrink: 0;
 }
 
@@ -73,18 +73,18 @@
 }
 
 .sidebar-item:hover {
-  background: #fff7ed;
-  color: #EC8F41;
+  background: #f0f8f8;
+  color: #2C7176;
 }
 
 .sidebar-item--active {
-  background: #fff7ed;
-  color: #EC8F41;
+  background: #f0f8f8;
+  color: #2C7176;
   font-weight: 600;
 }
 
 .sidebar-item--active svg {
-  color: #EC8F41;
+  color: #2C7176;
 }
 
 .sidebar-logout {

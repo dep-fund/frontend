@@ -95,8 +95,8 @@
 }
 
 .menu-item:hover, .menu-item.active {
-  background: #fff7ed;
-  color: var(--orange-depfund);
+  background: #f0f8f8;
+  color: var(--cyan-depfund);
 }
 
 .sidebar-footer { padding: 16px; border-top: 1px solid #f1f5f9; }

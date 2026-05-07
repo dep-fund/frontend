@@ -1,7 +1,7 @@
 import "./Sidebar.css";
 import { LayoutDashboard, FolderOpen, Compass, User, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import logoDepFund from "../../assets/img/logo_regency.jpg";
+import logoDepFund from "/src/features/assets/img/logo_regency.jpg";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },

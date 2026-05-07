@@ -74,3 +74,25 @@
 .topbar-user:hover {
   background: #f9fafb;
 }
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .topbar {
+    padding: 0 24px;
+    width: 100%;
+    position: fixed; /* Se mantiene arriba al hacer scroll en móviles */
+    left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    padding: 0 16px;
+  }
+  .topbar-title {
+    font-size: 1.1rem;
+  }
+  .topbar-user-info {
+    display: none;
+  }
+}

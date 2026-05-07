@@ -1,6 +1,5 @@
 .sidebar {
   width: 200px;
-  min-height: 100vh;
   background: #ffffff;
   border-right: 1px solid #e5e7eb;
   display: flex;
@@ -8,8 +7,10 @@
   padding: 24px 0;
   position: fixed;
   top: 0;
+  bottom: 0;
   left: 0;
   z-index: 50;
+  overflow-y: auto;
 }
 
 .sidebar-brand {
@@ -23,10 +24,10 @@
 }
 
 .sidebar-logo {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 8px;
-  object-fit: cover;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -104,4 +105,19 @@
 
 .sidebar-logout:hover {
   color: #ef4444;
+}
+
+/* Responsive Sidebar */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    width: 260px;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Esta clase muestra el menú en móvil cuando se activa un botón hamburguesa */
+  .sidebar.open {
+    transform: translateX(0);
+  }
 }

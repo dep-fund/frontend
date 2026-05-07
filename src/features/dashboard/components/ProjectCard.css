@@ -173,3 +173,26 @@
 .btn-edit:hover {
   background: #d97f35;
 }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .project-card-stats { gap: 16px; }
+}
+
+@media (max-width: 480px) {
+  .project-card-header {
+    padding: 12px;
+    height: auto;
+    min-height: 90px;
+  }
+  .project-card-stats {
+    justify-content: space-between;
+  }
+  .project-card-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-detail, .btn-edit {
+    padding: 10px; /* Mejor área para tocar con el pulgar */
+  }
+}

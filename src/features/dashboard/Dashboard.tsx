@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -18,10 +18,12 @@ import ExploreProjects from "./pages/ExploreProjects";
 import Profile from "./pages/Profile";
 import "./Dashboard.css";
 import "./ResponsiveDashboard.css";
+import logoDepFund from "../assets/img/logo_regency.jpg";
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
@@ -34,6 +36,11 @@ export default function Dashboard() {
     { path: "/dashboard/profile", label: "Mi Perfil", icon: User },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <div className="dashboard-container">
       {/* Header para móviles */}
@@ -42,7 +49,7 @@ export default function Dashboard() {
           {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
         <div className="mobile-brand">
-          <img src="/src/features/assets/img/logo_regency.jpg" alt="DepFund Logo" className="brand-logo" />
+          <img src={logoDepFund} alt="DepFund Logo" className="brand-logo" />
           <span className="brand-text">
             <span className="brand-dep">Dep</span><span className="brand-fund">Fund</span>
           </span>
@@ -55,7 +62,7 @@ export default function Dashboard() {
       {/* Sidebar Principal */}
       <aside className={`dashboard-sidebar ${isSidebarOpen ? "show" : ""}`}>
         <div className="sidebar-brand">
-          <img src="/src/features/assets/img/logo_regency.jpg" alt="DepFund Logo" className="brand-logo" />
+          <img src={logoDepFund} alt="DepFund Logo" className="brand-logo" />
           <span className="brand-text">
             <span className="brand-dep">Dep</span><span className="brand-fund">Fund</span>
           </span>
@@ -81,7 +88,7 @@ export default function Dashboard() {
         </nav>
 
         <div className="sidebar-footer">
-          <button className="menu-item logout-btn" onClick={() => { /* Lógica de logout */ }}>
+          <button className="menu-item logout-btn" onClick={handleLogout}>
             <LogOut size={20} />
             <span>Cerrar Sesión</span>
           </button>

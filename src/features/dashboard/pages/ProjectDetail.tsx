@@ -6,7 +6,9 @@ import DashboardLayout from "../components/DashboardLayout";
 import ProjectForm from "../components/ProjectForm";
 import { useUser } from "../hooks/useUser";
 import { fetchProject } from "../services/api";
+
 import type { Project } from "../types";
+import ProjectAdvances from "./ProjectAdvances";
 
 const STATE_LABELS: Record<string, { label: string; className: string }> = {
   APPROVED: { label: "Activo", className: "pd-badge--active" },
@@ -23,7 +25,7 @@ export default function ProjectDetail() {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
-
+  
   const load = async () => {
     if (!id) return;
     try {
@@ -52,6 +54,7 @@ export default function ProjectDetail() {
   const progress = getProgress(project.id);
   const raised = Math.round(parseFloat(project.total_amount) * progress / 100);
   const investors = Math.floor(progress * 2.5);
+  const isOwner = user?.id === project.user_id;
 
   return (
     <DashboardLayout title="Detalle del Proyecto" user={user}>
@@ -131,6 +134,10 @@ export default function ProjectDetail() {
             </div>
           </div>
         </div>
+        <ProjectAdvances
+          projectId={project.id}
+          isOwner={isOwner}
+        />
       </div>
 
       {editing && (

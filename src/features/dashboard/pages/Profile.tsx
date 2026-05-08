@@ -3,7 +3,7 @@ import "./Profile.css";
 import { Lock, Trash2 } from "lucide-react";
 import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
-import { updateMe, changePassword, deleteMe } from "../services/api";
+import { updateMe, updateAvatar, changePassword, deleteMe } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 const parseApiError = (err: any): string => {
@@ -56,6 +56,18 @@ export default function Profile() {
     }
   };
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSaveError("");
+    try {
+      const updated = await updateAvatar(file);
+      setUser(updated);
+    } catch (err: any) {
+      setSaveError(parseApiError(err));
+    }
+  };
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPasswordMsg("");
@@ -82,7 +94,7 @@ export default function Profile() {
       localStorage.removeItem("token");
       navigate("/");
     } catch (err: any) {
-      setPasswordError(parseApiError(err));
+      setSaveError(parseApiError(err));
     }
   };
 
@@ -95,14 +107,25 @@ export default function Profile() {
 
             <div className="profile-avatar-row">
               <div className="profile-avatar">
-                {user ? `${user.name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase() : "?"}
+                {user?.image
+                  ? <img src={user.image} alt="avatar" className="profile-avatar-img" />
+                  : `${user?.name.charAt(0)}${user?.last_name.charAt(0)}`.toUpperCase()
+                }
               </div>
               <div>
                 <div className="profile-avatar-name">
                   {user ? `${user.name} ${user.last_name}` : ""}
                 </div>
                 <div className="profile-avatar-email">{user?.email}</div>
-                <button className="profile-change-photo">Cambiar foto de perfil</button>
+                <label className="profile-change-photo">
+                  Cambiar foto de perfil
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handleAvatarChange}
+                    style={{ display: "none" }}
+                  />
+                </label>
               </div>
             </div>
 

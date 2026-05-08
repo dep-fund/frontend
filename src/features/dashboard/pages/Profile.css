@@ -289,3 +289,10 @@
     width: 100%;
   }
 }
+
+.profile-avatar-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}

@@ -71,7 +71,6 @@ export const updateMe = async (data: {
   name?: string;
   last_name?: string;
   email?: string;
-  image?: string;
 }): Promise<User> => {
   const res = await axios.patch(`${API_URL}/users/me`, data, { headers: authHeader() });
   return res.data;
@@ -86,4 +85,42 @@ export const changePassword = async (data: {
 
 export const deleteMe = async (): Promise<void> => {
   await axios.delete(`${API_URL}/users/me`, { headers: authHeader() });
+};
+
+export const updateAvatar = async (file: File): Promise<User> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await axios.patch(`${API_URL}/users/me/avatar`, formData, {
+    headers: {
+      ...authHeader(),
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+export type ProjectAdvance = {
+  project_id: string;
+  number: number;
+  description: string;
+  url?: string | null;
+};
+
+export const listAdvances = async (projectId: string): Promise<ProjectAdvance[]> => {
+  const res = await axios.get(`${API_URL}/projects/${projectId}/advances`, { headers: authHeader() });
+  return res.data;
+};
+
+export const addAdvance = async (projectId: string, file: File, description: string): Promise<ProjectAdvance> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("description", description);
+  const res = await axios.post(`${API_URL}/projects/${projectId}/advances`, formData, {
+    headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const deleteAdvance = async (projectId: string, number: number): Promise<void> => {
+  await axios.delete(`${API_URL}/projects/${projectId}/advances/${number}`, { headers: authHeader() });
 };

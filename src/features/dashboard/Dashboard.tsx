@@ -5,7 +5,8 @@ import {
   Briefcase, 
   PlusCircle, 
   Search, 
-  User, 
+  User,
+  ShoppingBag,
   Menu, 
   X, 
   LogOut 
@@ -15,6 +16,7 @@ import MyProjects from "./pages/MyProjects";
 import CreateProject from "./pages/CreateProject";
 import ProjectDetail from "./pages/ProjectDetail";
 import ExploreProjects from "./pages/ExploreProjects";
+import Marketplace from "./components/Marketplace";
 import Profile from "./pages/Profile";
 import "./Dashboard.css";
 import "./ResponsiveDashboard.css";
@@ -33,6 +35,7 @@ export default function Dashboard() {
     { path: "/dashboard/explore", label: "Explorar", icon: Search },
     { path: "/dashboard/projects", label: "Mis Proyectos", icon: Briefcase },
     { path: "/dashboard/projects/new", label: "Crear Proyecto", icon: PlusCircle },
+    { path: "/dashboard/marketplace", label: "Marketplace", icon: ShoppingBag },
     { path: "/dashboard/profile", label: "Mi Perfil", icon: User },
   ];
 
@@ -103,6 +106,7 @@ export default function Dashboard() {
           <Route path="projects/new" element={<CreateProject />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="explore" element={<ExploreProjects />} />
+          <Route path="marketplace" element={<Marketplace />} />
           <Route path="profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

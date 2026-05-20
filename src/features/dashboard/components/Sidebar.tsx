@@ -1,13 +1,15 @@
 import "./Sidebar.css";
-import { LayoutDashboard, FolderOpen, Compass, User, LogOut } from "lucide-react";
+import { LayoutDashboard, Briefcase, Search, PlusCircle, ShoppingBag, User, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logoDepFund from "/src/features/assets/img/logo_regency.jpg";
 
 const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-  { label: "Mis Proyectos", icon: FolderOpen, path: "/dashboard/projects" },
-  { label: "Explorar Proyectos", icon: Compass, path: "/dashboard/explore" },
-  { label: "Perfil", icon: User, path: "/dashboard/profile" },
+  { label: "Inicio", icon: LayoutDashboard, path: "/dashboard" },
+  { label: "Explorar", icon: Search, path: "/dashboard/explore" },
+  { label: "Mis Proyectos", icon: Briefcase, path: "/dashboard/projects" },
+  { label: "Crear Proyecto", icon: PlusCircle, path: "/dashboard/projects/new" },
+  { label: "Marketplace", icon: ShoppingBag, path: "/dashboard/marketplace" },
+  { label: "Mi Perfil", icon: User, path: "/dashboard/profile" },
 ];
 
 export default function Sidebar() {

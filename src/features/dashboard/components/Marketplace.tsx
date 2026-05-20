@@ -16,7 +16,6 @@ interface Ad {
   limiteMax: number;
 }
 
-// MOCK DATA: Datos de mentira idénticos a los que te daría la base de datos
 const initialAds: Ad[] = [
   {
     id: 1,
@@ -57,10 +56,10 @@ export default function Marketplace() {
   const [usdtAmount, setUsdtAmount] = useState<string>("");
   const [tokenAmount, setTokenAmount] = useState<string>("");
 
-  // Manejador para cuando abrís la caja de operaciones (Previsualización)
+
   const handleOpenTrade = (id: number) => {
     if (selectedAdId === id) {
-      setSelectedAdId(null); // Si ya estaba abierto, lo cierra
+      setSelectedAdId(null); 
     } else {
       setSelectedAdId(id);
       setUsdtAmount("");
@@ -91,9 +90,8 @@ export default function Marketplace() {
 
   return (
     <DashboardLayout title="Marketplace" user={user}>
-
         <div className="p2p-container animate-fade-in">
-        {/* Encabezado con selector BUY/SELL (Estilo Binance P2P) */}
+        {/* Encabezado con selector BUY/SELL */}
         <div className="p2p-header-tabs">
             <button 
             className={`tab-btn tab-btn-buy ${tradeType === "BUY" ? "tab-btn--active-buy" : ""}`}
@@ -152,7 +150,7 @@ export default function Marketplace() {
                     </div>
                 </div>
 
-                {/* Caja de Operación Expandible */}
+                {/*  Operación Expandible */}
                 {isOpen && (
                     <div className="p2p-trade-box animate-fade-in">
                     <div className="trade-box-left">

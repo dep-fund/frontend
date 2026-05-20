@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowUpDown, ShieldCheck, Landmark, Wallet, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 import "./Marketplace.css";
 import DashboardLayout from "../components/DashboardLayout";
 

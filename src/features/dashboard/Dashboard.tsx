@@ -21,6 +21,8 @@ import Profile from "./pages/Profile";
 import "./Dashboard.css";
 import "./ResponsiveDashboard.css";
 import logoDepFund from "../assets/img/logo_regency.jpg";
+import { WalletPage } from "../wallet";
+import { Wallet } from "lucide-react";
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -36,6 +38,7 @@ export default function Dashboard() {
     { path: "/dashboard/projects", label: "Mis Proyectos", icon: Briefcase },
     { path: "/dashboard/projects/new", label: "Crear Proyecto", icon: PlusCircle },
     { path: "/dashboard/marketplace", label: "Marketplace", icon: ShoppingBag },
+    { path: "/dashboard/wallet", label: "Wallet", icon: Wallet },
     { path: "/dashboard/profile", label: "Mi Perfil", icon: User },
   ];
 
@@ -107,6 +110,7 @@ export default function Dashboard() {
           <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="explore" element={<ExploreProjects />} />
           <Route path="marketplace" element={<Marketplace />} />
+          <Route path="wallet" element={<WalletPage />} />
           <Route path="profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

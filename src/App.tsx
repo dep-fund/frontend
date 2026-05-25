@@ -8,6 +8,7 @@ import Dashboard from "./features/dashboard/Dashboard";
 import LandingPage from "./features/landing/LandingPage";
 import GoogleCallback from './features/oauth/Googlecallback';
 import ResetPassword from "./features/auth/ResetPassword";
+import { WalletProvider } from "./features/wallet";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const App: React.FC = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/edit-profile" element={<EditProfile />} />
-      <Route path="/dashboard/*" element={<Dashboard />} />
+      <Route path="/dashboard/*" element={<WalletProvider><Dashboard /></WalletProvider>} />
       <Route path="/auth/callback" element={<GoogleCallback />} />
     </Routes>
   );

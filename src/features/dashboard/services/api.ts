@@ -124,3 +124,27 @@ export const addAdvance = async (projectId: string, file: File, description: str
 export const deleteAdvance = async (projectId: string, number: number): Promise<void> => {
   await axios.delete(`${API_URL}/projects/${projectId}/advances/${number}`, { headers: authHeader() });
 };
+
+export type ProjectImage = {
+  project_id: string;
+  number: number;
+  url: string;
+};
+
+export const listProjectImages = async (projectId: string): Promise<ProjectImage[]> => {
+  const res = await axios.get(`${API_URL}/projects/${projectId}/images`, { headers: authHeader() });
+  return res.data;
+};
+
+export const uploadProjectImage = async (projectId: string, file: File): Promise<ProjectImage> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await axios.post(`${API_URL}/projects/${projectId}/images`, formData, {
+    headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+
+export const deleteProjectImage = async (projectId: string, number: number): Promise<void> => {
+  await axios.delete(`${API_URL}/projects/${projectId}/images/${number}`, { headers: authHeader() });
+};

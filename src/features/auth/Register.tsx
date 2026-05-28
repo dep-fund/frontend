@@ -109,10 +109,6 @@ export default function Register({ isOpen, onClose, onLoginClick }: RegisterPane
           <p>Únete a DepFund y empieza a invertir.</p>
         </header>
 
-        {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
-
-
-
         <form onSubmit={handleSubmit}>
           <div className="register-input-group">
             <label>Nombre</label>
@@ -163,6 +159,7 @@ export default function Register({ isOpen, onClose, onLoginClick }: RegisterPane
             </div>
           </div>
 
+          {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
           <button type="submit" className="register-button" disabled={loading}>
             {loading ? 'Procesando...' : 'Registrarse'}
           </button>

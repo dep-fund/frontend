@@ -2,6 +2,8 @@ import "./ProjectCard.css";
 import { Eye } from "lucide-react";
 import type { Project } from "../types";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { listProjectImages } from "../services/api";
 
 interface ProjectCardProps {
   project: Project;
@@ -28,13 +30,25 @@ export default function ProjectCard({ project}: ProjectCardProps) {
   const progress = getProgress(project.id);
   const raised = `$${Math.round(parseFloat(project.total_amount) * progress / 100 / 1000)}K`;
   const investors = Math.floor(progress * 2.5);
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    listProjectImages(project.id)
+      .then((imgs) => imgs.length > 0 ? setCoverUrl(imgs[0].url) : null)
+      .catch(() => null);
+  }, [project.id]);
 
   return (
     <div className="project-card">
       <div className="project-card-header">
+        {coverUrl ? (
+          <img src={coverUrl} alt={project.name} className="project-card-cover" />
+        ) : (
+          <div className="project-card-cover project-card-cover--placeholder" />
+        )}
         <span className={`project-badge ${stateInfo.className}`}>{stateInfo.label}</span>
       </div>
-
+      
       <div className="project-card-body">
         <h3 className="project-card-name">{project.name}</h3>
         <p className="project-card-category">

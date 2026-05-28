@@ -170,24 +170,15 @@ export const listDocuments = async (
 export const addDocument = async (
   projectId: string,
   file: File,
-  description: string
 ): Promise<ProjectDocument> => {
   const formData = new FormData();
-
   formData.append("file", file);
-  formData.append("description", description);
 
   const res = await axios.post(
     `${API_URL}/projects/${projectId}/documents`,
     formData,
-    {
-      headers: {
-        ...authHeader(),
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
   );
-
   return res.data;
 };
 

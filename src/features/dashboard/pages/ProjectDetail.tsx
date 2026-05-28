@@ -9,6 +9,7 @@ import { fetchProject } from "../services/api";
 
 import type { Project } from "../types";
 import ProjectAdvances from "./ProjectAdvances";
+import ProjectDocuments from "./ProjectDocuments";
 
 const STATE_LABELS: Record<string, { label: string; className: string }> = {
   APPROVED: { label: "Activo", className: "pd-badge--active" },
@@ -134,6 +135,10 @@ export default function ProjectDetail() {
             </div>
           </div>
         </div>
+        <ProjectDocuments 
+          projectId={project.id} 
+          isOwner={isOwner} 
+        />
         <ProjectAdvances
           projectId={project.id}
           isOwner={isOwner}

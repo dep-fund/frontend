@@ -20,6 +20,8 @@
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   padding: 32px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .cp-title {
@@ -254,4 +256,30 @@
   font-size: 0.78rem;
   color: #9ca3af;
   font-family: "DM Sans", sans-serif;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (Media Queries)
+   ========================================= */
+
+
+
+@media (max-width: 1024px) {
+  .cp-card {
+    padding: 20px; /* Reducimos un poco el padding en móviles para ganar espacio */
+  }
+
+  .cp-row {
+    grid-template-columns: 1fr; /* Forzamos a que pase a 1 sola columna */
+    gap: 16px;
+  }
+
+  .cp-actions {
+    flex-direction: column; /* Apilamos los botones uno debajo del otro */
+  }
+
+  .cp-btn-submit,
+  .cp-btn-cancel {
+    width: 100%;
+  }
 }

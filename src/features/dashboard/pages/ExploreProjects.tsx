@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import "./ExploreProjects.css";
-import { Search } from "lucide-react";
+import { Search, Library } from "lucide-react";
 import DashboardLayout from "../components/DashboardLayout";
 import ProjectCard from "../components/ProjectCard";
 import { useUser } from "../hooks/useUser";
@@ -14,13 +14,15 @@ export default function ExploreProjects() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const filtered = projects.filter((p) => {
-    const matchesSearch = search === "" || p.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory =
-      !selectedCategory ||
-      p.categories.some((c) => c.id === selectedCategory);
-    return matchesSearch && matchesCategory;
-  });
+  const filtered = useMemo(() => {
+    return projects.filter((p) => {
+      const matchesSearch = search === "" || p.name.toLowerCase().includes(search.toLowerCase());
+      const matchesCategory =
+        !selectedCategory ||
+        p.categories?.some((c) => c.id === selectedCategory);
+      return matchesSearch && matchesCategory;
+    });
+  }, [projects, search, selectedCategory]);
 
   return (
     <DashboardLayout title="Explorar Proyectos" user={user}>
@@ -29,10 +31,11 @@ export default function ExploreProjects() {
           <h3 className="explore-filters-title">Filtros</h3>
 
           <div className="explore-filter-group">
-            <label>Buscar proyectos</label>
+            <label htmlFor="search-projects">Buscar proyectos</label>
             <div className="explore-search">
               <Search size={14} className="explore-search-icon" />
               <input
+                id="search-projects"
                 type="text"
                 placeholder="Nombre del proyecto..."
                 value={search}
@@ -65,15 +68,22 @@ export default function ExploreProjects() {
 
         <div className="explore-main">
           <p className="explore-count">
-            {loading ? "Cargando..." : `${filtered.length} proyecto${filtered.length !== 1 ? "s" : ""} encontrado${filtered.length !== 1 ? "s" : ""}`}
+            <Library size={16} style={{ marginRight: 8, color: '#EC8F41' }} />
+            {loading ? "Cargando proyectos..." : `${filtered.length} proyecto${filtered.length !== 1 ? "s" : ""} encontrado${filtered.length !== 1 ? "s" : ""}`}
           </p>
 
           <div className="explore-grid">
-            {filtered.map((p) => (
-              <ProjectCard key={p.id} project={p} showActions={false} />
-            ))}
-            {!loading && filtered.length === 0 && (
-              <p className="explore-empty">No se encontraron proyectos.</p>
+            {loading ? (
+              <p className="explore-loading">Obteniendo los proyectos de la comunidad...</p>
+            ) : (
+              <>
+                {filtered.map((p) => (
+                  <ProjectCard key={p.id} project={p} showActions={false} />
+                ))}
+                {filtered.length === 0 && (
+                  <p className="explore-empty">No se encontraron proyectos con los filtros actuales.</p>
+                )}
+              </>
             )}
           </div>
         </div>

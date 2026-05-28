@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import "./ProjectDetail.css";
-import { ChevronLeft, Pencil } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import ProjectForm from "../components/ProjectForm";
 import { useUser } from "../hooks/useUser";
-import { fetchProject } from "../services/api";
+import { fetchProject, listProjectImages } from "../services/api";
 
 import type { Project } from "../types";
 import ProjectAdvances from "./ProjectAdvances";
@@ -26,12 +26,22 @@ export default function ProjectDetail() {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [images, setImages] = useState<any[]>([]);
   
   const load = async () => {
     if (!id) return;
     try {
-      const data = await fetchProject(id);
-      setProject(data);
+      // Obtenemos los datos del proyecto y las imágenes en paralelo
+      const [projectData, projectImages] = await Promise.all([
+        fetchProject(id),
+        // Usamos catch para que si falla la carga de imágenes, el proyecto se muestre igual
+        listProjectImages(id).catch(() => [])
+      ]);
+      
+      setProject(projectData);
+      setImages(projectImages || []);
+
     } finally {
       setLoading(false);
     }
@@ -64,7 +74,50 @@ export default function ProjectDetail() {
       </button>
 
       <div className="pd-hero">
-        <span className={`pd-badge ${stateInfo.className}`}>{stateInfo.label}</span>
+        {images.length > 0 ? (
+          <>
+            <div 
+              className="pd-carousel-bg-blur"
+              style={{ backgroundImage: `url(${typeof images[currentImageIndex] === 'string' ? images[currentImageIndex] : images[currentImageIndex].url})` }}
+            />
+            <img 
+              src={typeof images[currentImageIndex] === 'string' ? images[currentImageIndex] : images[currentImageIndex].url} 
+              alt={`Imagen del proyecto ${currentImageIndex + 1}`} 
+              className="pd-carousel-img"
+            />
+            {/* Gradiente oscuro inferior para asegurar que los puntos de navegación sean visibles */}
+            <div className="pd-carousel-gradient" />
+            
+            {images.length > 1 && (
+              <>
+                <button 
+                  className="pd-carousel-btn pd-carousel-btn--prev"
+                  onClick={() => setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)}
+                >
+                  <ChevronLeft size={24} />
+                </button>
+                <button 
+                  className="pd-carousel-btn pd-carousel-btn--next"
+                  onClick={() => setCurrentImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1)}
+                >
+                  <ChevronRight size={24} />
+                </button>
+                <div className="pd-carousel-dots">
+                  {images.map((_: any, idx: number) => (
+                    <button
+                      key={idx}
+                      className={`pd-carousel-dot ${idx === currentImageIndex ? 'active' : ''}`}
+                      onClick={() => setCurrentImageIndex(idx)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <span className="pd-carousel-empty">Sin imágenes disponibles</span>
+        )}
+        <span className={`pd-badge pd-carousel-badge ${stateInfo.className}`}>{stateInfo.label}</span>
       </div>
 
       <div className="pd-header">

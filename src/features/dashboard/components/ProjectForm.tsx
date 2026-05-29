@@ -100,6 +100,7 @@ export default function ProjectForm({ project, onClose, onSuccess }: ProjectForm
                 onChange={(e) => setTotalAmount(e.target.value)}
                 placeholder="500000"
                 required
+                disabled={!!project}
               />
             </div>
           </div>
@@ -118,11 +119,11 @@ export default function ProjectForm({ project, onClose, onSuccess }: ProjectForm
           {project && (
             <div className="form-group">
               <label>Estado</label>
-              <select value={state} onChange={(e) => setState(e.target.value as any)}>
-                <option value="PENDING">Pendiente</option>
-                <option value="APPROVED">Activo</option>
-                <option value="CANCELED">Completado</option>
-              </select>
+              <p className="form-state-display">{
+                state === "APPROVED" ? "Activo" :
+                state === "PENDING" ? "Pendiente" :
+                "Completado"
+              }</p>
             </div>
           )}
 

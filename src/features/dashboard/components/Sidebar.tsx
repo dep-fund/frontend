@@ -1,12 +1,13 @@
 import "./Sidebar.css";
-import { LayoutDashboard, Briefcase, Search, PlusCircle, ShoppingBag, User, LogOut } from "lucide-react";
+import { LayoutDashboard, Briefcase, Search, PlusCircle, ShoppingBag, User, LogOut, Wallet } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logoDepFund from "/src/features/assets/img/logo_regency.jpg";
-import { Wallet } from "lucide-react";
 
 const navItems = [
   { label: "Inicio", icon: LayoutDashboard, path: "/dashboard" },
   { label: "Explorar", icon: Search, path: "/dashboard/explore" },
+  // { label: "Invertir", icon: DollarSign, path: "/dashboard/invest" },
+  // { label: "Mis Inversiones", icon: TrendingUp, path: "/dashboard/investments" },
   { label: "Mis Proyectos", icon: Briefcase, path: "/dashboard/projects" },
   { label: "Crear Proyecto", icon: PlusCircle, path: "/dashboard/projects/new" },
   { label: "Marketplace", icon: ShoppingBag, path: "/dashboard/marketplace" },

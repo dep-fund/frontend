@@ -181,7 +181,11 @@
 
 .btn-edit:hover { background: #d97f35; }
 
+
+
 @media (max-width: 480px) {
   .project-card-stats { gap: 12px; flex-wrap: wrap; }
   .project-card-actions { flex-direction: column; gap: 10px; }
 }
+
+

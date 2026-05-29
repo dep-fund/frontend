@@ -169,3 +169,67 @@
     padding: 16px;
   }
 }
+
+.invest-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.invest-card-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.invest-card-container .project-card {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.btn-invest-slide {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 16px;
+  background-color: #fffaf5;
+  color: #EC8F41;
+  border: none;
+  border-top: 1px dashed #fcd3a8;
+  border-radius: 0;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: auto;
+}
+
+.btn-invest-slide::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #EC8F41;
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.btn-invest-slide:hover {
+  color: #ffffff;
+}
+
+.btn-invest-slide:hover::before {
+  left: 0;
+}

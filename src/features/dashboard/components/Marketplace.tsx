@@ -111,7 +111,7 @@ export default function Marketplace() {
         <div className="p2p-table-wrapper">
             <div className="p2p-table-header">
             <div className="col-advertiser">Anunciante</div>
-            <div className="col-price">Precio (USDT)</div>
+            <div className="col-price">Precio (ETH)</div>
             <div className="col-limit">Disponible / Límites</div>
             <div className="col-trade">Operar</div>
             </div>
@@ -131,7 +131,7 @@ export default function Marketplace() {
                     </div>
 
                     <div className="col-price font-bold">
-                    {ad.precio.toFixed(2)} USDT
+                    {ad.precio.toFixed(2)} ETH
                     </div>
 
                     <div className="col-limit">
@@ -164,12 +164,12 @@ export default function Marketplace() {
 
                     <div className="trade-box-right">
                         <div className="price-indicator">
-                        Precio de referencia: <strong>{ad.precio} USDT</strong>
+                        Precio de referencia: <strong>{ad.precio} ETH</strong>
                         </div>
 
                         <div className="trade-inputs-group">
                         <div className="trade-input-wrapper">
-                            <label>{tradeType === "BUY" ? "Pagas (USDT)" : "Vendes (DPF)"}</label>
+                            <label>{tradeType === "BUY" ? "Pagas (ETH)" : "Vendes (DPF)"}</label>
                             <div className="input-with-symbol">
                             <input 
                                 type="number" 
@@ -180,7 +180,7 @@ export default function Marketplace() {
                                 : handleTokenChange(e.target.value, ad.precio)
                                 }
                             />
-                            <span className="symbol-label">{tradeType === "BUY" ? "USDT" : "DPF"}</span>
+                            <span className="symbol-label">{tradeType === "BUY" ? "ETH" : "DPF"}</span>
                             </div>
                         </div>
 
@@ -189,7 +189,7 @@ export default function Marketplace() {
                         </div>
 
                         <div className="trade-input-wrapper">
-                            <label>{tradeType === "BUY" ? "Recibes (DPF)" : "Recibes (USDT)"}</label>
+                            <label>{tradeType === "BUY" ? "Recibes (DPF)" : "Recibes (ETH)"}</label>
                             <div className="input-with-symbol">
                             <input 
                                 type="number" 
@@ -200,7 +200,7 @@ export default function Marketplace() {
                                 : handleUsdtChange(e.target.value, ad.precio)
                                 }
                             />
-                            <span className="symbol-label">{tradeType === "BUY" ? "DPF" : "USDT"}</span>
+                            <span className="symbol-label">{tradeType === "BUY" ? "DPF" : "ETH"}</span>
                             </div>
                         </div>
                         </div>

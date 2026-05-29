@@ -32,10 +32,8 @@ export default function ProjectDetail() {
   const load = async () => {
     if (!id) return;
     try {
-      // Obtenemos los datos del proyecto y las imágenes en paralelo
       const [projectData, projectImages] = await Promise.all([
         fetchProject(id),
-        // Usamos catch para que si falla la carga de imágenes, el proyecto se muestre igual
         listProjectImages(id).catch(() => [])
       ]);
       
@@ -85,7 +83,6 @@ export default function ProjectDetail() {
               alt={`Imagen del proyecto ${currentImageIndex + 1}`} 
               className="pd-carousel-img"
             />
-            {/* Gradiente oscuro inferior para asegurar que los puntos de navegación sean visibles */}
             <div className="pd-carousel-gradient" />
             
             {images.length > 1 && (

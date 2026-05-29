@@ -1,0 +1,291 @@
+.invest-checkout-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 24px;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.btn-back:hover {
+  color: #EC8F41;
+}
+
+.invest-checkout-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+/* Columna Izquierda */
+.checkout-left {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.checkout-title {
+  font-family: "Sora", sans-serif;
+  font-size: 1.2rem;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.checkout-project-info h3 {
+  font-family: "Sora", sans-serif;
+  font-size: 1.5rem;
+  margin: 0 0 8px 0;
+}
+
+.badge-category {
+  display: inline-block;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.project-desc {
+  color: #4b5563;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.project-rules h4 {
+  font-size: 1rem;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.project-rules ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-rules li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #374151;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.project-rules li svg {
+  color: #10b981; /* Verde para dar confianza */
+}
+
+/* Columna Derecha (Exchange Box) */
+.checkout-right {
+  width: 400px;
+  flex-shrink: 0;
+}
+
+.price-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.price-header strong {
+  color: #111827;
+  font-size: 1rem;
+}
+
+.exchange-box {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: #4b5563;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: #EC8F41;
+  box-shadow: 0 0 0 2px rgba(236, 143, 65, 0.1);
+}
+
+.input-wrapper.read-only {
+  background: #f9fafb;
+}
+
+.input-wrapper input {
+  flex: 1;
+  border: none;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-family: "DM Sans", sans-serif;
+  color: #111827;
+  outline: none;
+  background: transparent;
+}
+
+.currency-tag {
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid #d1d5db;
+  height: 100%;
+}
+
+.tag-text {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.token-tag .tag-text {
+  color: #EC8F41;
+}
+
+.balance-text {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.btn-add-funds {
+  background: none;
+  border: none;
+  color: #EC8F41;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.payment-method-selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: background 0.2s ease;
+}
+
+.payment-method-selector:hover {
+  background: #f3f4f6;
+}
+
+.pm-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.btn-confirm-invest {
+  width: 100%;
+  background: #EC8F41;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-confirm-invest:hover:not(:disabled) {
+  background: #d17d36;
+}
+
+.btn-confirm-invest:disabled {
+  background: #fca5a5; /* Naranja muy pálido o gris */
+  background: #fcd34d;
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Responsive para celulares */
+@media (max-width: 860px) {
+  .invest-checkout-layout {
+    flex-direction: column;
+  }
+  .checkout-right {
+    width: 100%;
+  }
+  .checkout-left {
+    padding-right: 0;
+    margin-bottom: 24px;
+  }
+}
+
+/* --- Clases utilitarias reemplazando estilos en línea --- */
+.loading-msg {
+  text-align: center;
+  padding: 64px;
+  color: #9ca3af;
+}
+
+.invest-trade-box {
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.checkout-project-title {
+  font-family: "Sora", sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.invest-trade-actions {
+  margin-top: 24px;
+}
+
+.btn-execute:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -20,7 +20,7 @@ export default function ProjectForm({ project, onClose, onSuccess }: ProjectForm
   const [description, setDescription] = useState(project?.description ?? "");
   const [totalAmount, setTotalAmount] = useState(project?.total_amount ?? "");
   const [ubication, setUbication] = useState(project?.ubication ?? "");
-  const [state, setState] = useState(project?.state ?? "PENDING");
+  const [state] = useState(project?.state ?? "PENDING");
   const [categoryIds, setCategoryIds] = useState<string[]>(
     project?.categories.map((c) => c.id) ?? []
   );

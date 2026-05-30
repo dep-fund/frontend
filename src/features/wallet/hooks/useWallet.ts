@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useConnection,
   useConnect,
@@ -27,6 +27,17 @@ export function useWallet() {
 
   const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
 
+  useEffect(() => {
+    if (isConnected) return;
+    const connector = connectors.find((c) => c.id === 'metaMaskSDK') ?? connectors[0];
+    if (!connector) return;
+    connector.getAccounts().then((accounts) => {
+      if (accounts.length > 0) {
+        connect.mutate({ connector });
+      }
+    }).catch(() => {});
+  }, []);
+  
   const handleConnect = async () => {
     const connector =
       connectors.find((c) => c.id === 'metaMaskSDK') ?? connectors[0];

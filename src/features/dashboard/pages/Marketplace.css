@@ -1,0 +1,510 @@
+/* Marketplace.css */
+
+.p2p-container {
+  padding: 24px;
+  min-height: 100%;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* ── Tabs superiores ──────────────────────────────────────────────────────── */
+
+.p2p-header-tabs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.tabs-left {
+  display: flex;
+  gap: 4px;
+}
+
+.tab-btn {
+  flex: 1;
+  max-width: 200px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background-color: white;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.tab-btn-buy:hover {
+  background-color: #EC8F41;
+  color: white;
+  border-color: #EC8F41;
+  box-shadow: 0 6px 12px rgba(236, 143, 65, 0.2);
+}
+
+.tab-btn-sell:hover {
+  background-color: #2C7176;
+  color: white;
+  border-color: #2C7176;
+  box-shadow: 0 6px 12px rgba(44, 113, 118, 0.2);
+}
+
+.tab-btn--active-buy {
+  background-color: #EC8F41;
+  color: white;
+  border-color: #EC8F41;
+}
+
+.tab-btn--active-sell {
+  background-color: #2C7176;
+  color: white;
+  border-color: #2C7176;
+}
+
+/* ── Botón crear publicación ──────────────────────────────────────────────── */
+
+.btn-create-listing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: #2C7176;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-create-listing:hover {
+  background: #235c60;
+  transform: translateY(-1px);
+}
+
+/* ── Tabla estilo Binance ─────────────────────────────────────────────────── */
+
+.p2p-table-wrapper {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.p2p-table-header {
+  display: flex;
+  background-color: #f9fafb;
+  padding: 16px 24px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.p2p-row-group {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.p2p-row {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  background-color: white;
+}
+
+.col-advertiser { flex: 3; display: flex; align-items: center; gap: 12px; }
+.col-price      { flex: 2; font-size: 18px; color: #1a1a1a; font-family: "Sora", sans-serif; font-weight: 600; }
+.col-limit      { flex: 3; font-size: 13px; color: #374151; }
+.col-limit span { color: #6b7280; }
+.col-trade      { flex: 2; text-align: right; }
+
+.adv-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #fef4ea;
+  color: #EC8F41;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.adv-name  { font-weight: 600; color: #1a1a1a; }
+.adv-stats { font-size: 11px; color: #6b7280; margin-top: 2px; }
+
+/* ── Botones de acción en filas ───────────────────────────────────────────── */
+
+.trade-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 13px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.trade-action-btn:active { transform: scale(0.96); }
+.btn-buy  { background-color: #EC8F41; }
+.btn-sell { background-color: #2C7176; }
+
+/* ── Panel desplegable de operación ──────────────────────────────────────── */
+
+.p2p-trade-box {
+  display: flex;
+  background-color: #fafafa;
+  padding: 24px;
+  border-top: 1px dashed #e5e7eb;
+  gap: 40px;
+}
+
+.trade-box-left {
+  flex: 1;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  padding-right: 24px;
+}
+
+.trade-box-left h4 {
+  color: #EC8F41;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.terms-text {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.8;
+}
+
+.trade-box-right {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.price-indicator {
+  font-size: 13px;
+  color: #2C7176;
+}
+
+.trade-inputs-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trade-input-wrapper       { flex: 1; }
+.trade-input-wrapper label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #6b7280;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input-with-symbol {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-symbol input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0 50px 0 12px;
+  font-size: 14px;
+  outline: none;
+  background: white;
+  color: #1a1a1a;
+}
+
+.input-with-symbol input:focus { border-color: #EC8F41; }
+
+.symbol-label {
+  position: absolute;
+  right: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2C7176;
+}
+
+.trade-inputs-spacer {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.trade-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn-secondary {
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #374151;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover { background: #f3f4f6; }
+
+.btn-execute {
+  border: none;
+  padding: 10px 24px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-execute:disabled { opacity: 0.5; cursor: not-allowed; }
+.bg-dep  { background-color: #EC8F41; }
+.bg-fund { background-color: #2C7176; }
+
+/* ── Status de transacción ────────────────────────────────────────────────── */
+
+.tx-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.tx-status button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.tx-status--ok  { background: #e6f4ea; color: #2e7d32; }
+.tx-status--err { background: #fdecea; color: #c62828; }
+
+/* ── Empty state ──────────────────────────────────────────────────────────── */
+
+.p2p-empty {
+  padding: 48px 32px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* ── Modal Crear Publicación ──────────────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 440px;
+  max-width: calc(100vw - 32px);
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e5e7eb;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.modal-header button:hover {
+  background: #f3f4f6;
+  color: #1a1a1a;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-body label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.modal-body input {
+  padding: 11px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  width: 100%;
+  color: #1a1a1a;
+  background: #f9fafb;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.modal-body input:focus {
+  border-color: #2C7176;
+  background: #ffffff;
+}
+
+.modal-body input::placeholder { color: #9ca3af; }
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* ── Animación ────────────────────────────────────────────────────────────── */
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsivo ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .p2p-container { padding: 16px; }
+
+  .tab-btn {
+    max-width: 100%;
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .p2p-table-header { display: none; }
+
+  .p2p-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+
+  .col-advertiser,
+  .col-price,
+  .col-limit,
+  .col-trade {
+    width: 100%;
+    text-align: left;
+  }
+
+  .col-advertiser {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 16px;
+  }
+
+  .col-price::before {
+    content: "Precio: ";
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: normal;
+    margin-right: 6px;
+  }
+
+  .trade-action-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .p2p-trade-box {
+    flex-direction: column;
+    gap: 24px;
+    padding: 20px 16px;
+  }
+
+  .trade-box-left {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+
+  .trade-inputs-group {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .trade-actions { flex-direction: column; }
+
+  .btn-secondary,
+  .btn-execute {
+    width: 100%;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .p2p-header-tabs {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .btn-create-listing {
+    width: 100%;
+    justify-content: center;
+  }
+}

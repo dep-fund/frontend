@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
 import { ArrowLeft, ShieldCheck, ArrowUpDown } from "lucide-react";
-import "../components/Marketplace.css";
+import "./Marketplace.css";
 import "./InvestCheckout.css";
 import { fetchProject } from "../services/api";
 import type { Project } from "../types";

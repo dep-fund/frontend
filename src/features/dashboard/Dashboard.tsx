@@ -19,7 +19,7 @@ import MyProjects from "./pages/MyProjects";
 import CreateProject from "./pages/CreateProject";
 import ProjectDetail from "./pages/ProjectDetail";
 import ExploreProjects from "./pages/ExploreProjects";
-import Marketplace from "./components/Marketplace";
+import Marketplace from "./pages/Marketplace";
 import Profile from "./pages/Profile";
 import InvestProjects from "./pages/InvestProjects";
 import MyInvestments from "./pages/MyInvestments";

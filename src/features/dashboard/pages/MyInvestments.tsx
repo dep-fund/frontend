@@ -1,75 +1,13 @@
-// import { useMemo } from "react";
-// import DashboardLayout from "../components/DashboardLayout";
-// import { useUser } from "../hooks/useUser";
-// import InvestmentCard from "../components/InvestmentCard";
-// import { useExploreProjects } from "../hooks/useExploreProjects";
-
-// export default function MyInvestments() {
-//   const { user } = useUser();
-//   const { projects, loading } = useExploreProjects();
-  
-//   const myInvestmentsData = useMemo(() => {
-//     const saved = localStorage.getItem("my_investments");
-//     return saved ? JSON.parse(saved) : [];
-//   }, []);
-
-//   const investments = useMemo(() => {
-//     return projects
-//       .filter((p) => myInvestmentsData.some((inv: any) => inv.projectId === p.id))
-//       .map((p) => {
-//         const invData = myInvestmentsData.find((inv: any) => inv.projectId === p.id);
-//         return {
-//           id: invData.id || p.id,
-//           projectName: p.name,
-//           tokens: invData.tokens || 0,
-//           amount: invData.amount || 0,
-//           roi: invData.roi || "+0.0%",
-//           projectId: p.id
-//         };
-//       });
-//   }, [projects, myInvestmentsData]);
-
-//   return (
-//     <DashboardLayout title="Mis Inversiones" user={user}>
-//       <div className="myprojects-header">
-//         <span className="myprojects-count">{investments.length} inversión{investments.length !== 1 ? "es" : ""} activas</span>
-//       </div>
-
-//       {loading && <div className="myprojects-loading">Cargando tus inversiones...</div>}
-
-//       {!loading && investments.length === 0 && (
-//         <div className="myprojects-empty">
-//           <p>Aún no realizaste ninguna inversión.</p>
-//           <a href="/dashboard/invest" style={{ 
-//             display: "inline-block", 
-//             marginTop: "1rem", 
-//             padding: "10px 16px", 
-//             background: "#EC8F41", 
-//             color: "white", 
-//             borderRadius: "8px", 
-//             textDecoration: "none",
-//             fontWeight: "bold" 
-//           }}>
-//             Explorar Proyectos
-//           </a>
-//         </div>
-//       )}
-
-//       <div className="myprojects-grid">
-//         {investments.map(inv => (
-//           <InvestmentCard key={inv.id} investment={inv} />
-//         ))}
-//       </div>
-//     </DashboardLayout>
-//   );
-// }
-
-
 import { useState, useEffect } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
 import InvestmentCard from "../components/InvestmentCard";
 import { useExploreProjects } from "../hooks/useExploreProjects";
+
+const getProgress = (id: string) => {
+  const seed = id.charCodeAt(0) + id.charCodeAt(1);
+  return Math.min(100, (seed % 60) + 40);
+};
 
 export default function MyInvestments() {
   const { user } = useUser();
@@ -79,30 +17,43 @@ export default function MyInvestments() {
 
   useEffect(() => {
     // 1. Buscamos el registro REAL de transacciones exitosas.
-    // (Si tu backend ya estuviera conectado, aquí haríamos un fetch a tu API)
     const savedHistory = localStorage.getItem("historial_real_inversiones");
-    
     if (savedHistory && projects.length > 0) {
       const transaccionesReales = JSON.parse(savedHistory);
 
-      // 2. Cruzamos los datos de la transacción de la blockchain con la info visual del proyecto
-      const inversionesMapeadas = transaccionesReales.map((txInfo: any) => {
-        const proyecto = projects.find(p => String(p.id) === String(txInfo.projectId));
+      // 2. Agrupamos las transacciones por ID de proyecto para sumar las inversiones
+      const inversionesAgrupadas = transaccionesReales.reduce((acc: any, txInfo: any) => {
+        const pid = txInfo.projectId;
+        if (!acc[pid]) {
+          acc[pid] = { projectId: pid, usdcAmount: 0, tokenAmount: 0 };
+        }
         
+        // Sumamos los USDC de todas las inversiones viejas y nuevas
+        // (Soporte por si quedó alguna vieja guardada como ethAmount)
+        const cantidadInvertida = parseFloat(txInfo.usdcAmount || txInfo.ethAmount || "0");
+        
+        acc[pid].usdcAmount += cantidadInvertida;
+        acc[pid].tokenAmount += parseFloat(txInfo.tokenAmount || "0");
+        return acc;
+      }, {});
+
+      // 3. Cruzamos los datos agrupados con la info visual del proyecto
+      const inversionesMapeadas = Object.values(inversionesAgrupadas).map((grupo: any) => {
+        const proyecto = projects.find(p => String(p.id) === String(grupo.projectId));
+
         return {
-          id: txInfo.txHash, // Usamos el Hash real de la Blockchain como ID único
+          id: grupo.projectId,
           projectName: proyecto?.name || "Proyecto en Blockchain",
-          tokens: txInfo.tokenAmount, // Tokens DPF exactos calculados en la compra
-          amount: txInfo.ethAmount,   // ETH exacto que pagaste en MetaMask
-          roi: "+0.0%", // Esto queda estático hasta que programen la lógica de retornos
-          projectId: txInfo.projectId
+          amount: Number(grupo.usdcAmount.toFixed(2)),
+          tokens: Number(grupo.tokenAmount.toFixed(4)),
+          progress: `${getProgress(grupo.projectId)}%`,
+          projectId: grupo.projectId
         };
       });
 
       setInvestments(inversionesMapeadas);
     }
     
-    // Apagamos el estado de carga solo cuando los proyectos terminan de descargar
     if (!projectsLoading) {
       setLoading(false);
     }

@@ -305,6 +305,8 @@ export default function InvestCheckout() {
   const [isProcessing, setIsProcessing] = useState(false);
   //  Estado de error visible en la UI en lugar de solo alerts
   const [txError, setTxError] = useState<string | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const TOKEN_PRICE = 0.5;
   const MIN_INVESTMENT = 1;
@@ -406,8 +408,8 @@ export default function InvestCheckout() {
         JSON.stringify(historial)
       );
 
-      alert(`¡Inversión de ${usdcAmount} USDC procesada con éxito en el Smart Contract!`);
-      navigate("/dashboard/investments");
+      setSuccessMessage(`¡Inversión de ${usdcAmount} USDC procesada con éxito! Se han cargado ${tokenAmount} DPF en tu billetera.`);
+      setShowSuccessModal(true);
 
     } catch (error: any) {
       console.error("Error en inversión:", error);
@@ -415,8 +417,8 @@ export default function InvestCheckout() {
       //  Parsing más robusto del error de ethers v6
       const msg =
         error?.info?.error?.message ||   // error RPC de MetaMask
-        error?.shortMessage ||           // ethers v6
-        error?.reason ||                 // revert reason
+        error?.shortMessage ||           
+        error?.reason ||                 
         error?.message ||
         "Error desconocido.";
 
@@ -519,30 +521,13 @@ export default function InvestCheckout() {
               </div>
             </div>
 
-            {/* ✅ Error visible en la UI */}
             {txError && (
-              <div
-                style={{
-                  marginTop: "0.75rem",
-                  padding: "10px 14px",
-                  borderRadius: "8px",
-                  background: "#fee2e2",
-                  color: "#991b1b",
-                  fontSize: "0.875rem",
-                }}
-              >
-                ⚠️ {txError}
+              <div className="tx-error-msg">
+                {txError}
               </div>
             )}
 
-            <div
-              style={{
-                marginTop: "1rem",
-                padding: "12px",
-                borderRadius: "8px",
-                background: "#f4f4f4",
-              }}
-            >
+            <div className="tx-summary-box">
               <p>Inversión: <strong>{usdcAmount || 0} USDC</strong></p>
               <p>Recibirás: <strong>{tokenAmount || 0} DPF</strong></p>
               <p>Precio actual: <strong>1 DPF = {TOKEN_PRICE} USDC</strong></p>
@@ -569,6 +554,22 @@ export default function InvestCheckout() {
           </div>
         </div>
       </div>
+
+      {showSuccessModal && (
+        <div className="success-modal-overlay">
+          <div className="success-modal-content">
+            <ShieldCheck size={48} color="#10b981" className="success-modal-icon" />
+            <h3 className="success-modal-title">¡Inversión Exitosa!</h3>
+            <p className="success-modal-text">{successMessage}</p>
+            <button 
+              className="btn-execute bg-dep"
+              onClick={() => navigate("/dashboard/investments")}
+            >
+              Ver Mis Inversiones
+            </button>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

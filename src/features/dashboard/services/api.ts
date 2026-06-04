@@ -39,6 +39,9 @@ export const createProject = async (data: {
   name: string;
   description: string;
   total_amount: number;
+  min_cost: number;
+  suffix: string;
+  gross_profit: number;
   ubication: string;
   category_ids?: string[];
 }): Promise<Project> => {

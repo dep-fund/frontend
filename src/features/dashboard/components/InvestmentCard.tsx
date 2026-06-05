@@ -1,10 +1,20 @@
 import { TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { listProjectImages } from "../services/api";
 import "./ProjectCard.css"; 
 
 export default function InvestmentCard({ investment }: { investment: any }) {
   const navigate = useNavigate();
-  
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (investment.projectId) {
+      listProjectImages(investment.projectId)
+        .then((imgs) => imgs.length > 0 ? setCoverUrl(imgs[0].url) : null)
+        .catch(() => null);
+    }
+  }, [investment.projectId]);
 
   const tokens = investment.tokens || 0;
   const progress = investment.progress || "0%";
@@ -13,7 +23,11 @@ export default function InvestmentCard({ investment }: { investment: any }) {
   return (
     <div className="project-card">
       <div className="project-card-header">
-        <div className="project-card-cover project-card-cover--placeholder" style={{ backgroundColor: '#1e293b' }} />
+        {coverUrl ? (
+          <img src={coverUrl} alt={investment.projectName} className="project-card-cover" />
+        ) : (
+          <div className="project-card-cover project-card-cover--placeholder" style={{ backgroundColor: '#1e293b' }} />
+        )}
         <span className="project-badge badge--active">Inversión Activa</span>
       </div>
       

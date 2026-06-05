@@ -54,3 +54,19 @@ export interface User {
   created_at: string;
   updated_at: string;
 }
+
+export interface Listing {
+  id: number;
+  total_amount: number;
+  remaining_amount: number;
+  price_per_token: number;
+  seller: string;
+  status: "active" | "finalized" | "cancelled";
+  token: string;
+}
+ 
+export interface MarketplaceInfo {
+  marketplace_address: string;
+  usdc_address: string;
+  factory_address: string;
+}

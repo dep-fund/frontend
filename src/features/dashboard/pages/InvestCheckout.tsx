@@ -274,6 +274,7 @@ import "../components/Marketplace.css";
 import "./InvestCheckout.css";
 import { fetchProject } from "../services/api";
 import type { Project } from "../types";
+import { parseContractError } from "../utils/ParseContractError";
 
 // Centralizá las direcciones acá — actualizalas tras cada re-deploy de Anvil
 const USDC_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -413,25 +414,7 @@ export default function InvestCheckout() {
 
     } catch (error: any) {
       console.error("Error en inversión:", error);
-
-      //  Parsing más robusto del error de ethers v6
-      const msg =
-        error?.info?.error?.message ||   // error RPC de MetaMask
-        error?.shortMessage ||           
-        error?.reason ||                 
-        error?.message ||
-        "Error desconocido.";
-
-      // Traducimos los custom errors del contrato a mensajes legibles
-      if (msg.includes("Offering__Closed"))
-        setTxError("La oferta está cerrada.");
-      else if (msg.includes("Offering__HardCapReached"))
-        setTxError("Se alcanzó el Hard Cap.");
-      else if (msg.includes("Offering__SoftCapReached"))
-        setTxError("El Soft Cap ya fue alcanzado.");
-      else
-        setTxError(msg);
-
+      setTxError(parseContractError(error));
     } finally {
       setIsProcessing(false);
     }

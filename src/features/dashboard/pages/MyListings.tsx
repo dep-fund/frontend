@@ -107,12 +107,12 @@ export default function MyListings() {
 
       {txError && (
         <div style={{ margin: "12px 0", padding: "10px 14px", borderRadius: "8px", background: "#fee2e2", color: "#991b1b", fontSize: "0.875rem" }}>
-          ⚠️ {txError}
+          {txError}
         </div>
       )}
       {txSuccess && (
         <div style={{ margin: "12px 0", padding: "10px 14px", borderRadius: "8px", background: "#dcfce7", color: "#166534", fontSize: "0.875rem" }}>
-          ✅ {txSuccess}
+          {txSuccess}
         </div>
       )}
 

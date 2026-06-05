@@ -78,7 +78,7 @@ export default function Marketplace() {
             fontSize: "0.875rem",
             fontWeight: 500,
           }}>
-            ✅ {txSuccess}
+            {txSuccess}
           </div>
         )}
 
@@ -218,7 +218,7 @@ export default function Marketplace() {
                                 color: "#991b1b",
                                 fontSize: "0.875rem",
                               }}>
-                                ⚠️ {txError}
+                                {txError}
                               </div>
                             )}
 

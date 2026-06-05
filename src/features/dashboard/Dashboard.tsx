@@ -19,7 +19,6 @@ import DashboardHome from "./pages/DashboardHome";
 import MyProjects from "./pages/MyProjects";
 import CreateProject from "./pages/CreateProject";
 import ProjectDetail from "./pages/ProjectDetail";
-import ExploreProjects from "./pages/ExploreProjects";
 import Marketplace from "./components/Marketplace";
 import Profile from "./pages/Profile";
 import InvestProjects from "./pages/InvestProjects";
@@ -41,7 +40,6 @@ export default function Dashboard() {
 
   const menuItems = [
     { path: "/dashboard", label: "Inicio", icon: LayoutDashboard },
-    { path: "/dashboard/explore", label: "Explorar", icon: Search },
     { path: "/dashboard/invest", label: "Invertir", icon: DollarSign },
     { path: "/dashboard/investments", label: "Mis Inversiones", icon: TrendingUp },
     { path: "/dashboard/projects", label: "Mis Proyectos", icon: Briefcase },
@@ -115,7 +113,6 @@ export default function Dashboard() {
           <Route path="projects" element={<MyProjects />} />
           <Route path="projects/new" element={<CreateProject />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
-          <Route path="explore" element={<ExploreProjects />} />
           <Route path="invest" element={<InvestProjects />} />
           <Route path="invest/:id" element={<InvestCheckout />} />
           <Route path="investments" element={<MyInvestments />} />

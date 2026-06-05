@@ -5,7 +5,7 @@ import logoDepFund from "/src/features/assets/img/logo_regency.jpg";
 
 const navItems = [
   { label: "Inicio", icon: LayoutDashboard, path: "/dashboard" },
-  { label: "Explorar", icon: Search, path: "/dashboard/explore" },
+  // { label: "Explorar", icon: Search, path: "/dashboard/explore" },
   // { label: "Invertir", icon: DollarSign, path: "/dashboard/invest" },
   // { label: "Mis Inversiones", icon: TrendingUp, path: "/dashboard/investments" },
   { label: "Mis Proyectos", icon: Briefcase, path: "/dashboard/projects" },

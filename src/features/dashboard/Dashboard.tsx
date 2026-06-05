@@ -69,10 +69,8 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Backdrop (fondo oscuro al abrir menú en móvil) */}
       {isSidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 
-      {/* Sidebar Principal */}
       <aside className={`dashboard-sidebar ${isSidebarOpen ? "show" : ""}`}>
         <div className="sidebar-brand">
           <img src={logoDepFund} alt="DepFund Logo" className="brand-logo" />
@@ -108,7 +106,6 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      {/* Área de Contenido */}
       <main className="dashboard-content">
         <Routes>
           <Route index element={<DashboardHome />} />

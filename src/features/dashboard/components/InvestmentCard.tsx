@@ -7,7 +7,7 @@ export default function InvestmentCard({ investment }: { investment: any }) {
   
 
   const tokens = investment.tokens || 0;
-  const roi = investment.roi || "+0.0%";
+  const progress = investment.progress || "0%";
   const investedAmount = investment.amount || 0;
   
   return (
@@ -19,16 +19,18 @@ export default function InvestmentCard({ investment }: { investment: any }) {
       
       <div className="project-card-body">
         <h3 className="project-card-name">{investment.projectName || "Proyecto Deportivo"}</h3>
-        <p className="project-card-category">Participación: {tokens} DPF (Tokens)</p>
+        <p className="project-card-category" style={{ color: '#2C7176', fontWeight: 600 }}>
+          Participación: {tokens} DPF
+        </p>
         
         <div className="project-card-stats" style={{ marginTop: '16px' }}>
           <div>
-            <span className="stat-label">Invertido</span>
-            <span className="stat-value">${investedAmount}</span>
+            <span className="stat-label">Invertido (USDC)</span>
+            <span className="stat-value">{investedAmount}</span>
           </div>
           <div>
-            <span className="stat-label">Retorno (ROI)</span>
-            <span className="stat-value" style={{ color: '#16a34a' }}>{roi}</span>
+            <span className="stat-label">Progreso</span>
+            <span className="stat-value" style={{ color: '#EC8F41' }}>{progress}</span>
           </div>
         </div>
 

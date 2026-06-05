@@ -39,9 +39,10 @@ export const createProject = async (data: {
   name: string;
   description: string;
   total_amount: number;
-  min_cost: number;
-  suffix: string;
-  gross_profit: number;
+  min_amount?: number | null;
+  suffix?: string | null;
+  annual_gross_profit?: number | null;
+  annual_expenses?: number | null;
   ubication: string;
   category_ids?: string[];
 }): Promise<Project> => {

@@ -40,7 +40,7 @@ export default function ProjectForm({ project, onClose, onSuccess }: ProjectForm
       if (project) {
         await updateProject(project.id, { ...payload, state });
       } else {
-        await createProject(payload);
+        await createProject(payload as any);
       }
       onSuccess();
       onClose();

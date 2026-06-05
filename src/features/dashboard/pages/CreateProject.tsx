@@ -50,7 +50,7 @@ export default function CreateProject() {
     );
   };
 
-  const validateAmount = (value: string, field: string): string => {
+  const validateAmount = (value: string): string => {
     if (!value) return "";
     const num = parseFloat(value);
     if (isNaN(num) || num < 0) return "Debe ser un número positivo.";
@@ -76,7 +76,7 @@ export default function CreateProject() {
     field: string
   ) => {
     setter(val);
-    setFieldErrors((prev) => ({ ...prev, [field]: validateAmount(val, field) }));
+    setFieldErrors((prev) => ({ ...prev, [field]: validateAmount(val) }));
   };
 
   const addFiles = (files: FileList | null) => {
@@ -117,13 +117,13 @@ export default function CreateProject() {
     const errors: Record<string, string> = {};
     const suffixErr = validateSuffix(suffix);
     if (suffixErr) errors.suffix = suffixErr;
-    const totalErr = validateAmount(totalAmount, "totalAmount");
+    const totalErr = validateAmount(totalAmount);
     if (totalErr) errors.totalAmount = totalErr;
-    const minCostErr = validateAmount(minCost, "minCost");
+    const minCostErr = validateAmount(minCost);
     if (minCostErr) errors.minCost = minCostErr;
-    const annualCostsErr = validateAmount(annualCosts, "annualCosts");
+    const annualCostsErr = validateAmount(annualCosts);
     if (annualCostsErr) errors.annualCosts = annualCostsErr;
-    const grossErr = validateAmount(grossProfit, "grossProfit");
+    const grossErr = validateAmount(grossProfit);
     if (grossErr) errors.grossProfit = grossErr;
 
     if (Object.values(errors).some((e) => e)) {

@@ -1,5 +1,9 @@
 export type ProjectState = "PENDING" | "APPROVED" | "CANCELED";
 
+export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
+
+
+
 export interface Category {
   id: string;
   name: string;
@@ -19,7 +23,16 @@ export interface Project {
   categories: Category[];
   created_at: string;
   updated_at: string;
+
+  min_amount?: string | null;
+  risk?: RiskLevel | null;
+  annual_expenses?: string | null;
+  annual_gross_profit?: string | null;
+  roi?: string | null;
+  annual_benefits?: string | null;
+  suffix?: string | null;
 }
+ 
 
 export interface PaginatedResponse<T> {
   total: number;

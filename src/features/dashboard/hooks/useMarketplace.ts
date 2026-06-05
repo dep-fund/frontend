@@ -75,14 +75,13 @@ export const useMarketplace = () => {
         return false;
       }
 
-      if (!Number.isInteger(amount) || amount < 1) {
-        const minUsdc = ethers.formatUnits(BigInt(listing.price_per_token), 6);
-        setTxError(`La cantidad mínima a comprar es 1 token (${minUsdc} USDC).`);
+      //Para poder comprar porciones de tokens.
+      if (!amount || amount <= 0) {
+        setTxError("La cantidad debe ser mayor a 0.");
         return false;
       }
-
-      const amountWei = BigInt(amount) * BigInt(10 ** 18);
-      const totalUsdc = BigInt(listing.price_per_token) * BigInt(amount);
+      const amountWei = ethers.parseUnits(amount.toFixed(18).replace(/\.?0+$/, "") || "0", 18);
+      const totalUsdc = BigInt(Math.ceil(Number(ethers.formatUnits(BigInt(listing.price_per_token), 6)) * amount * 1_000_000));
 
       const usdc = new ethers.Contract(info.usdc_address, USDC_ABI, signer);
       const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 import "./Marketplace.css";
+import "./MarketplaceInline.css";
 import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
 import { useMarketplace } from "../hooks/useMarketplace";
@@ -10,7 +11,19 @@ import type { Listing } from "../types";
 
 export default function Marketplace() {
   const { user } = useUser();
-  const { listings, info, loading, error, txError, setTxError, txSuccess, setTxSuccess, isProcessing, buyTokens, reload } = useMarketplace();
+  const { 
+    listings, 
+    info, 
+    loading, 
+    error, 
+    txError, 
+    setTxError, 
+    txSuccess, 
+    setTxSuccess, 
+    isProcessing, 
+    buyTokens, 
+    reload 
+  } = useMarketplace();
 
   const [tradeType, setTradeType] = useState<"BUY" | "SELL">("BUY");
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -29,13 +42,18 @@ export default function Marketplace() {
     }
   };
 
-  const formatPrice = (pricePerToken: number) =>
+  const formatPrice = (pricePerToken: string | bigint | number) =>
     ethers.formatUnits(BigInt(pricePerToken), 6);
 
-  const formatTokens = (amount: number) =>
-    ethers.formatUnits(BigInt(amount), 18);
+  const formatTokens = (amount: string | bigint | number) => {
+    const formatted = ethers.formatUnits(BigInt(amount), 18);
+    return Number(formatted).toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 4 
+    });
+  };
 
-  const handleUsdcChange = (val: string, pricePerToken: number) => {
+  const handleUsdcChange = (val: string, pricePerToken: string | bigint | number) => {
     setUsdcAmount(val);
     setTxError(null);
     if (!val || isNaN(Number(val))) return setTokenAmount("");
@@ -43,7 +61,7 @@ export default function Marketplace() {
     setTokenAmount((Number(val) / price).toFixed(4));
   };
 
-  const handleTokenChange = (val: string, pricePerToken: number) => {
+  const handleTokenChange = (val: string, pricePerToken: string | bigint | number) => {
     setTokenAmount(val);
     setTxError(null);
     if (!val || isNaN(Number(val))) return setUsdcAmount("");
@@ -53,7 +71,15 @@ export default function Marketplace() {
 
   const handleBuy = async (listing: Listing) => {
     if (!tokenAmount || isNaN(Number(tokenAmount))) return;
-    const success = await buyTokens(listing.id, Math.floor(Number(tokenAmount)));
+
+    const numericAmount = Number(tokenAmount);
+
+    if (numericAmount <= 0) {
+      setTxError("La cantidad a comprar debe ser mayor a 0.");
+      return;
+    }
+    
+    const success = await buyTokens(listing.id, numericAmount);
     if (success) {
       setSelectedId(null);
       setUsdcAmount("");
@@ -62,28 +88,20 @@ export default function Marketplace() {
   };
 
   const shortAddress = (address: string) =>
-    `${address.slice(0, 6)}...${address.slice(-4)}`;
+    address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "";
 
   return (
     <DashboardLayout title="Marketplace" user={user}>
       <div className="p2p-container animate-fade-in">
 
         {txSuccess && (
-          <div style={{
-            marginBottom: "16px",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            background: "#dcfce7",
-            color: "#166534",
-            fontSize: "0.875rem",
-            fontWeight: 500,
-          }}>
+          <div className="p2p-tx-success">
             {txSuccess}
           </div>
         )}
 
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "24px" }}>
-          <div className="p2p-header-tabs" style={{ marginBottom: 0, flex: 1 }}>
+        <div className="p2p-header-container">
+          <div className="p2p-header-tabs p2p-header-tabs-override">
             <button
               className={`tab-btn tab-btn-buy ${tradeType === "BUY" ? "tab-btn--active-buy" : ""}`}
               onClick={() => { setTradeType("BUY"); setSelectedId(null); }}
@@ -100,8 +118,7 @@ export default function Marketplace() {
 
           {tradeType === "SELL" && info && (
             <button
-              className="btn-execute bg-fund"
-              style={{ padding: "12px 20px", fontSize: "14px" }}
+              className="btn-execute bg-fund btn-new-listing"
               onClick={() => setShowCreateModal(true)}
             >
               + Nueva Publicación
@@ -112,7 +129,7 @@ export default function Marketplace() {
         {tradeType === "BUY" && (
           <>
             {loading && <p className="loading-msg">Cargando listings...</p>}
-            {error && <p className="loading-msg" style={{ color: "red" }}>{error}</p>}
+            {error && <p className="loading-msg p2p-error-text">{error}</p>}
 
             {!loading && !error && listings.length === 0 && (
               <p className="loading-msg">No hay ofertas activas en este momento.</p>
@@ -133,7 +150,7 @@ export default function Marketplace() {
                     <div key={listing.id} className="p2p-row-group">
                       <div className="p2p-row">
                         <div className="col-advertiser">
-                          <div className="adv-badge">{listing.seller[2].toUpperCase()}</div>
+                          <div className="adv-badge">{listing.seller?.[2]?.toUpperCase() || "?"}</div>
                           <div>
                             <span className="adv-name">{shortAddress(listing.seller)}</span>
                             <p className="adv-stats">Token: {shortAddress(listing.token)}</p>
@@ -164,12 +181,14 @@ export default function Marketplace() {
                         <div className="p2p-trade-box animate-fade-in">
                           <div className="trade-box-left">
                             <h4>Términos del listing</h4>
-                            <p className="terms-text">
-                              Asegurate de tener saldo suficiente en USDC para cubrir el monto
-                              y los fees de red (Gas). La transacción se ejecuta directamente
-                              en el Smart Contract. Una vez confirmada, recibirás los tokens DPF
-                              en tu wallet.
-                            </p>
+                              <p className="terms-text">
+                                Asegurate de tener saldo suficiente en USDC para cubrir el monto
+                                y los fees de red (Gas). La transacción se ejecuta directamente
+                                en el Smart Contract. Una vez confirmada, recibirás los tokens DPF
+                                en tu wallet. 
+                                <br /><br />
+                                <strong>Aclaración:</strong> La Plataforma se queda con el 2% de los tokens que compres.
+                              </p>
                           </div>
 
                           <div className="trade-box-right">
@@ -210,14 +229,7 @@ export default function Marketplace() {
                             </div>
 
                             {txError && (
-                              <div style={{
-                                marginTop: "0.75rem",
-                                padding: "10px 14px",
-                                borderRadius: "8px",
-                                background: "#fee2e2",
-                                color: "#991b1b",
-                                fontSize: "0.875rem",
-                              }}>
+                              <div className="p2p-tx-error">
                                 {txError}
                               </div>
                             )}

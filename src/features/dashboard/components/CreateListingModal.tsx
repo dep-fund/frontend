@@ -86,12 +86,24 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
     if (!amount || Number(amount) <= 0) return setError("Ingresá una cantidad válida.");
     if (!pricePerToken || Number(pricePerToken) <= 0) return setError("Ingresá un precio válido.");
 
+    const tokenData = tokens.find((t) => t.address === selectedToken);
+    
+    try {
+      const amountWei = ethers.parseUnits(amount, 18);
+      
+      if (tokenData && amountWei > tokenData.balance) {
+        return setError("No tienes tokens sufientes para hacer la operación.");
+      }
+    } catch (e) {
+      return setError("Cantidad inválida.");
+    }
+
     try {
       setIsProcessing(true);
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
 
-      const amountWei = ethers.parseUnits(amount, 18);
+      const amountWei = ethers.parseUnits(amount, 18); // Se vuelve a parsear pero ya validado
       const priceWei = ethers.parseUnits(pricePerToken, 6); // USDC tiene 6 decimales
 
       const token = new ethers.Contract(selectedToken, ERC20_ABI, signer);

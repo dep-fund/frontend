@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../../../constants";
-import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo } from "../types";
+import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken } from "../types";
 
 const authHeader = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -219,6 +219,13 @@ export const fetchListingsByToken = async (tokenAddress: string): Promise<Listin
 
 export const fetchMyListings = async (sellerAddress: string, status = "active"): Promise<Listing[]> => {
   const res = await axios.get(`${API_URL}/marketplace/listings/seller/${sellerAddress}?status=${status}`, {
+    headers: authHeader(),
+  });
+  return res.data;
+};
+
+export const fetchTokenByProject = async (projectId: string): Promise<ProjectToken> => {
+  const res = await axios.get(`${API_URL}/tokens/project/${projectId}`, {
     headers: authHeader(),
   });
   return res.data;

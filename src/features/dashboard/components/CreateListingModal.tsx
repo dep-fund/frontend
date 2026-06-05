@@ -4,10 +4,6 @@ import { X } from "lucide-react";
 import type { MarketplaceInfo } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
 
-const FACTORY_ABI = [
-  "event TokenCreated(address indexed token, string name, address indexed issuer)",
-];
-
 const ERC20_ABI = [
   "function balanceOf(address owner) view returns (uint256)",
   "function name() view returns (string)",
@@ -40,7 +36,6 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
   const [pricePerToken, setPricePerToken] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   useEffect(() => {
     loadUserTokens();
@@ -58,7 +53,6 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
-      setWalletAddress(address);
   
       // Por ahora solo existe el token DPF
       const DPF_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"; // ← tu address de MockDPF

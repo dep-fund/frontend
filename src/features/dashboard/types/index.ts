@@ -23,16 +23,18 @@ export interface Project {
   categories: Category[];
   created_at: string;
   updated_at: string;
-
-  min_amount?: string | null;
-  risk?: RiskLevel | null;
-  annual_expenses?: string | null;
-  annual_gross_profit?: string | null;
-  roi?: string | null;
-  annual_benefits?: string | null;
-  suffix?: string | null;
+  // Campos financieros
+  min_amount: string | null;
+  risk: string | null;
+  annual_expenses: string | null;
+  annual_gross_profit: string | null;
+  roi: string | null;
+  annual_benefits: string | null;
+  // Campos blockchain
+  suffix: string | null;
+  dividend_address: string | null;
+  offering_address: string | null;
 }
- 
 
 export interface PaginatedResponse<T> {
   total: number;
@@ -69,4 +71,20 @@ export interface MarketplaceInfo {
   marketplace_address: string;
   usdc_address: string;
   factory_address: string;
+}
+
+export interface TokenDetail {
+  id: string;
+  name: string;
+  suffix: string;
+  contract_address: string;
+}
+
+export interface ProjectToken {
+  id: string;
+  token_id: string;
+  project_id: string;
+  total_supply: string;
+  available_supply: string;
+  token: TokenDetail;
 }

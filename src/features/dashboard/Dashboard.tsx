@@ -4,7 +4,6 @@ import {
   LayoutDashboard, 
   Briefcase, 
   PlusCircle, 
-  Search, 
   User,
   ShoppingBag,
   Menu, 

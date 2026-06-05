@@ -1,5 +1,5 @@
 import "./Sidebar.css";
-import { LayoutDashboard, Briefcase, Search, PlusCircle, ShoppingBag, User, LogOut, Wallet } from "lucide-react";
+import { LayoutDashboard, Briefcase, PlusCircle, ShoppingBag, User, LogOut, Wallet } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logoDepFund from "/src/features/assets/img/logo_regency.jpg";
 

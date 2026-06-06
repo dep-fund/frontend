@@ -7,33 +7,16 @@ type Tab = 'send' | 'sign' | 'history';
 export function TransactionPanel() {
   const {
     isConnected,
-    sendTransaction,
-    isSending,
     transactions,
   } = useWallet();
 
   const [tab, setTab] = useState<Tab>('send');
-  const [toAddress, setToAddress] = useState('');
-  const [ethAmount, setEthAmount] = useState('');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   if (!isConnected) return null;
 
-  const handleSend = async () => {
-    setFeedback(null);
-    try {
-      const hash = await sendTransaction({ to: toAddress, value: ethAmount });
-      setFeedback({ type: 'success', text: `Tx enviada: ${hash.slice(0, 18)}…` });
-      setToAddress('');
-      setEthAmount('');
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Error desconocido';
-      setFeedback({ type: 'error', text: msg });
-    }
-  };
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'send', label: 'Enviar' },
     { id: 'history', label: 'Historial' },
   ];
 
@@ -59,45 +42,6 @@ export function TransactionPanel() {
       {feedback && (
         <div className={`tx-panel__feedback tx-panel__feedback--${feedback.type}`}>
           {feedback.text}
-        </div>
-      )}
-
-      {/* Send */}
-      {tab === 'send' && (
-        <div className="tx-panel__form">
-          <div className="tx-panel__field">
-            <label className="tx-panel__label">Dirección destinatario</label>
-            <input
-              className="tx-panel__input"
-              type="text"
-              placeholder="0x..."
-              value={toAddress}
-              onChange={(e) => setToAddress(e.target.value)}
-            />
-          </div>
-          <div className="tx-panel__field">
-            <label className="tx-panel__label">Monto (ETH)</label>
-            <input
-              className="tx-panel__input"
-              type="number"
-              step="0.001"
-              min="0"
-              placeholder="0.01"
-              value={ethAmount}
-              onChange={(e) => setEthAmount(e.target.value)}
-            />
-          </div>
-          <button
-            className="tx-panel__submit"
-            onClick={handleSend}
-            disabled={isSending || !toAddress || !ethAmount}
-          >
-            {isSending ? (
-              <><span className="wallet-spinner" /> Enviando…</>
-            ) : (
-              'Enviar ETH'
-            )}
-          </button>
         </div>
       )}
 

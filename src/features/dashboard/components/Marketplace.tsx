@@ -1,224 +1,278 @@
 import { useState } from "react";
+import { ethers } from "ethers";
 import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 import "./Marketplace.css";
+import "./MarketplaceInline.css";
 import DashboardLayout from "../components/DashboardLayout";
-
 import { useUser } from "../hooks/useUser";
-
-interface Ad {
-  id: number;
-  username: string;
-  ordenes: number;
-  completado: string;
-  precio: number;
-  disponible: number;
-  limiteMin: number;
-  limiteMax: number;
-}
-
-const initialAds: Ad[] = [
-  {
-    id: 1,
-    username: "Coin Reserve",
-    ordenes: 2232,
-    completado: "100.00%",
-    precio: 1.02,
-    disponible: 19992.01,
-    limiteMin: 10,
-    limiteMax: 5000
-  },
-  {
-    id: 2,
-    username: "HarveyySpecter",
-    ordenes: 459,
-    completado: "98.50%",
-    precio: 1.05,
-    disponible: 339.52,
-    limiteMin: 50,
-    limiteMax: 300
-  },
-  {
-    id: 3,
-    username: "Swap2pExpress",
-    ordenes: 511,
-    completado: "98.70%",
-    precio: 1.03,
-    disponible: 747.35,
-    limiteMin: 20,
-    limiteMax: 1000
-  }
-];
+import { useMarketplace } from "../hooks/useMarketplace";
+import CreateListingModal from "../components/CreateListingModal";
+import type { Listing } from "../types";
 
 export default function Marketplace() {
-    const { user } = useUser();
-  const [tradeType, setTradeType] = useState<"BUY" | "SELL">("BUY");
-  const [selectedAdId, setSelectedAdId] = useState<number | null>(null);
-  const [usdtAmount, setUsdtAmount] = useState<string>("");
-  const [tokenAmount, setTokenAmount] = useState<string>("");
+  const { user } = useUser();
+  const { 
+    listings, 
+    info, 
+    loading, 
+    error, 
+    txError, 
+    setTxError, 
+    txSuccess, 
+    setTxSuccess, 
+    isProcessing, 
+    buyTokens, 
+    reload 
+  } = useMarketplace();
 
+  const [tradeType, setTradeType] = useState<"BUY" | "SELL">("BUY");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [usdcAmount, setUsdcAmount] = useState<string>("");
+  const [tokenAmount, setTokenAmount] = useState<string>("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleOpenTrade = (id: number) => {
-    if (selectedAdId === id) {
-      setSelectedAdId(null); 
+    if (selectedId === id) {
+      setSelectedId(null);
     } else {
-      setSelectedAdId(id);
-      setUsdtAmount("");
+      setSelectedId(id);
+      setUsdcAmount("");
       setTokenAmount("");
+      setTxError(null);
     }
   };
 
-  // Lógica de cálculo automático (Teniendo en cuenta el precio)
-  const handleUsdtChange = (val: string, precio: number) => {
-    setUsdtAmount(val);
-    if (!val || isNaN(Number(val))) {
-      setTokenAmount("");
-      return;
-    }
-    const calculated = (Number(val) / precio).toFixed(4);
-    setTokenAmount(calculated);
+  const formatPrice = (pricePerToken: string | bigint | number) =>
+    ethers.formatUnits(BigInt(pricePerToken), 6);
+
+  const formatTokens = (amount: string | bigint | number) => {
+    const formatted = ethers.formatUnits(BigInt(amount), 18);
+    return Number(formatted).toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 4 
+    });
   };
 
-  const handleTokenChange = (val: string, precio: number) => {
+  const handleUsdcChange = (val: string, pricePerToken: string | bigint | number) => {
+    setUsdcAmount(val);
+    setTxError(null);
+    if (!val || isNaN(Number(val))) return setTokenAmount("");
+    const price = Number(ethers.formatUnits(BigInt(pricePerToken), 6));
+    setTokenAmount((Number(val) / price).toFixed(4));
+  };
+
+  const handleTokenChange = (val: string, pricePerToken: string | bigint | number) => {
     setTokenAmount(val);
-    if (!val || isNaN(Number(val))) {
-      setUsdtAmount("");
+    setTxError(null);
+    if (!val || isNaN(Number(val))) return setUsdcAmount("");
+    const price = Number(ethers.formatUnits(BigInt(pricePerToken), 6));
+    setUsdcAmount((Number(val) * price).toFixed(2));
+  };
+
+  const handleBuy = async (listing: Listing) => {
+    if (!tokenAmount || isNaN(Number(tokenAmount))) return;
+
+    const numericAmount = Number(tokenAmount);
+
+    if (numericAmount <= 0) {
+      setTxError("La cantidad a comprar debe ser mayor a 0.");
       return;
     }
-    const calculated = (Number(val) * precio).toFixed(2);
-    setUsdtAmount(calculated);
+    
+    const success = await buyTokens(listing.id, numericAmount);
+    if (success) {
+      setSelectedId(null);
+      setUsdcAmount("");
+      setTokenAmount("");
+    }
   };
+
+  const shortAddress = (address: string) =>
+    address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "";
 
   return (
     <DashboardLayout title="Marketplace" user={user}>
-        <div className="p2p-container animate-fade-in">
-        {/* Encabezado con selector BUY/SELL */}
-        <div className="p2p-header-tabs">
-            <button 
-            className={`tab-btn tab-btn-buy ${tradeType === "BUY" ? "tab-btn--active-buy" : ""}`}
-            onClick={() => { setTradeType("BUY"); setSelectedAdId(null); }}
+      <div className="p2p-container animate-fade-in">
+
+        {txSuccess && (
+          <div className="p2p-tx-success">
+            {txSuccess}
+          </div>
+        )}
+
+        <div className="p2p-header-container">
+          <div className="p2p-header-tabs p2p-header-tabs-override">
+            <button
+              className={`tab-btn tab-btn-buy ${tradeType === "BUY" ? "tab-btn--active-buy" : ""}`}
+              onClick={() => { setTradeType("BUY"); setSelectedId(null); }}
             >
-            Comprar
+              Comprar
             </button>
-            <button 
-            className={`tab-btn tab-btn-sell ${tradeType === "SELL" ? "tab-btn--active-sell" : ""}`}
-            onClick={() => { setTradeType("SELL"); setSelectedAdId(null); }}
+            <button
+              className={`tab-btn tab-btn-sell ${tradeType === "SELL" ? "tab-btn--active-sell" : ""}`}
+              onClick={() => { setTradeType("SELL"); setSelectedId(null); }}
             >
-            Vender
+              Vender
             </button>
+          </div>
+
+          {tradeType === "SELL" && info && (
+            <button
+              className="btn-execute bg-fund btn-new-listing"
+              onClick={() => setShowCreateModal(true)}
+            >
+              + Nueva Publicación
+            </button>
+          )}
         </div>
 
-        {/* Tabla de Anunciantes */}
-        <div className="p2p-table-wrapper">
-            <div className="p2p-table-header">
-            <div className="col-advertiser">Anunciante</div>
-            <div className="col-price">Precio (ETH)</div>
-            <div className="col-limit">Disponible / Límites</div>
-            <div className="col-trade">Operar</div>
-            </div>
+        {tradeType === "BUY" && (
+          <>
+            {loading && <p className="loading-msg">Cargando listings...</p>}
+            {error && <p className="loading-msg p2p-error-text">{error}</p>}
 
-            {initialAds.map((ad) => {
-            const isOpen = selectedAdId === ad.id;
-            return (
-                <div key={ad.id} className="p2p-row-group">
-                {/* Fila Principal */}
-                <div className="p2p-row">
-                    <div className="col-advertiser">
-                    <div className="adv-badge">{ad.username[0]}</div>
-                    <div>
-                        <span className="adv-name">{ad.username}</span>
-                        <p className="adv-stats">{ad.ordenes} órdenes | {ad.completado}</p>
-                    </div>
-                    </div>
+            {!loading && !error && listings.length === 0 && (
+              <p className="loading-msg">No hay ofertas activas en este momento.</p>
+            )}
 
-                    <div className="col-price font-bold">
-                    {ad.precio.toFixed(2)} ETH
-                    </div>
-
-                    <div className="col-limit">
-                    <p><span>Disponible:</span> {ad.disponible} DPF</p>
-                    <p><span>Límites:</span> {ad.limiteMin} - {ad.limiteMax} USDT</p>
-                    </div>
-
-                    <div className="col-trade">
-                    <button 
-                        className={`trade-action-btn ${tradeType === "BUY" ? "btn-buy" : "btn-sell"}`}
-                        onClick={() => handleOpenTrade(ad.id)}
-                    >
-                        {tradeType === "BUY" ? "Comprar DPF" : "Vender DPF"}
-                        {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                    </button>
-                    </div>
+            {!loading && !error && listings.length > 0 && (
+              <div className="p2p-table-wrapper">
+                <div className="p2p-table-header">
+                  <div className="col-advertiser">Vendedor</div>
+                  <div className="col-price">Precio / Token</div>
+                  <div className="col-limit">Disponible</div>
+                  <div className="col-trade">Operar</div>
                 </div>
 
-                {/*  Operación Expandible */}
-                {isOpen && (
-                    <div className="p2p-trade-box animate-fade-in">
-                    <div className="trade-box-left">
-                        <h4>Términos del anunciante</h4>
-                        <p className="terms-text">
-                        Asegúrate de contar con saldo suficiente para cubrir los fees de la red (Gas).
-                        La liberación de los tokens se ejecutará automáticamente vía Smart Contract.
-                        Una vez confirmada la transacción en la blockchain, recibirás los DPF en tu wallet conectada.
-                        </p>
-                    </div>
-
-                    <div className="trade-box-right">
-                        <div className="price-indicator">
-                        Precio de referencia: <strong>{ad.precio} ETH</strong>
+                {listings.map((listing) => {
+                  const isOpen = selectedId === listing.id;
+                  return (
+                    <div key={listing.id} className="p2p-row-group">
+                      <div className="p2p-row">
+                        <div className="col-advertiser">
+                          <div className="adv-badge">{listing.seller?.[2]?.toUpperCase() || "?"}</div>
+                          <div>
+                            <span className="adv-name">{shortAddress(listing.seller)}</span>
+                            <p className="adv-stats">Token: {shortAddress(listing.token)}</p>
+                          </div>
                         </div>
 
-                        <div className="trade-inputs-group">
-                        <div className="trade-input-wrapper">
-                            <label>{tradeType === "BUY" ? "Pagas (ETH)" : "Vendes (DPF)"}</label>
-                            <div className="input-with-symbol">
-                            <input 
-                                type="number" 
-                                placeholder="0.00"
-                                value={tradeType === "BUY" ? usdtAmount : tokenAmount}
-                                onChange={(e) => tradeType === "BUY" 
-                                ? handleUsdtChange(e.target.value, ad.precio)
-                                : handleTokenChange(e.target.value, ad.precio)
-                                }
-                            />
-                            <span className="symbol-label">{tradeType === "BUY" ? "ETH" : "DPF"}</span>
+                        <div className="col-price font-bold">
+                          {formatPrice(listing.price_per_token)} USDC
+                        </div>
+
+                        <div className="col-limit">
+                          <p><span>Disponible:</span> {formatTokens(listing.remaining_amount)} DPF</p>
+                          <p><span>Total original:</span> {formatTokens(listing.total_amount)} DPF</p>
+                        </div>
+
+                        <div className="col-trade">
+                          <button
+                            className="trade-action-btn btn-buy"
+                            onClick={() => handleOpenTrade(listing.id)}
+                          >
+                            Comprar DPF
+                            {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {isOpen && (
+                        <div className="p2p-trade-box animate-fade-in">
+                          <div className="trade-box-left">
+                            <h4>Términos del listing</h4>
+                              <p className="terms-text">
+                                Asegurate de tener saldo suficiente en USDC para cubrir el monto
+                                y los fees de red (Gas). La transacción se ejecuta directamente
+                                en el Smart Contract. Una vez confirmada, recibirás los tokens DPF
+                                en tu wallet. 
+                                <br /><br />
+                                <strong>Aclaración:</strong> La Plataforma se queda con el 2% de los tokens que compres.
+                              </p>
+                          </div>
+
+                          <div className="trade-box-right">
+                            <div className="price-indicator">
+                              Precio por token: <strong>{formatPrice(listing.price_per_token)} USDC</strong>
                             </div>
-                        </div>
 
-                        <div className="trade-inputs-spacer">
-                            <ArrowUpDown size={16} className="text-muted" />
-                        </div>
+                            <div className="trade-inputs-group">
+                              <div className="trade-input-wrapper">
+                                <label>Pagás (USDC)</label>
+                                <div className="input-with-symbol">
+                                  <input
+                                    type="number"
+                                    placeholder="0.00"
+                                    value={usdcAmount}
+                                    onChange={(e) => handleUsdcChange(e.target.value, listing.price_per_token)}
+                                  />
+                                  <span className="symbol-label">USDC</span>
+                                </div>
+                              </div>
 
-                        <div className="trade-input-wrapper">
-                            <label>{tradeType === "BUY" ? "Recibes (DPF)" : "Recibes (ETH)"}</label>
-                            <div className="input-with-symbol">
-                            <input 
-                                type="number" 
-                                placeholder="0.00"
-                                value={tradeType === "BUY" ? tokenAmount : usdtAmount}
-                                onChange={(e) => tradeType === "BUY"
-                                ? handleTokenChange(e.target.value, ad.precio)
-                                : handleUsdtChange(e.target.value, ad.precio)
-                                }
-                            />
-                            <span className="symbol-label">{tradeType === "BUY" ? "DPF" : "ETH"}</span>
+                              <div className="trade-inputs-spacer">
+                                <ArrowUpDown size={16} className="text-muted" />
+                              </div>
+
+                              <div className="trade-input-wrapper">
+                                <label>Recibís (DPF)</label>
+                                <div className="input-with-symbol">
+                                  <input
+                                    type="number"
+                                    placeholder="0.00"
+                                    value={tokenAmount}
+                                    onChange={(e) => handleTokenChange(e.target.value, listing.price_per_token)}
+                                  />
+                                  <span className="symbol-label">DPF</span>
+                                </div>
+                              </div>
                             </div>
-                        </div>
-                        </div>
 
-                        <div className="trade-actions">
-                        <button className="btn-secondary" onClick={() => setSelectedAdId(null)}>Cancelar</button>
-                        <button className={`btn-execute ${tradeType === "BUY" ? "bg-dep" : "bg-fund"}`}>
-                            {tradeType === "BUY" ? "Confirmar Compra" : "Confirmar Venta"}
-                        </button>
+                            {txError && (
+                              <div className="p2p-tx-error">
+                                {txError}
+                              </div>
+                            )}
+
+                            <div className="trade-actions">
+                              <button className="btn-secondary" onClick={() => setSelectedId(null)}>
+                                Cancelar
+                              </button>
+                              <button
+                                className="btn-execute bg-dep"
+                                disabled={!tokenAmount || Number(tokenAmount) <= 0 || isProcessing}
+                                onClick={() => handleBuy(listing)}
+                              >
+                                {isProcessing ? "Procesando..." : "Confirmar Compra"}
+                              </button>
+                            </div>
+                          </div>
                         </div>
+                      )}
                     </div>
-                    </div>
-                )}
-                </div>
-            );
-            })}
-        </div>
-        </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {tradeType === "SELL" && (
+          <p className="loading-msg">No tenés publicaciones activas.</p>
+        )}
+
+      </div>
+
+      {showCreateModal && info && (
+        <CreateListingModal
+          info={info}
+          onClose={() => setShowCreateModal(false)}
+          onSuccess={() => {
+            reload();
+            setTxSuccess("¡Publicación creada exitosamente!");
+          }}
+        />
+      )}
 
     </DashboardLayout>
   );

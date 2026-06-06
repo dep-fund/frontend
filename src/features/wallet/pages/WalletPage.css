@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --dep:          #EC8F41;
+  --dep-light:    #fef4ea;
+  --dep-mid:      #f5c07a;
+  --dep-dark:     #b86a1e;
+
+  --fund:         #2C7176;
+  --fund-light:   #e6f4f5;
+  --fund-mid:     #4fa8af;
+  --fund-dark:    #1a4a4e;
+
+  --w-surface:    #ffffff;
+  --w-surface-2:  #f9fafb;
+  --w-surface-3:  #f3f4f6;
+  --w-border:     #e5e7eb;
+  --w-border-soft:#f0f1f3;
+
+  --w-text-1:     #111827;
+  --w-text-2:     #6b7280;
+  --w-text-3:     #9ca3af;
+
+  --w-radius-sm:  8px;
+  --w-radius-md:  12px;
+  --w-radius-lg:  16px;
+  --w-radius-xl:  20px;
+}
+
+/* ── Page ───────────────────────────────────────────── */
+.wallet-page {
+  padding: 2rem 2.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 100%;
+  font-family: "DM Sans", sans-serif;
+  background: var(--w-surface-2);
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.wallet-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--w-border);
+}
+
+.wallet-page__title {
+  font-family: "Sora", sans-serif;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--w-text-1);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.03em;
+}
+
+.wallet-page__title span {
+  color: var(--dep);
+}
+
+.wallet-page__subtitle {
+  font-size: 0.875rem;
+  color: var(--w-text-2);
+  margin: 0;
+  max-width: 420px;
+  line-height: 1.6;
+}
+
+/* ── Grid ───────────────────────────────────────────── */
+.wallet-page__grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.wallet-page__empty {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ── Spinner ────────────────────────────────────────── */
+.wallet-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: w-spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes w-spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 820px) {
+  .wallet-page { padding: 1.5rem 1.25rem; }
+  .wallet-page__grid { grid-template-columns: 1fr; }
+  .wallet-page__header { flex-direction: column; align-items: flex-start; }
+}

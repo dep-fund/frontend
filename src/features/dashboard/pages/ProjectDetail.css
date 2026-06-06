@@ -1,0 +1,419 @@
+.pd-loading {
+  text-align: center;
+  color: #9ca3af;
+  padding: 64px;
+}
+
+.pd-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #2C7176;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.pd-back:hover { opacity: 0.75; }
+
+.pd-hero {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 7; /* Formato panorámico que se adapta a la resolución */
+  min-height: 250px;
+  max-height: 450px; /* Evita que sea demasiado gigante en monitores grandes */
+  background-color: #f3f4f6;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.pd-carousel-bg-blur {
+  position: absolute;
+  inset: -5%; /* Ligeramente más grande para evitar bordes duros por el desenfoque */
+  background-size: cover;
+  background-position: center;
+  filter: blur(24px);
+  opacity: 0.5; /* Oscurece el fondo para resaltar la imagen principal */
+  z-index: 0;
+}
+
+.pd-carousel-img {
+  width: 100%;
+  height: 100%;
+  /* contain asegura que la imagen no sufra zoom ni recortes y mantenga máxima calidad */
+  object-fit: contain; 
+  object-position: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  image-rendering: high-quality; /* Fuerza la mayor calidad de imagen posible en navegadores compatibles */
+}
+
+.pd-carousel-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 2; /* Subimos el gradiente por encima de la imagen */
+}
+
+.pd-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  transition: all 0.2s ease;
+}
+
+.pd-carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.pd-carousel-btn--prev { left: 16px; }
+.pd-carousel-btn--next { right: 16px; }
+
+.pd-carousel-dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+
+.pd-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.pd-carousel-dot.active {
+  background: #ffffff;
+  transform: scale(1.2);
+}
+
+.pd-carousel-empty {
+  color: #6b7280;
+  font-size: 14px;
+  z-index: 3;
+}
+
+.pd-carousel-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 3;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.pd-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-family: "DM Sans", sans-serif;
+}
+
+.pd-badge--active { background: #dcfce7; color: #16a34a; }
+.pd-badge--pending { background: #fef9c3; color: #d97706; }
+.pd-badge--completed { background: #f3f4f6; color: #6b7280; }
+
+.pd-badge--inline {
+  font-size: 0.72rem;
+}
+
+.pd-roi-badge {
+  background: rgba(255,255,255,0.92);
+  color: #1a1a1a;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+}
+
+.pd-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.pd-name {
+  font-family: "Sora", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.pd-sub {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.pd-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #EC8F41;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.pd-edit-btn:hover { background: #d97f35; }
+
+.pd-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.pd-stat-card {
+  background: #fff7ed;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #fed7aa;
+}
+
+.pd-stat-label {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.pd-stat-value {
+  font-family: "Sora", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.pd-stat-sub {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.pd-progress-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.pd-progress-fill {
+  height: 100%;
+  background: #EC8F41;
+  border-radius: 99px;
+}
+
+.pd-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pd-section {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 20px 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.pd-section h3 {
+  font-family: "Sora", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 10px;
+}
+
+.pd-section p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.pd-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.pd-info-card {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 20px 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.pd-info-card h4 {
+  font-family: "Sora", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 14px;
+}
+
+.pd-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.85rem;
+}
+
+.pd-info-row:last-child {
+  border-bottom: none;
+}
+
+.pd-info-row span {
+  color: #6b7280;
+}
+
+.pd-info-row strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.pd-roi-text {
+  color: #EC8F41 !important;
+}
+
+
+
+@media (max-width: 1024px) {
+  .pd-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .pd-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .pd-edit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pd-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .pd-hero {
+    aspect-ratio: 16 / 11; 
+    min-height: 220px;
+    margin-bottom: 16px;
+  }
+
+  /* Centrado perfecto del header en celulares */
+  .pd-header {
+    align-items: center; 
+    text-align: center;  
+    width: 100%;
+  }
+
+  .pd-name {
+    font-size: 1.5rem;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .pd-sub {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pd-stats {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .pd-stat-card {
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .pd-stat-label {
+    font-size: 0.7rem;
+  }
+
+  .pd-stat-value {
+    font-size: 1.15rem; 
+    word-break: break-all;
+  }
+
+  .pd-stat-sub {
+    font-size: 0.65rem;
+    white-space: nowrap;
+  }
+
+  .pd-section,
+  .pd-info-card {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pd-stats {
+    /* Pasamos a 2 columnas arriba y 1 abajo que ocupa todo el ancho */
+    grid-template-columns: repeat(2, 1fr); 
+  }
+  
+  /* Hacemos que la barra de progreso (la 3ra tarjeta) ocupe toda la fila de abajo */
+  .pd-stat-card:last-child {
+    grid-column: span 2; 
+  }
+}

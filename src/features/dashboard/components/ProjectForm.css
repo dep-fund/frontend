@@ -1,0 +1,235 @@
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+
+.form-modal {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.form-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px 0;
+  margin-bottom: 20px;
+}
+
+.form-modal-header h2 {
+  font-family: "Sora", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.form-close {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.form-close:hover {
+  color: #374151;
+}
+
+.form-error {
+  margin: 0 28px 16px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border-left: 3px solid #ef4444;
+  color: #b91c1c;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.form-body {
+  padding: 0 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  font-family: "DM Sans", sans-serif;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 10px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.15s;
+  background: white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #EC8F41;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.form-cat-tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #6b7280;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.form-cat-tag:hover {
+  border-color: #EC8F41;
+  color: #EC8F41;
+}
+
+.form-cat-tag--selected {
+  background: #EC8F41;
+  border-color: #EC8F41;
+  color: white;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-submit {
+  flex: 1;
+  padding: 12px;
+  background: #EC8F41;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #d97f35;
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  padding: 12px 20px;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-cancel:hover {
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.form-group input:disabled,
+.form-group select:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.form-state-display {
+  margin: 0;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .form-modal {
+    width: 95%;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-overlay { padding: 0; }
+  .form-modal {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  .form-modal-header { padding: 20px 20px 0; }
+  .form-body { padding: 0 20px 20px; }
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .btn-submit, .btn-cancel {
+    width: 100%;
+    padding: 14px;
+  }
+}
+

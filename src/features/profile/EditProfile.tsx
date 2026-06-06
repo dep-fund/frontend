@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './EditProfile.css';
+import logoDepFund from '../assets/img/logo_regency.jpg';
+import { API_URL } from '../../constants';
+
+const EditProfile: React.FC = () => {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    last_name: '',
+    birthdate: '',
+    email: '',
+  });
+
+  const [passwordData, setPasswordData] = useState({
+    old_password: '',
+    new_password: '',
+    confirm_new_password: ''
+  });
+
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'success' | 'error';
+  } | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return navigate('/login');
+
+        const response = await axios.get(`${API_URL}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setFormData(response.data);
+      } catch {
+        navigate('/login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name.includes('password')) {
+      setPasswordData({ ...passwordData, [name]: value.replace(/\s/g, '') });
+    } else {
+      setFormData({ ...formData, [name]: value.trimStart() });
+    }
+  };
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUpdating(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      await axios.patch(`${API_URL}/users/me`, formData, { headers });
+
+      if (passwordData.old_password || passwordData.new_password) {
+        if (passwordData.new_password !== passwordData.confirm_new_password) {
+          throw new Error("Las nuevas contraseñas no coinciden");
+        }
+
+        await axios.post(`${API_URL}/users/me/change-password`, {
+          old_password: passwordData.old_password,
+          new_password: passwordData.new_password
+        }, { headers });
+      }
+
+      showToast('Perfil actualizado correctamente', 'success');
+
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
+
+    } catch (err: any) {
+      showToast(
+        err.response?.data?.detail || err.message || 'Error al actualizar',
+        'error'
+      );
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  if (loading) return <div className="loading-screen">Cargando datos...</div>;
+
+  return (
+    <>
+      {toast && (
+        <div className={`edit-profile-toast ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+
+      <div className="edit-profile-page">
+        <div className="edit-profile-columns">
+
+          <div className="edit-profile-visual">
+            <div className="edit-profile-overlay"></div>
+            <div className="edit-profile-visual-content">
+              <img src={logoDepFund} className="edit-profile-logo" />
+              <h2>Ajustes</h2>
+            </div>
+          </div>
+
+          <div className="edit-profile-form-side">
+            <div className="edit-profile-wrapper">
+
+              <div className="edit-profile-header">
+                <h2>Editar Información</h2>
+              </div>
+
+              <form onSubmit={handleSubmit} className="edit-profile-form">
+
+                <div className="edit-profile-group">
+                  <label>Nombre</label>
+                  <input name="name" value={formData.name} onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-group">
+                  <label>Apellido</label>
+                  <input name="last_name" value={formData.last_name} onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-group edit-profile-full">
+                  <label>Email</label>
+                  <input name="email" value={formData.email} onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-section edit-profile-full">
+                  Seguridad
+                </div>
+
+                <div className="edit-profile-group edit-profile-full">
+                  <label>Contraseña actual</label>
+                  <input name="old_password" type="password"
+                    value={passwordData.old_password}
+                    onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-group">
+                  <label>Nueva contraseña</label>
+                  <input name="new_password" type="password"
+                    value={passwordData.new_password}
+                    onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-group">
+                  <label>Repetir</label>
+                  <input name="confirm_new_password" type="password"
+                    value={passwordData.confirm_new_password}
+                    onChange={handleChange} />
+                </div>
+
+                <div className="edit-profile-buttons">
+
+                  <button className="edit-profile-primary" disabled={updating}>
+                    {updating ? 'Guardando...' : 'Guardar cambios'}
+                  </button>
+
+                  <Link to="/ProfileView" className="edit-profile-secondary">
+                    Cancelar
+                  </Link>
+
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default EditProfile;

@@ -1,0 +1,98 @@
+.topbar {
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbar-title {
+  font-family: "Sora", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 4px 8px;
+  transition: background 0.15s;
+}
+
+.topbar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #EC8F41;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.topbar-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.topbar-user-name {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.topbar-user-email {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  line-height: 1.2;
+}
+
+.topbar-user {
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 4px 8px;
+  transition: background 0.15s;
+}
+
+.topbar-user:hover {
+  background: #f9fafb;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .topbar {
+    padding: 0 24px;
+    width: 100%;
+    position: fixed; /* Se mantiene arriba al hacer scroll en móviles */
+    left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    padding: 0 16px;
+  }
+  .topbar-title {
+    font-size: 1.1rem;
+  }
+  .topbar-user-info {
+    display: none;
+  }
+}

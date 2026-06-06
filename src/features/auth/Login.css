@@ -1,0 +1,253 @@
+:root {
+  --primary-orange: #f19204;
+  --dark-navy: #0d1b2a;
+  --text-main: #1a1a1a;
+  --text-muted: #667085;
+  --white: #ffffff;
+  --glow-color: rgba(241, 146, 4, 0.4);
+}
+
+/* Reset básico para el panel */
+.login-panel-container * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Contenedor principal para el panel y el backdrop */
+.login-panel-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* Permite interactuar con el contenido de abajo por defecto */
+  z-index: 999; /* Asegura que esté por encima del contenido de la landing */
+}
+
+.login-panel-container.open {
+  pointer-events: auto; /* Habilita la interacción cuando está abierto */
+}
+
+/* Backdrop oscuro */
+.login-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  backdrop-filter: blur(0px); /* Inicia sin desenfoque */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.login-panel-container.open .login-backdrop {
+  opacity: 1;
+  visibility: visible;
+  backdrop-filter: blur(5px); /* Aplica el desenfoque cuando está abierto */
+}
+
+/* Panel lateral de login */
+.login-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 100%; /* Por defecto, ocupa todo el ancho en móviles */
+  max-width: 450px; /* Ancho máximo en pantallas más grandes */
+  background-color: var(--white);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 900; 
+  transform: translateX(100%); /* Inicia fuera de la pantalla a la derecha */
+  transition: transform 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  padding: 25px; /* Ajuste de padding para el panel */
+  padding-top: 80px; /* compensa la altura del navbar */
+  overflow-y: auto; /* Para permitir scroll si el contenido es largo */
+}
+
+.login-panel-container.open .login-panel {
+  transform: translateX(0); /* Se desliza hacia adentro */
+}
+
+/* Botón de cerrar para el panel */
+.login-close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  z-index: 1001;
+}
+
+.login-close-button:hover {
+  color: var(--primary-orange);
+}
+
+/* Los siguientes estilos se mantienen, pero se ajustan para el contexto del panel */
+.auth-header {
+  margin-bottom: 25px; /* Ajuste de margen */
+  text-align: center; /* Centrar el texto del encabezado en el panel */
+}
+
+.auth-header h2 {
+  font-size: 1.8rem; /* Tamaño de fuente ligeramente menor para el panel */
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+
+.auth-header p {
+  color: var(--text-muted);
+  font-size: 0.9rem; /* Tamaño de fuente ligeramente menor para el panel */
+}
+
+.error-message {
+  background: #fff5f5;
+  color: #c53030;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border-left: 4px solid #c53030;
+  text-align: left;
+}
+
+/* INPUTS */
+.input-group {
+  margin-bottom: 18px; /* Ajuste de margen */
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem; /* Tamaño de fuente ligeramente menor para el panel */
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 6px; /* Ajuste de margen */
+  text-align: left;
+}
+
+.input-input-wrapper {
+  position: relative;
+}
+
+
+.input-group input {
+  width: 100%;
+  padding: 12px 14px; /* Ajuste de padding */
+  border: 1px solid #e4e7eb;
+  border-radius: 8px;
+  font-size: 0.95rem; /* Tamaño de fuente ligeramente menor para el panel */
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+  color: var(--text-main);
+}
+
+/* Estilo al escribir/focus */
+.input-group input:focus {
+  outline: none;
+  background-color: var(--white);
+  border-color: var(--primary-orange);
+}
+
+/* La barra de sombreado inferior (Glow bar) */
+.input-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0; /* Empieza con ancho 0 */
+  background: var(--primary-orange);
+  box-shadow: 0 0 10px var(--glow-color); /* Efecto Neón/Glow */
+  transition: width 0.3s ease;
+  z-index: 2;
+}
+
+/* Animación cuando el input tiene focus */
+.input-group input:focus + .input-highlight {
+  width: 100%; /* Se expande a todo el ancho */
+}
+
+/* --- BOTONES Y LINKS --- */
+.login-button {
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary-orange) 0%, #d98303 100%);
+  color: white;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrar el contenido del botón */
+  gap: 12px;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(241, 146, 4, 0.3);
+}
+
+.button-arrow {
+  transition: transform 0.2s ease;
+}
+
+.login-button:hover .button-arrow {
+  transform: translateX(5px);
+}
+
+.signup-link {
+  color: var(--primary-orange);
+  text-decoration: none;
+  font-weight: 700;
+  white-space: nowrap; /* Evita que el enlace se rompa en varias líneas */
+}
+
+.forgot-link {
+  color: var(--primary-orange);
+  text-decoration: none;
+  font-size: 0.8rem; /* Tamaño de fuente ligeramente menor para el panel */
+  font-weight: 500;
+  display: block; /* Asegura que ocupe su propia línea si es necesario */
+  margin-top: 5px; /* Espacio superior */
+}
+
+.signup-link:hover, .forgot-link:hover {
+  text-decoration: underline;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 25px; /* Ajuste de margen */
+  font-size: 0.85rem; /* Tamaño de fuente ligeramente menor para el panel */
+  color: var(--text-muted);
+}
+
+/* --- RESPONSIVIDAD (Móviles) --- */
+@media (max-width: 1024px) {
+  .visual-title {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 768px) { /* Ajustes para el panel en pantallas más pequeñas */
+  .login-panel {
+    width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    max-width: 100%;
+    padding: 20px;
+  }
+}

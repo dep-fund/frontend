@@ -1,0 +1,101 @@
+.wallet-connect-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ── Address badge ──────────────────────────────────── */
+.wallet-address-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.78rem;
+  color: var(--w-text-2, #6b7280);
+  background: var(--w-surface, #fff);
+  border: 1px solid var(--w-border, #e5e7eb);
+  padding: 0.45rem 0.9rem;
+  border-radius: 99px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ── Connected dot ──────────────────────────────────── */
+.wallet-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22,163,74,0.2);
+  animation: wdot-pulse 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes wdot-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(22,163,74,0.2); }
+  50%       { box-shadow: 0 0 0 5px rgba(22,163,74,0.08); }
+}
+
+/* ── Base button ────────────────────────────────────── */
+.wallet-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--w-radius-sm, 8px);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* ── Connect ────────────────────────────────────────── */
+.wallet-btn--connect {
+  background: #EC8F41;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(236,143,65,0.3);
+}
+
+.wallet-btn--connect:hover:not(:disabled) {
+  background: #b86a1e;
+  box-shadow: 0 4px 14px rgba(236,143,65,0.4);
+  transform: translateY(-1px);
+}
+
+.wallet-btn--connect:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.wallet-btn--connect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Disconnect ─────────────────────────────────────── */
+.wallet-btn--disconnect {
+  background: transparent;
+  color: var(--w-text-2, #6b7280);
+  border: 1px solid var(--w-border, #e5e7eb);
+}
+
+.wallet-btn--disconnect:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+/* ── Spinner ────────────────────────────────────────── */
+.wallet-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: w-spin 0.65s linear infinite;
+}
+
+@keyframes w-spin { to { transform: rotate(360deg); } }

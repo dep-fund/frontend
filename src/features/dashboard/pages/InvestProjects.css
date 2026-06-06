@@ -1,0 +1,76 @@
+.invest-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.invest-filters-title {
+  margin: 0;
+}
+
+.invest-filters-reset {
+  background: none;
+  border: none;
+  color: #ec8f41;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+}
+
+.invest-filters-more {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.invest-filters-subtitle {
+  font-family: "Sora", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.invest-filter-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.invest-input-number {
+  padding-left: 14px;
+}
+
+.invest-date-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invest-date-span {
+  font-size: 0.75rem;
+  color: #6b7280;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.invest-date-input {
+  width: 100%;
+  padding: 10px;
+  background: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.85rem;
+  box-sizing: border-box;
+}
+
+.invest-count-icon {
+  margin-right: 8px;
+  color: #ec8f41;
+}

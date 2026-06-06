@@ -1,0 +1,123 @@
+.mylistings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  .listing-card {
+    background: white;
+    border: 0.5px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .listing-card-accent {
+    height: 4px;
+    background: #2C7176;
+  }
+  
+  .listing-card-accent--finalized { background: #1e40af; }
+  .listing-card-accent--cancelled { background: #dc2626; }
+  
+  .listing-card-body {
+    padding: 20px;
+  }
+  
+  .listing-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  
+  .listing-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    font-family: "DM Sans", sans-serif;
+  }
+  
+  .listing-card-sub {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
+  }
+  
+  .listing-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .listing-badge--active   { background: #dcfce7; color: #166534; }
+  .listing-badge--finalized { background: #dbeafe; color: #1e40af; }
+  .listing-badge--cancelled { background: #fee2e2; color: #991b1b; }
+  
+  .listing-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .listing-metric {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  
+  .listing-metric-label {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 3px;
+  }
+  
+  .listing-metric-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .listing-metric-value--highlight { color: #2C7176; }
+  
+  .listing-divider {
+    height: 0.5px;
+    background: #e5e7eb;
+    margin-bottom: 12px;
+  }
+  
+  .listing-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  
+  .listing-row span:first-child { color: #6b7280; }
+  .listing-row span:last-child  { color: #111827; font-weight: 500; }
+  
+  .btn-cancel-listing {
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 0.5px solid #fca5a5;
+    background: #fff1f2;
+    color: #991b1b;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  
+  .btn-cancel-listing:hover:not(:disabled) { background: #fee2e2; }
+  .btn-cancel-listing:disabled { opacity: 0.5; cursor: not-allowed; }
+  
+  @media (max-width: 1100px) {
+    .mylistings-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 720px) {
+    .mylistings-grid { grid-template-columns: 1fr; }
+  }

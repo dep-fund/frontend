@@ -96,7 +96,7 @@ export default function DashboardHome() {
         </button>
         <button
           className="home-action-card home-action-card--teal"
-          onClick={() => navigate("/dashboard/explore")}
+          onClick={() => navigate("/dashboard/invest")}
         >
           <Compass size={28} />
           <div>

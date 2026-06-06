@@ -50,6 +50,10 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: ${{ vars.FRONTEND_API_URL }}
+          VITE_RPC_URL: ${{ secrets.RPC_URL }}
+          VITE_USDC_ADDRESS: ${{ vars.USDC_ADDRESS }}
+          VITE_MARKETPLACE_ADDRESS: ${{ vars.MARKETPLACE_ADDRESS }}
+          VITE_INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
 
       - name: Upload to GCS
         working-directory: frontend

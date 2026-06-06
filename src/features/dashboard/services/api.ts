@@ -230,3 +230,10 @@ export const fetchTokenByProject = async (projectId: string): Promise<ProjectTok
   });
   return res.data;
 };
+
+export const fetchAllTokens = async () => {
+  const res = await axios.get(`${API_URL}/tokens`, {
+    headers: authHeader(),
+  });
+  return res.data;
+};

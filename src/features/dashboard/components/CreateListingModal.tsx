@@ -3,11 +3,10 @@ import { ethers } from "ethers";
 import { X } from "lucide-react";
 import type { MarketplaceInfo } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
+import { fetchAllTokens } from "../services/api";
 
 const ERC20_ABI = [
   "function balanceOf(address owner) view returns (uint256)",
-  "function name() view returns (string)",
-  "function symbol() view returns (string)",
   "function approve(address spender, uint256 amount) external returns (bool)",
 ];
 
@@ -49,24 +48,30 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
         setError("Instalá MetaMask para continuar.");
         return;
       }
-  
+
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-  
-      // Por ahora solo existe el token DPF
-      const DPF_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"; // ← tu address de MockDPF
-      const token = new ethers.Contract(DPF_ADDRESS, ERC20_ABI, provider);
-      const [name, symbol, balance] = await Promise.all([
-        token.name(),
-        token.symbol(),
-        token.balanceOf(address),
-      ]);
-  
-      if (balance > 0n) {
-        setTokens([{ address: DPF_ADDRESS, name, symbol, balance }]);
+      const walletAddress = await signer.getAddress();
+
+      // Obtener todos los tokens de la plataforma
+      const platformTokens = await fetchAllTokens();
+
+      // Filtrar los que el usuario tiene en su wallet
+      const tokensWithBalance: TokenOption[] = [];
+      for (const t of platformTokens) {
+        const contract = new ethers.Contract(t.contract_address, ERC20_ABI, provider);
+        const balance: bigint = await contract.balanceOf(walletAddress);
+        if (balance > 0n) {
+          tokensWithBalance.push({
+            address: t.contract_address,
+            name: t.name,
+            symbol: `DPF-${t.suffix}`,
+            balance,
+          });
+        }
       }
-  
+
+      setTokens(tokensWithBalance);
     } catch {
       setError("Error al cargar tus tokens.");
     } finally {
@@ -81,14 +86,13 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
     if (!pricePerToken || Number(pricePerToken) <= 0) return setError("Ingresá un precio válido.");
 
     const tokenData = tokens.find((t) => t.address === selectedToken);
-    
+
     try {
       const amountWei = ethers.parseUnits(amount, 18);
-      
       if (tokenData && amountWei > tokenData.balance) {
-        return setError("No tienes tokens sufientes para hacer la operación.");
+        return setError("No tenés tokens suficientes para hacer la operación.");
       }
-    } catch (e) {
+    } catch {
       return setError("Cantidad inválida.");
     }
 
@@ -97,8 +101,8 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
 
-      const amountWei = ethers.parseUnits(amount, 18); // Se vuelve a parsear pero ya validado
-      const priceWei = ethers.parseUnits(pricePerToken, 6); // USDC tiene 6 decimales
+      const amountWei = ethers.parseUnits(amount, 18);
+      const priceWei = ethers.parseUnits(pricePerToken, 6);
 
       const token = new ethers.Contract(selectedToken, ERC20_ABI, signer);
       const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);

@@ -52,17 +52,7 @@ export default function MyListings() {
       setCancelingId(listingId);
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
-      const walletAddress = await signer.getAddress();
       const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);
-
-      const anvilProvider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
-      const marketplaceReadonly = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, anvilProvider);
-      try {
-        await marketplaceReadonly.cancel.staticCall(BigInt(listingId), { from: walletAddress });
-      } catch (simErr: any) {
-        setTxError(parseContractError(simErr));
-        return;
-      }
 
       const tx = await marketplace.cancel(BigInt(listingId), { gasLimit: 200000 });
       await tx.wait();

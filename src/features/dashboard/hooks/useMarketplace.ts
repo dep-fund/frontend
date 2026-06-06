@@ -95,16 +95,6 @@ export const useMarketplace = () => {
       const approveTx = await usdc.approve(info.marketplace_address, totalUsdc);
       await approveTx.wait();
 
-      const anvilProvider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
-      const marketplaceReadonly = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, anvilProvider);
-
-      try {
-        await marketplaceReadonly.buy.staticCall(BigInt(listingId), amountWei, { from: walletAddress });
-      } catch (simErr: any) {
-        setTxError(parseContractError(simErr));
-        return false;
-      }
-
       const buyTx = await marketplace.buy(BigInt(listingId), amountWei, { gasLimit: 300000 });
       await buyTx.wait();
 

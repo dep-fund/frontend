@@ -127,10 +127,15 @@ export default function InvestCheckout() {
           setTxError("La oferta ya cerró.");
           return;
         }
-
+        
         const totalRaised: bigint = await offering.totalRaised();
         const hardCap: bigint = await offering.HARD_CAP();
-        if (totalRaised + amountToInvest > hardCap) {
+
+        console.log("totalRaised (raw):", totalRaised.toString());
+        console.log("hardCap (raw):", hardCap.toString());
+        console.log("amountToInvest (raw):", amountToInvest.toString());
+        console.log("totalRaised + amount:", (totalRaised + amountToInvest).toString());
+        if ((totalRaised + amountToInvest) > hardCap) {
           const disponible = ethers.formatUnits(hardCap - totalRaised, 6);
           setTxError(`Superás el Hard Cap. Máximo disponible: ${disponible} USDC.`);
           return;

@@ -1,24 +1,18 @@
-name: Deploy Frontend to GCS
+name: Build & Push Frontend
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: "Target environment"
-        required: true
-        default: "production"
-        type: choice
-        options:
-          - production
-          - preview
+  push:
+    branches: [main]
 
 env:
+  REGISTRY: us-central1-docker.pkg.dev
   PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-  BUCKET: prod-depfund-frontend
-  REGION: us-central1
+  REPOSITORY: depfund
+  IMAGE: frontend
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -40,8 +34,8 @@ jobs:
           workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
           service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+      - name: Configure Docker
+        run: gcloud auth configure-docker $REGISTRY
 
       - name: Install dependencies
         run: npm ci
@@ -55,8 +49,11 @@ jobs:
           VITE_MARKETPLACE_ADDRESS: ${{ vars.MARKETPLACE_ADDRESS }}
           VITE_INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
 
-      - name: Upload to GCS
+      - name: Build & Push
         run: |
-          gsutil -m rsync -r -d dist/ gs://$BUCKET/
-          gsutil -m setmeta -h "Cache-Control:no-cache,no-store,must-revalidate" gs://$BUCKET/**/*.html
-          gsutil -m setmeta -h "Cache-Control:public,max-age=31536000" gs://$BUCKET/**/*.{js,css,png,jpg,svg,ico,woff2}
+          SHA_SHORT=$(echo $GITHUB_SHA | head -c 7)
+          TAG_SHA="$REGISTRY/$PROJECT_ID/$REPOSITORY/$IMAGE:$SHA_SHORT"
+          TAG_LATEST="$REGISTRY/$PROJECT_ID/$REPOSITORY/$IMAGE:latest"
+          docker build -t $TAG_SHA -t $TAG_LATEST .
+          docker push $TAG_SHA
+          docker push $TAG_LATEST

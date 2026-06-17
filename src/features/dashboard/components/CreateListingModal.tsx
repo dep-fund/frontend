@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { X } from "lucide-react";
 import type { MarketplaceInfo } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
-import { fetchAllTokens } from "../services/api";
+import { fetchAllTokens, createPublication } from "../services/api";
 
 const ERC20_ABI = [
   "function balanceOf(address owner) view returns (uint256)",
@@ -12,9 +12,11 @@ const ERC20_ABI = [
 
 const MARKETPLACE_ABI = [
   "function list(address token, uint256 amount, uint256 pricePerToken) external returns (uint256)",
+  "event Listed(uint256 indexed listingId, address indexed seller, uint256 indexed totalAmount, uint256 pricePerToken)",
 ];
 
 interface TokenOption {
+  id: string;
   address: string;
   name: string;
   symbol: string;
@@ -53,16 +55,15 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
       const signer = await provider.getSigner();
       const walletAddress = await signer.getAddress();
 
-      // Obtener todos los tokens de la plataforma
       const platformTokens = await fetchAllTokens();
 
-      // Filtrar los que el usuario tiene en su wallet
       const tokensWithBalance: TokenOption[] = [];
       for (const t of platformTokens) {
         const contract = new ethers.Contract(t.contract_address, ERC20_ABI, provider);
         const balance: bigint = await contract.balanceOf(walletAddress);
         if (balance > 0n) {
           tokensWithBalance.push({
+            id: t.id,
             address: t.contract_address,
             name: t.name,
             symbol: `DPF-${t.suffix}`,
@@ -86,11 +87,12 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
     if (!pricePerToken || Number(pricePerToken) <= 0) return setError("Ingresá un precio válido.");
 
     const tokenData = tokens.find((t) => t.address === selectedToken);
+    if (!tokenData) return setError("Token no encontrado.");
 
     try {
       const amountWei = ethers.parseUnits(amount, 18);
-      if (tokenData && amountWei > tokenData.balance) {
-        return setError("No tenés tokens suficientes para hacer la operación.");
+      if (amountWei > tokenData.balance) {
+        return setError("No tenés tokens suficientes.");
       }
     } catch {
       return setError("Cantidad inválida.");
@@ -104,16 +106,43 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
       const amountWei = ethers.parseUnits(amount, 18);
       const priceWei = ethers.parseUnits(pricePerToken, 6);
 
+      // 1. Approve token al marketplace
       const token = new ethers.Contract(selectedToken, ERC20_ABI, signer);
-      const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);
-
-      // Paso 1: Approve
       const approveTx = await token.approve(info.marketplace_address, amountWei);
       await approveTx.wait();
 
-      // Paso 2: List
+      // 2. List en blockchain
+      const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);
       const listTx = await marketplace.list(selectedToken, amountWei, priceWei);
-      await listTx.wait();
+      const receipt = await listTx.wait();
+
+      // 3. Extraer listingId del evento Listed
+      const marketplaceInterface = new ethers.Interface(MARKETPLACE_ABI);
+      let listingId: number | null = null;
+
+      for (const log of receipt.logs) {
+        try {
+          const parsed = marketplaceInterface.parseLog(log);
+          if (parsed?.name === "Listed") {
+            listingId = Number(parsed.args.listingId);
+            break;
+          }
+        } catch {
+          // log de otro contrato, ignorar
+        }
+      }
+
+      if (listingId === null) {
+        return setError("No se pudo obtener el ID del listing del contrato.");
+      }
+
+      // 4. Guardar en DB con listing_id
+      await createPublication({
+        token_id: tokenData.id,
+        total: amount,
+        price_per_token: pricePerToken,
+        listing_id: listingId,
+      });
 
       onSuccess();
       onClose();
@@ -139,8 +168,6 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
         {error && <div className="form-error">{error}</div>}
 
         <div className="form-body">
-
-          {/* Selección de token */}
           <div className="form-group">
             <label>Token DPF a vender</label>
             {loadingTokens ? (
@@ -174,7 +201,6 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
             )}
           </div>
 
-          {/* Cantidad */}
           <div className="form-group">
             <label>Cantidad a vender (DPF)</label>
             <div className="input-with-symbol">
@@ -194,7 +220,6 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
             )}
           </div>
 
-          {/* Precio por token */}
           <div className="form-group">
             <label>Precio por token (USDC)</label>
             <div className="input-with-symbol">
@@ -208,7 +233,6 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
             </div>
           </div>
 
-          {/* Resumen */}
           {amount && pricePerToken && (
             <div style={{
               background: "#f0f9f9",

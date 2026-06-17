@@ -1,7 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../../../constants";
-import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken } from "../types";
-
+import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken, Publication, Trade } from "../types";
 const authHeader = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
@@ -235,5 +234,53 @@ export const fetchAllTokens = async () => {
   const res = await axios.get(`${API_URL}/tokens`, {
     headers: authHeader(),
   });
+  return res.data;
+};
+
+export const fetchPublications = async (): Promise<Publication[]> => {
+  const res = await axios.get(`${API_URL}/publications`, { headers: authHeader() });
+  return res.data;
+};
+
+export const createPublication = async (data: {
+  token_id: string;
+  total: string;
+  price_per_token: string;
+  listing_id: number;
+}): Promise<Publication> => {
+  const res = await axios.post(`${API_URL}/publications`, data, { headers: authHeader() });
+  return res.data;
+};
+
+export const cancelPublication = async (publicationId: string): Promise<Publication> => {
+  const res = await axios.patch(`${API_URL}/publications/${publicationId}/cancel`, {}, { headers: authHeader() });
+  return res.data;
+};
+
+export const createTrade = async (data: {
+  publication_id: string;
+  amount: string;
+}): Promise<Trade> => {
+  const res = await axios.post(`${API_URL}/trades`, data, { headers: authHeader() });
+  return res.data;
+};
+
+export const confirmTrade = async (tradeId: string, tx_hash: string): Promise<Trade> => {
+  const res = await axios.patch(`${API_URL}/trades/${tradeId}/confirm`, { tx_hash }, { headers: authHeader() });
+  return res.data;
+};
+
+export const failTrade = async (tradeId: string): Promise<Trade> => {
+  const res = await axios.patch(`${API_URL}/trades/${tradeId}/fail`, {}, { headers: authHeader() });
+  return res.data;
+};
+
+export const fetchMyTrades = async (): Promise<Trade[]> => {
+  const res = await axios.get(`${API_URL}/trades/my-trades`, { headers: authHeader() });
+  return res.data;
+};
+
+export const fetchMyPublications = async (): Promise<Publication[]> => {
+  const res = await axios.get(`${API_URL}/publications/my`, { headers: authHeader() });
   return res.data;
 };

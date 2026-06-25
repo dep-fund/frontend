@@ -181,6 +181,40 @@
 
 .btn-edit:hover { background: #d97f35; }
 
+.badge--dividends {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(236, 143, 65, 0.92);
+  color: white;
+  font-size: 0.7rem;
+}
+
+.btn-dividends {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: transparent;
+  color: #374151;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-dividends:hover { border-color: #EC8F41; color: #EC8F41; }
+
+.btn-dividends--active {
+  border-color: #EC8F41;
+  color: #EC8F41;
+  background: rgba(236, 143, 65, 0.05);
+}
 
 
 @media (max-width: 480px) {

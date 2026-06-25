@@ -95,7 +95,7 @@ export default function ProjectDetail() {
 
   return (
     <DashboardLayout title="Detalle del Proyecto" user={user}>
-      <button className="pd-back" onClick={() => navigate("/dashboard/projects")}>
+      <button className="pd-back" onClick={() => navigate("/dashboard/invest")}>
         <ChevronLeft size={16} /> Volver
       </button>
 

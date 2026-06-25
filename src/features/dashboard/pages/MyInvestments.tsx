@@ -47,7 +47,8 @@ export default function MyInvestments() {
           amount: Number(grupo.usdcAmount.toFixed(2)),
           tokens: Number(grupo.tokenAmount.toFixed(4)),
           progress: `${getProgress(grupo.projectId)}%`,
-          projectId: grupo.projectId
+          projectId: grupo.projectId,
+          dividendAddress: proyecto?.dividend_address ?? null,
         };
       });
 

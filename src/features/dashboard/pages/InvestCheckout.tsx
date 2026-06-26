@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
-import { ArrowLeft, ShieldCheck, ArrowUpDown } from "lucide-react";
+import { ArrowLeft, ShieldCheck, ArrowUpDown, Info, X, Coins, TrendingUp, AlertCircle } from "lucide-react";
 import "../components/Marketplace.css";
 import "./InvestCheckout.css";
 import { fetchProject, fetchTokenByProject } from "../services/api";
@@ -40,6 +40,8 @@ export default function InvestCheckout() {
   const [txError, setTxError] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [priceTooltipOpen, setPriceTooltipOpen] = useState(false);
+  const [helpPanelOpen, setHelpPanelOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -59,11 +61,10 @@ export default function InvestCheckout() {
   const tokenSuffix = projectToken?.token?.suffix ?? project?.suffix ?? "TOKEN";
   const minInvestment = 1;
 
-  // Precio en USDC con 6 decimales → convertir a número legible
   const tokenPrice = projectToken?.current_price
     ? Number(projectToken.current_price)
     : null;
-  
+
   console.log("projectToken:", projectToken);
   console.log("current_price raw:", projectToken?.current_price);
   console.log("tokenPrice calculado:", tokenPrice);
@@ -193,7 +194,7 @@ export default function InvestCheckout() {
 
         <div className="p2p-trade-box invest-trade-box animate-fade-in">
 
-          {/* Info del proyecto */}
+          {/* Columna izquierda — info del proyecto */}
           <div className="trade-box-left">
             <h3 className="checkout-project-title">{project.name}</h3>
             <span className="badge-category">
@@ -222,16 +223,101 @@ export default function InvestCheckout() {
                 )}
               </ul>
             </div>
+
+            {/* Mini-panel de ayuda contextual */}
+            <div className="checkout-help-block">
+              <button
+                className="checkout-help-toggle"
+                onClick={() => setHelpPanelOpen((v) => !v)}
+                aria-expanded={helpPanelOpen}
+              >
+                <Info size={14} />
+                ¿Cómo funciona esta inversión?
+                <span className="checkout-help-toggle-arrow">{helpPanelOpen ? "▲" : "▼"}</span>
+              </button>
+
+              {helpPanelOpen && (
+                <div className="checkout-help-content">
+
+                  <div className="checkout-help-item">
+                    <div className="checkout-help-item-icon">
+                      <Coins size={13} />
+                    </div>
+                    <div>
+                      <p className="checkout-help-item-title">¿Qué recibo?</p>
+                      <p className="checkout-help-item-text">
+                        Tokens <strong>$DPF</strong> proporcionales a tu inversión en USDC. Cada token representa participación real en el complejo y genera dividendos cuando el proyecto distribuye ganancias.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="checkout-help-item">
+                    <div className="checkout-help-item-icon checkout-help-item-icon--green">
+                      <TrendingUp size={13} />
+                    </div>
+                    <div>
+                      <p className="checkout-help-item-title">¿Puedo salir después?</p>
+                      <p className="checkout-help-item-text">
+                        Sí. Podés vender tus $DPF en el Marketplace en cualquier momento a precio de mercado y recibir USDC de los compradores.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="checkout-help-item">
+                    <div className="checkout-help-item-icon checkout-help-item-icon--amber">
+                      <AlertCircle size={13} />
+                    </div>
+                    <div>
+                      <p className="checkout-help-item-title">¿Qué pasa si el proyecto no llega a su meta?</p>
+                      <p className="checkout-help-item-text">
+                        Si la oferta no alcanza su mínimo de recaudación antes del cierre, recuperás tu USDC íntegramente.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Inputs de inversión */}
+          {/* Columna derecha — inputs de inversión */}
           <div className="trade-box-right">
+
+            {/* Precio con tooltip explicativo */}
             <div className="price-indicator">
-              Precio del Token:{" "}
-              <strong>
-                {tokenPrice ? `${tokenPrice.toFixed(6)} USDC` : "Cargando..."} / DPF-{tokenSuffix}
-              </strong>
+              <span>
+                Precio del Token:{" "}
+                <strong>
+                  {tokenPrice ? `${tokenPrice.toFixed(6)} USDC` : "Cargando..."} / DPF-{tokenSuffix}
+                </strong>
+              </span>
+              <button
+                className="checkout-price-info-btn"
+                onClick={() => setPriceTooltipOpen((v) => !v)}
+                aria-label="¿Por qué varía el precio?"
+              >
+                <Info size={14} />
+              </button>
             </div>
+
+            {priceTooltipOpen && (
+              <div className="checkout-price-tooltip">
+                <button
+                  className="checkout-price-tooltip-close"
+                  onClick={() => setPriceTooltipOpen(false)}
+                  aria-label="Cerrar"
+                >
+                  <X size={13} />
+                </button>
+                <p className="checkout-price-tooltip-title">Precio dinámico</p>
+                <p className="checkout-price-tooltip-text">
+                  El precio del token sube a medida que el proyecto recauda más fondos. Invertir antes significa un precio más bajo y mayor cantidad de tokens por el mismo USDC.
+                </p>
+                <p className="checkout-price-tooltip-text">
+                  El precio mostrado es el actual. El monto final de tokens puede variar levemente si otra transacción se confirma antes.
+                </p>
+              </div>
+            )}
 
             <div className="trade-inputs-group">
               <div className="trade-input-wrapper">

@@ -7,6 +7,7 @@ import { useUser } from "../hooks/useUser";
 import { useMarketplace } from "../hooks/useMarketplace";
 import CreateListingModal from "../components/CreateListingModal";
 import type { Publication } from "../types";
+import HelpTooltip from "../components/HelpTooltip";
 
 export default function Marketplace() {
   const { user } = useUser();
@@ -87,19 +88,30 @@ export default function Marketplace() {
         )}
 
         <div className="p2p-header-container">
-          <div className="p2p-header-tabs p2p-header-tabs-override">
-            <button
-              className={`tab-btn tab-btn-buy ${tradeType === "BUY" ? "tab-btn--active-buy" : ""}`}
-              onClick={() => { setTradeType("BUY"); setSelectedId(null); }}
-            >
-              Comprar
-            </button>
-            <button
-              className={`tab-btn tab-btn-sell ${tradeType === "SELL" ? "tab-btn--active-sell" : ""}`}
-              onClick={() => { setTradeType("SELL"); setSelectedId(null); }}
-            >
-              Vender
-            </button>
+          <div className="p2p-header-left">
+            <div className="p2p-header-tabs p2p-header-tabs-override">
+              <button
+                className={`tab-btn tab-btn-buy ${tradeType === "BUY" ? "tab-btn--active-buy" : ""}`}
+                onClick={() => { setTradeType("BUY"); setSelectedId(null); }}
+              >
+                Comprar
+              </button>
+              <button
+                className={`tab-btn tab-btn-sell ${tradeType === "SELL" ? "tab-btn--active-sell" : ""}`}
+                onClick={() => { setTradeType("SELL"); setSelectedId(null); }}
+              >
+                Vender
+              </button>
+            </div>
+
+            <div className="p2p-header-help">
+              <HelpTooltip title="Marketplace" side="bottom" size={18}>
+                Acá comprás y vendés tokens <strong>$DPF</strong> que ya están en circulación,
+                directamente entre inversores, a precio fijo. Es distinto de invertir en un
+                proyecto nuevo: ahí el precio sube solo a medida que se llena el proyecto. En el
+                Marketplace el precio lo fija cada vendedor y podés operar las 24&nbsp;hs.
+              </HelpTooltip>
+            </div>
           </div>
 
           {tradeType === "SELL" && (
@@ -126,7 +138,14 @@ export default function Marketplace() {
               <div className="p2p-table-wrapper">
                 <div className="p2p-table-header">
                   <div className="col-advertiser">Vendedor</div>
-                  <div className="col-price">Precio / Token</div>
+                  <div className="col-price">
+                    Precio / Token
+                    <HelpTooltip title="Precio fijo" side="bottom">
+                      Es el precio que definió el vendedor al publicar. No cambia mientras la
+                      publicación esté activa, a diferencia del precio de un proyecto en
+                      financiamiento, que sube con cada inversión.
+                    </HelpTooltip>
+                  </div>
                   <div className="col-limit">Disponible</div>
                   <div className="col-trade">Operar</div>
                 </div>
@@ -176,7 +195,13 @@ export default function Marketplace() {
                               en el Smart Contract. Una vez confirmada, recibirás los tokens DPF
                               en tu wallet.
                               <br /><br />
-                              <strong>Aclaración:</strong> La Plataforma se queda con el 2% de los tokens que compres.
+                              <strong>Fee de plataforma:</strong> se descuenta un 2% del monto en
+                              USDC que pagás; el resto va directo al vendedor.
+                              <br /><br />
+                              <strong>Quema de tokens:</strong> un 0.1% de los tokens comprados se
+                              quema automáticamente en cada operación, por lo que vas a recibir un
+                              0.1% menos de DPF que la cantidad que ves en "Recibís (DPF)" antes de
+                              confirmar.
                             </p>
                           </div>
 

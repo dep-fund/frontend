@@ -10,6 +10,22 @@ const DIVIDENDS_ABI = [
   "function claimable(address holder) view returns (uint256)",
 ];
 
+/**
+ * Formatea el monto reclamable para el badge de la card. Usa notación
+ * compacta a partir de los miles (1.2K, 45.3K) para que el texto nunca
+ * crezca tanto como para desbordar o achicar el badge de forma rara,
+ * sin importar cuán grande sea el monto acumulado.
+ */
+const formatClaimable = (amount: number): string => {
+  if (amount >= 1000) {
+    return new Intl.NumberFormat("es-AR", {
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(amount);
+  }
+  return amount.toFixed(2);
+};
+
 export default function InvestmentCard({ investment }: { investment: any }) {
   const navigate = useNavigate();
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
@@ -51,7 +67,8 @@ export default function InvestmentCard({ investment }: { investment: any }) {
     }
   }, [investment.projectId]);
 
-  const hasClaimable = parseFloat(claimableAmount) >= 0.000001;
+  const claimableNumeric = parseFloat(claimableAmount);
+  const hasClaimable = claimableNumeric >= 0.000001;
 
   return (
     <>
@@ -66,8 +83,8 @@ export default function InvestmentCard({ investment }: { investment: any }) {
 
           {/* Badge de dividendos disponibles */}
           {hasClaimable && (
-            <span className="project-badge badge--dividends">
-              {parseFloat(claimableAmount).toFixed(2)} USDC disponibles
+            <span className="project-badge badge--dividends" title={`${claimableNumeric.toFixed(6)} USDC dividendos`}>
+              {formatClaimable(claimableNumeric)} USDC • Disponible
             </span>
           )}
         </div>

@@ -1,4 +1,3 @@
-
 .p2p-container {
   padding: 24px;
   min-height: 100%;
@@ -74,6 +73,18 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 1px solid #e5e7eb;
+}
+
+.p2p-table-header .col-price {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* El ícono de ayuda dentro del header de columna no debe heredar
+   el uppercase/letter-spacing de la columna */
+.p2p-table-header .ht-wrap {
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .p2p-row-group {

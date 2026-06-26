@@ -29,7 +29,6 @@
   align-items: flex-start;
 }
 
-/* Columna Izquierda */
 .checkout-left {
   flex: 1;
   padding-right: 20px;
@@ -89,10 +88,9 @@
 }
 
 .project-rules li svg {
-  color: #10b981; /* Verde para dar confianza */
+  color: #10b981;
 }
 
-/* Columna Derecha (Exchange Box) */
 .checkout-right {
   width: 400px;
   flex-shrink: 0;
@@ -241,14 +239,11 @@
 }
 
 .btn-confirm-invest:disabled {
-  background: #fca5a5; /* Naranja muy pálido o gris */
-  background: #fcd34d;
   background: #e5e7eb;
   color: #9ca3af;
   cursor: not-allowed;
 }
 
-/* Responsive para celulares */
 @media (max-width: 860px) {
   .invest-checkout-layout {
     flex-direction: column;
@@ -262,7 +257,6 @@
   }
 }
 
-/* --- Clases utilitarias reemplazando estilos en línea --- */
 .loading-msg {
   text-align: center;
   padding: 64px;
@@ -290,7 +284,6 @@
   cursor: not-allowed;
 }
 
-/* --- Modal de Éxito --- */
 .success-modal-overlay {
   position: fixed;
   top: 0;
@@ -332,7 +325,6 @@
   line-height: 1.5;
 }
 
-/* --- Mensaje de Error de Transacción --- */
 .tx-error-msg {
   margin-top: 0.75rem;
   padding: 10px 14px;
@@ -342,10 +334,173 @@
   font-size: 0.875rem;
 }
 
-/* --- Caja de Resumen de Transacción --- */
 .tx-summary-box {
   margin-top: 1rem;
   padding: 12px;
   border-radius: 8px;
   background: #f4f4f4;
+}
+
+/* ── Precio con tooltip ── */
+
+.price-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #2C7176;
+}
+
+.checkout-price-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.checkout-price-info-btn:hover {
+  color: #2C7176;
+}
+
+.checkout-price-tooltip {
+  position: relative;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+  padding: 12px 36px 12px 14px;
+  margin-bottom: 4px;
+}
+
+.checkout-price-tooltip-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.checkout-price-tooltip-close:hover {
+  color: #475569;
+}
+
+.checkout-price-tooltip-title {
+  font-family: "Sora", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0c4a6e;
+  margin: 0 0 6px;
+}
+
+.checkout-price-tooltip-text {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.78rem;
+  color: #075985;
+  line-height: 1.55;
+  margin: 0 0 4px;
+}
+
+.checkout-price-tooltip-text:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Mini-panel de ayuda colapsable ── */
+
+.checkout-help-block {
+  margin-top: 20px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 16px;
+}
+
+.checkout-help-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #2C7176;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.checkout-help-toggle:hover {
+  color: #1e5558;
+}
+
+.checkout-help-toggle-arrow {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
+.checkout-help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.checkout-help-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.checkout-help-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: #fff4ec;
+  color: #EC8F41;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.checkout-help-item-icon--green {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.checkout-help-item-icon--amber {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.checkout-help-item-title {
+  font-family: "Sora", sans-serif;
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.checkout-help-item-text {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.78rem;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
 }

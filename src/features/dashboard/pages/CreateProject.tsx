@@ -6,6 +6,8 @@ import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
 import { useCategories } from "../hooks/useCategories";
 import { createProject, uploadProjectImage } from "../services/api";
+import HelpTooltip from "../components/HelpTooltip";
+import GuideBanner from "../components/GuideBanner"
 
 const parseApiError = (err: any): string => {
   const detail = err?.response?.data?.detail;
@@ -64,7 +66,7 @@ export default function CreateProject() {
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(value)) return "Solo se permiten letras.";
     return "";
   };
-  
+
   const handleSuffixChange = (val: string) => {
     setSuffix(val);
     setFieldErrors((prev) => ({ ...prev, suffix: validateSuffix(val) }));
@@ -133,18 +135,14 @@ export default function CreateProject() {
 
     setError("");
 
-
-
-    if (parseFloat(totalAmount) <= parseFloat(minCost))
-     {
+    if (parseFloat(totalAmount) <= parseFloat(minCost)) {
       setError("La Meta Mínima debe ser menor a la Meta de Financiamiento");
-     return;
-      }
-    if (categoryIds.length === 0) {
-     setError("Debes seleccionar al menos una categoría");
       return;
     }
-
+    if (categoryIds.length === 0) {
+      setError("Debes seleccionar al menos una categoría");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -184,6 +182,38 @@ export default function CreateProject() {
           <p className="cp-subtitle">Completá los datos para publicar tu proyecto de inversión</p>
         </div>
 
+        <GuideBanner title="¿Cómo funciona publicar un proyecto?">
+          <div className="gb-steps">
+            <div className="gb-step">
+              <span className="gb-step-num">1</span>
+              <span className="gb-step-text">
+                Completás los datos del proyecto y lo enviás (primero debe enviar el proyecto con esta sección, posteriormente debe ir a la sección "Mis Proyectos", seleccionar el proyecto y cargar la documentación). Un <b>administrador</b> revisa la
+                documentación y costos antes de aprobarlo.
+              </span>
+            </div>
+            <div className="gb-step">
+              <span className="gb-step-num">2</span>
+              <span className="gb-step-text">
+                Una vez aprobado, se abre a inversión. Los inversores compran tokens <b>$DPF</b>{" "}
+                de tu proyecto; el precio sube a medida que se acerca a la meta.
+              </span>
+            </div>
+            <div className="gb-step">
+              <span className="gb-step-num">3</span>
+              <span className="gb-step-text">
+                Si se alcanza la <b>Meta Mínima</b> antes de la fecha límite, podés retirar los
+                fondos (se descuenta una comisión de plataforma). Si no se alcanza, los
+                inversores son reembolsados automáticamente.
+              </span>
+            </div>
+          </div>
+          <p style={{ marginTop: 12 }}>
+            Importante: una vez publicado el proyecto, estos datos quedan asociados a un
+            contrato en blockchain y <strong>no se pueden modificar</strong>. Revisá los montos
+            con cuidado antes de confirmar.
+          </p>
+        </GuideBanner>
+
         {error && (
           <div className="cp-error">
             <span className="cp-error-icon">!</span>
@@ -218,7 +248,15 @@ export default function CreateProject() {
                 />
               </div>
               <div className="cp-group">
-                <label>Sufijo</label>
+                <label>
+                  Sufijo
+                  <HelpTooltip title="Sufijo del token">
+                    Va a formar el nombre de tu token en la plataforma, con el formato{" "}
+                    <strong>DPF-SUFIJO</strong>. Por ejemplo, si el sufijo es "Norte", el token se
+                    va a llamar <strong>DPF-NORTE</strong>. No se puede cambiar después de crear
+                    el proyecto.
+                  </HelpTooltip>
+                </label>
                 <input
                   type="text"
                   value={suffix}
@@ -248,11 +286,25 @@ export default function CreateProject() {
           </div>
 
           <div className="cp-section">
-            <div className="cp-section-label">Datos Financieros</div>
+            <div className="cp-section-label">
+              Datos Financieros
+              <HelpTooltip title="Datos Financieros" side="bottom">
+                Estos números definen cómo se calcula el precio del token y cuánto vas a poder
+                retirar. Te recomendamos completarlos con datos reales: van a estar visibles para
+                los inversores y respaldan tu reputación como desarrollador.
+              </HelpTooltip>
+            </div>
 
             <div className="cp-row">
               <div className="cp-group">
-                <label>Meta Mínima</label>
+                <label>
+                  Meta Mínima
+                  <HelpTooltip title="Meta Mínima (Soft Cap)">
+                    Es el monto mínimo que necesitás recaudar para que el proyecto sea viable. Si
+                    no se alcanza antes de la fecha límite, <strong>todos los inversores son
+                    reembolsados automáticamente</strong> y el proyecto no avanza.
+                  </HelpTooltip>
+                </label>
                 <div className="cp-input-wrapper">
                   <span className="cp-input-prefix">USD</span>
                   <input
@@ -272,7 +324,14 @@ export default function CreateProject() {
               </div>
 
               <div className="cp-group">
-                <label>Meta de Financiamiento</label>
+                <label>
+                  Meta de Financiamiento
+                  <HelpTooltip title="Meta de Financiamiento (Hard Cap)">
+                    Es el techo máximo que tu proyecto puede recaudar. El precio del token
+                    empieza más bajo y va subiendo a medida que se acerca a este monto, así que
+                    los primeros inversores entran a mejor precio.
+                  </HelpTooltip>
+                </label>
                 <div className="cp-input-wrapper">
                   <span className="cp-input-prefix">USD</span>
                   <input
@@ -294,7 +353,14 @@ export default function CreateProject() {
 
             <div className="cp-row">
               <div className="cp-group">
-                <label>Costos Anuales</label>
+                <label>
+                  Costos Anuales
+                  <HelpTooltip title="Costos Anuales">
+                    Gastos operativos estimados del complejo por año (mantenimiento, personal,
+                    servicios, etc.). Ayuda a los inversores a entender la rentabilidad neta real
+                    del proyecto.
+                  </HelpTooltip>
+                </label>
                 <div className="cp-input-wrapper">
                   <span className="cp-input-prefix">USD</span>
                   <input
@@ -314,7 +380,14 @@ export default function CreateProject() {
               </div>
 
               <div className="cp-group">
-                <label>Ganancias Brutas Anuales</label>
+                <label>
+                  Ganancias Brutas Anuales
+                  <HelpTooltip title="Ganancias Brutas Anuales">
+                    Facturación estimada del complejo por año, antes de descontar costos. Junto
+                    con los Costos Anuales, le permite a los inversores estimar el dividendo
+                    mensual que podrían recibir.
+                  </HelpTooltip>
+                </label>
                 <div className="cp-input-wrapper">
                   <span className="cp-input-prefix">USD</span>
                   <input

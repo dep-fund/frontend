@@ -1,9 +1,11 @@
 import "./DashboardHome.css";
-import { Building2, TrendingUp, Users, Plus, Compass } from "lucide-react";
+import { Building2, TrendingUp, Plus, Compass } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
 import { useProjects } from "../hooks/useProjects";
+import WelcomeGuide from "../components/WelcomeGuide";
+import HelpTooltip from "../components/HelpTooltip";
 
 const STATE_LABELS: Record<string, { label: string; className: string }> = {
   APPROVED: { label: "Activo", className: "home-badge--active" },
@@ -17,15 +19,13 @@ export default function DashboardHome() {
   const { projects, total } = useProjects();
 
   const activeCount = projects.filter((p) => p.state === "APPROVED").length;
-  const totalInvestors = projects.reduce((acc, p) => {
-    const seed = p.id.charCodeAt(0) + p.id.charCodeAt(1);
-    return acc + Math.floor(seed % 200 + 50);
-  }, 0);
 
   const recentProjects = projects.slice(0, 4);
 
   return (
     <DashboardLayout title="Dashboard" user={user}>
+      <WelcomeGuide userName={user?.name} />
+
       <div className="home-stats">
         <div className="home-stat-card">
           <Building2 size={28} color="#2C7176" />
@@ -39,13 +39,6 @@ export default function DashboardHome() {
           <div>
             <div className="home-stat-value">{activeCount}</div>
             <div className="home-stat-label">Proyectos Activos</div>
-          </div>
-        </div>
-        <div className="home-stat-card">
-          <Users size={28} color="#2C7176" />
-          <div>
-            <div className="home-stat-value">{totalInvestors}</div>
-            <div className="home-stat-label">Total Inversores</div>
           </div>
         </div>
       </div>
@@ -89,8 +82,19 @@ export default function DashboardHome() {
           onClick={() => navigate("/dashboard/projects/new")}
         >
           <Plus size={28} />
-          <div>
-            <div className="home-action-title">Crear Nuevo Proyecto</div>
+          <div className="home-action-text">
+            <div className="home-action-title">
+              Crear Nuevo Proyecto
+              <span
+                className="home-action-help"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <HelpTooltip title="Para desarrolladores" side="top">
+                  Publicá tu complejo deportivo para conseguir financiamiento. Un administrador
+                  revisa los datos antes de aprobarlo y abrirlo a inversión.
+                </HelpTooltip>
+              </span>
+            </div>
             <div className="home-action-sub">Comenzá un nuevo proyecto de inversión deportiva</div>
           </div>
         </button>
@@ -99,8 +103,19 @@ export default function DashboardHome() {
           onClick={() => navigate("/dashboard/invest")}
         >
           <Compass size={28} />
-          <div>
-            <div className="home-action-title">Explorar Proyectos</div>
+          <div className="home-action-text">
+            <div className="home-action-title">
+              Explorar Proyectos
+              <span
+                className="home-action-help"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <HelpTooltip title="Para inversores" side="top">
+                  Mirá los proyectos disponibles para invertir, recibí tokens $DPF y empezá a
+                  cobrar dividendos mensuales en USDC.
+                </HelpTooltip>
+              </span>
+            </div>
             <div className="home-action-sub">Descubrí nuevas oportunidades de inversión</div>
           </div>
         </button>

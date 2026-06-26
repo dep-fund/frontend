@@ -132,6 +132,20 @@ export default function CreateProject() {
     }
 
     setError("");
+
+
+
+    if(totalAmount<minCost)
+     {
+      setError("La Meta Mínima debe ser menor a la Meta de Financiamiento");
+     return;
+      }
+    if (categoryIds.length === 0) {
+     setError("Debes seleccionar al menos una categoría");
+      return;
+    }
+
+
     setLoading(true);
     try {
       const project = await createProject({
@@ -210,14 +224,14 @@ export default function CreateProject() {
                   value={suffix}
                   onChange={(e) => handleSuffixChange(e.target.value)}
                   placeholder="Ej: Norte, Premium, ARG"
-                  maxLength={30}
+                  maxLength={50}
                   required
                   className={fieldErrors.suffix ? "cp-input--error" : ""}
                 />
                 {fieldErrors.suffix && (
                   <span className="cp-field-error">{fieldErrors.suffix}</span>
                 )}
-                <span className="cp-field-hint">{suffix.length}/30 caracteres · mínimo 3</span>
+                <span className="cp-field-hint">{suffix.length}/50 caracteres · mínimo 3</span>
               </div>
             </div>
 
@@ -240,7 +254,7 @@ export default function CreateProject() {
               <div className="cp-group">
                 <label>Meta Mínima</label>
                 <div className="cp-input-wrapper">
-                  <span className="cp-input-prefix">USDT</span>
+                  <span className="cp-input-prefix">USD</span>
                   <input
                     type="number"
                     value={minCost}
@@ -260,7 +274,7 @@ export default function CreateProject() {
               <div className="cp-group">
                 <label>Meta de Financiamiento</label>
                 <div className="cp-input-wrapper">
-                  <span className="cp-input-prefix">USDT</span>
+                  <span className="cp-input-prefix">USD</span>
                   <input
                     type="number"
                     value={totalAmount}
@@ -282,7 +296,7 @@ export default function CreateProject() {
               <div className="cp-group">
                 <label>Costos Anuales</label>
                 <div className="cp-input-wrapper">
-                  <span className="cp-input-prefix">USDT</span>
+                  <span className="cp-input-prefix">USD</span>
                   <input
                     type="number"
                     value={annualCosts}
@@ -302,7 +316,7 @@ export default function CreateProject() {
               <div className="cp-group">
                 <label>Ganancias Brutas Anuales</label>
                 <div className="cp-input-wrapper">
-                  <span className="cp-input-prefix">USDT</span>
+                  <span className="cp-input-prefix">USD</span>
                   <input
                     type="number"
                     value={grossProfit}

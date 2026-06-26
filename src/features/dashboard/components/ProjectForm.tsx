@@ -28,6 +28,7 @@ export default function ProjectForm({ project, onClose, onSuccess }: ProjectForm
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    
     setLoading(true);
     try {
       const payload = {

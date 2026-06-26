@@ -87,4 +87,30 @@ export interface ProjectToken {
   total_supply: string;
   available_supply: string;
   token: TokenDetail;
+  current_price: string | null;  // ← agregar esto
+}
+
+export interface Publication {
+  id: string;
+  token_id: string;
+  seller_id: string;
+  status: "active" | "completed" | "canceled";
+  total: string;
+  available: string;
+  price_per_token: string;
+  listing_id: number | null;  // agregar esta línea
+  created_at: string;
+  updated_at: string;
+  token: TokenDetail;
+}
+
+export interface Trade {
+  id: string;
+  publication_id: string;
+  buyer_id: string;
+  amount: string;
+  total_price: string;
+  status: "pending" | "confirmed" | "failed";
+  tx_hash: string | null;
+  created_at: string;
 }

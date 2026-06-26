@@ -10,13 +10,8 @@ import { fetchProject, fetchTokenByProject } from "../services/api";
 import type { Project, ProjectToken } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
 
-// ─── Env vars ────────────────────────────────────────────────────────────────
 const USDC_ADDRESS = import.meta.env.VITE_USDC_ADDRESS as string;
 
-// ─── TODO: reemplazar con endpoint cuando esté disponible ────────────────────
-const TOKEN_PRICE_USDC = 0.5;
-
-// ─── ABIs mínimos necesarios ─────────────────────────────────────────────────
 const USDC_ABI = [
   "function approve(address spender, uint256 amount) external returns (bool)",
   "function balanceOf(address owner) view returns (uint256)",
@@ -46,10 +41,8 @@ export default function InvestCheckout() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  // ─── Carga del proyecto y su token ────────────────────────────────────────
   useEffect(() => {
     if (!id) return;
-
     Promise.all([fetchProject(id), fetchTokenByProject(id)])
       .then(([proj, token]) => {
         setProject(proj);
@@ -62,31 +55,35 @@ export default function InvestCheckout() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // ─── Derivados del proyecto ───────────────────────────────────────────────
   const offeringAddress = project?.offering_address ?? null;
   const tokenSuffix = projectToken?.token?.suffix ?? project?.suffix ?? "TOKEN";
   const minInvestment = 1;
 
-  // ─── Conversión de montos ──────────────────────────────────────────────────
+  // Precio en USDC con 6 decimales → convertir a número legible
+  const tokenPrice = projectToken?.current_price
+    ? Number(projectToken.current_price)
+    : null;
+  
+  console.log("projectToken:", projectToken);
+  console.log("current_price raw:", projectToken?.current_price);
+  console.log("tokenPrice calculado:", tokenPrice);
+
   const handleUsdcChange = (val: string) => {
     setUsdcAmount(val);
     setTxError(null);
-    if (!val || isNaN(Number(val))) return setTokenAmount("");
-    setTokenAmount((Number(val) / TOKEN_PRICE_USDC).toFixed(4));
+    if (!val || isNaN(Number(val)) || !tokenPrice) return setTokenAmount("");
+    setTokenAmount((Number(val) / tokenPrice).toFixed(4));
   };
 
   const handleTokenChange = (val: string) => {
     setTokenAmount(val);
     setTxError(null);
-    if (!val || isNaN(Number(val))) return setUsdcAmount("");
-    setUsdcAmount((Number(val) * TOKEN_PRICE_USDC).toFixed(2));
+    if (!val || isNaN(Number(val)) || !tokenPrice) return setUsdcAmount("");
+    setUsdcAmount((Number(val) * tokenPrice).toFixed(2));
   };
 
-  // ─── Flujo de inversión ────────────────────────────────────────────────────
   const handleInvest = async () => {
     setTxError(null);
-    console.log("USDC_ADDRESS:", USDC_ADDRESS);
-    console.log("offering_address:", offeringAddress);
 
     if (!offeringAddress) {
       setTxError("Este proyecto aún no tiene un contrato de oferta desplegado.");
@@ -110,14 +107,10 @@ export default function InvestCheckout() {
 
       const amountToInvest = ethers.parseUnits(usdcAmount, 6);
 
-      // ── Validaciones pre-transacción ──────────────────────────────────────
-
       try {
         const balance: bigint = await usdc.balanceOf(walletAddress);
         if (balance < amountToInvest) {
-          setTxError(
-            `Saldo insuficiente. Tenés ${ethers.formatUnits(balance, 6)} USDC.`
-          );
+          setTxError(`Saldo insuficiente. Tenés ${ethers.formatUnits(balance, 6)} USDC.`);
           return;
         }
 
@@ -127,42 +120,31 @@ export default function InvestCheckout() {
           setTxError("La oferta ya cerró.");
           return;
         }
-        
+
         const totalRaised: bigint = await offering.totalRaised();
         const hardCap: bigint = await offering.HARD_CAP();
-
-        console.log("totalRaised (raw):", totalRaised.toString());
-        console.log("hardCap (raw):", hardCap.toString());
-        console.log("amountToInvest (raw):", amountToInvest.toString());
-        console.log("totalRaised + amount:", (totalRaised + amountToInvest).toString());
         if ((totalRaised + amountToInvest) > hardCap) {
           const disponible = ethers.formatUnits(hardCap - totalRaised, 6);
           setTxError(`Superás el Hard Cap. Máximo disponible: ${disponible} USDC.`);
           return;
         }
       } catch (validationError) {
-        console.warn("Validaciones pre-tx no disponibles en este contrato:", validationError);
+        console.warn("Validaciones pre-tx no disponibles:", validationError);
       }
 
-      // ── Paso 1: Approve ───────────────────────────────────────────────────
-      console.log("Aprobando USDC...");
       const approveTx = await usdc.approve(offeringAddress, amountToInvest);
       await approveTx.wait();
-      console.log("Approve confirmado.");
 
-      // ── Paso 2: Invest ────────────────────────────────────────────────────
-      console.log("Ejecutando invest...");
       const investTx = await offering.invest(amountToInvest, { gasLimit: 500_000 });
       const receipt = await investTx.wait();
       console.log("Inversión confirmada. Receipt:", receipt);
 
-      // ── Historial local (temporal hasta integración con BD) ───────────────
       const nuevaInversion = {
         projectId: id,
         usdcAmount: Number(usdcAmount),
         tokenAmount: Number(tokenAmount),
         tokenSuffix,
-        tokenPrice: TOKEN_PRICE_USDC,
+        tokenPrice: tokenPrice ?? 0,
         txHash: investTx.hash,
         createdAt: Date.now(),
       };
@@ -173,7 +155,8 @@ export default function InvestCheckout() {
       localStorage.setItem("historial_real_inversiones", JSON.stringify(historial));
 
       setSuccessMessage(
-        `¡Inversión de ${usdcAmount} USDC procesada con éxito! Se han acreditado ${tokenAmount} DPF-${tokenSuffix} en tu billetera.`
+        `¡Inversión de ${usdcAmount} USDC procesada con éxito! Se han acreditado aproximadamente ${tokenAmount} DPF-${tokenSuffix} en tu billetera. ` +
+        `El monto exacto puede variar levemente por el redondeo de la bonding curve.`
       );
       setShowSuccessModal(true);
     } catch (error: any) {
@@ -184,7 +167,6 @@ export default function InvestCheckout() {
     }
   };
 
-  // ─── Estados de carga / error ─────────────────────────────────────────────
   if (loading) {
     return (
       <DashboardLayout title="Confirmar Inversión" user={user}>
@@ -211,7 +193,7 @@ export default function InvestCheckout() {
 
         <div className="p2p-trade-box invest-trade-box animate-fade-in">
 
-          {/* ── Info del proyecto ── */}
+          {/* Info del proyecto */}
           <div className="trade-box-left">
             <h3 className="checkout-project-title">{project.name}</h3>
             <span className="badge-category">
@@ -230,6 +212,9 @@ export default function InvestCheckout() {
                   <ShieldCheck size={16} color="#10b981" /> Fondos protegidos
                   por contrato inteligente
                 </li>
+                <li style={{ color: "#6b7280", fontSize: "12px" }}>
+                  ⚠ El monto de tokens recibido puede variar levemente por redondeo de la bonding curve.
+                </li>
                 {!offeringAddress && (
                   <li style={{ color: "#f59e0b" }}>
                     ⚠ Contrato de oferta pendiente de despliegue
@@ -239,12 +224,12 @@ export default function InvestCheckout() {
             </div>
           </div>
 
-          {/* ── Inputs de inversión ── */}
+          {/* Inputs de inversión */}
           <div className="trade-box-right">
             <div className="price-indicator">
               Precio del Token:{" "}
               <strong>
-                {TOKEN_PRICE_USDC} USDC / DPF-{tokenSuffix}
+                {tokenPrice ? `${tokenPrice.toFixed(6)} USDC` : "Cargando..."} / DPF-{tokenSuffix}
               </strong>
             </div>
 
@@ -257,6 +242,7 @@ export default function InvestCheckout() {
                     placeholder="0.00"
                     value={usdcAmount}
                     onChange={(e) => handleUsdcChange(e.target.value)}
+                    disabled={!tokenPrice}
                   />
                   <span className="symbol-label">USDC</span>
                 </div>
@@ -274,6 +260,7 @@ export default function InvestCheckout() {
                     placeholder="0.00"
                     value={tokenAmount}
                     onChange={(e) => handleTokenChange(e.target.value)}
+                    disabled={!tokenPrice}
                   />
                   <span className="symbol-label">DPF-{tokenSuffix}</span>
                 </div>
@@ -283,19 +270,12 @@ export default function InvestCheckout() {
             {txError && <div className="tx-error-msg">{txError}</div>}
 
             <div className="tx-summary-box">
-              <p>
-                Inversión: <strong>{usdcAmount || 0} USDC</strong>
-              </p>
-              <p>
-                Recibirás:{" "}
-                <strong>
-                  {tokenAmount || 0} {tokenSuffix}
-                </strong>
-              </p>
+              <p>Inversión: <strong>{usdcAmount || 0} USDC</strong></p>
+              <p>Recibirás (aprox.): <strong>{tokenAmount || 0} {tokenSuffix}</strong></p>
               <p>
                 Precio actual:{" "}
                 <strong>
-                  1 {tokenSuffix} = {TOKEN_PRICE_USDC} USDC
+                  1 {tokenSuffix} ≈ {tokenPrice ? tokenPrice.toFixed(6) : "..."} USDC
                 </strong>
               </p>
             </div>
@@ -310,28 +290,22 @@ export default function InvestCheckout() {
                   !usdcAmount ||
                   parseFloat(usdcAmount) < minInvestment ||
                   isProcessing ||
-                  !offeringAddress
+                  !offeringAddress ||
+                  !tokenPrice
                 }
                 onClick={handleInvest}
               >
-                {isProcessing
-                  ? "Procesando en Blockchain..."
-                  : "Confirmar Inversión"}
+                {isProcessing ? "Procesando en Blockchain..." : "Confirmar Inversión"}
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Modal de éxito ── */}
       {showSuccessModal && (
         <div className="success-modal-overlay">
           <div className="success-modal-content">
-            <ShieldCheck
-              size={48}
-              color="#10b981"
-              className="success-modal-icon"
-            />
+            <ShieldCheck size={48} color="#10b981" className="success-modal-icon" />
             <h3 className="success-modal-title">¡Inversión Exitosa!</h3>
             <p className="success-modal-text">{successMessage}</p>
             <button

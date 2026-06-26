@@ -2,20 +2,19 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import DashboardLayout from "../components/DashboardLayout";
 import { useUser } from "../hooks/useUser";
-import { fetchMyListings, fetchMarketplaceInfo } from "../services/api";
-import { parseContractError } from "../utils/ParseContractError";
-import type { Listing, MarketplaceInfo } from "../types";
+import { fetchMyPublications, fetchMarketplaceInfo, cancelPublication } from "../services/api";
+import type { Publication, MarketplaceInfo } from "../types";
 import "./MyListings.css";
 
 const MARKETPLACE_ABI = ["function cancel(uint256 listingId) external"];
 
 export default function MyListings() {
   const { user } = useUser();
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [publications, setPublications] = useState<Publication[]>([]);
   const [info, setInfo] = useState<MarketplaceInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [cancelingId, setCancelingId] = useState<number | null>(null);
+  const [cancelingId, setCancelingId] = useState<string | null>(null);
   const [txError, setTxError] = useState<string | null>(null);
   const [txSuccess, setTxSuccess] = useState<string | null>(null);
 
@@ -23,17 +22,11 @@ export default function MyListings() {
     setLoading(true);
     setError(null);
     try {
-      if (!(window as any).ethereum) { setError("Instalá MetaMask para continuar."); return; }
-      const provider = new ethers.BrowserProvider((window as any).ethereum);
-      const signer = await provider.getSigner();
-      const walletAddress = await signer.getAddress();
-      const [active, finalized, cancelled, infoData] = await Promise.all([
-        fetchMyListings(walletAddress, "active"),
-        fetchMyListings(walletAddress, "finalized"),
-        fetchMyListings(walletAddress, "cancelled"),
+      const [pubs, infoData] = await Promise.all([
+        fetchMyPublications(),
         fetchMarketplaceInfo(),
       ]);
-      setListings([...active, ...finalized, ...cancelled].sort((a, b) => a.id - b.id));
+      setPublications(pubs);
       setInfo(infoData);
     } catch {
       setError("Error al cargar tus publicaciones.");
@@ -44,51 +37,54 @@ export default function MyListings() {
 
   useEffect(() => { load(); }, []);
 
-  const handleCancel = async (listingId: number) => {
+  const handleCancel = async (publication: Publication) => {
     setTxError(null);
     setTxSuccess(null);
-    if (!info) return;
+    if (!info || publication.listing_id === null) return;
+
     try {
-      setCancelingId(listingId);
+      setCancelingId(publication.id);
+
+      // 1. Cancelar en blockchain
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
       const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);
-
-      const tx = await marketplace.cancel(BigInt(listingId), { gasLimit: 200000 });
+      const tx = await marketplace.cancel(BigInt(publication.listing_id), { gasLimit: 200000 });
       await tx.wait();
-      setTxSuccess(`Publicación #${listingId + 1} cancelada. Tus tokens fueron devueltos.`);
+
+      // 2. Cancelar en BD
+      await cancelPublication(publication.id);
+
+      setTxSuccess(`Publicación cancelada. Tus tokens fueron devueltos.`);
       await load();
     } catch (err: any) {
-      setTxError(parseContractError(err));
+      setTxError(err?.shortMessage || err?.message || "Error al cancelar.");
     } finally {
       setCancelingId(null);
     }
   };
 
-  const formatTokens = (amount: number) => ethers.formatUnits(BigInt(amount), 18);
-  const formatPrice  = (price: number)  => ethers.formatUnits(BigInt(price), 6);
-  const shortAddress = (addr: string)   => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-
-  const tokensSold = (l: Listing) =>
-    Number(formatTokens(l.total_amount - l.remaining_amount));
-
-  const earnings = (l: Listing) =>
-    (tokensSold(l) * Number(formatPrice(l.price_per_token))).toFixed(2);
+  const formatTokens = (amount: string) => Number(amount).toLocaleString("es-AR", { maximumFractionDigits: 4 });
+  const formatPrice = (price: string) => Number(price).toFixed(6);
+  const tokensSold = (p: Publication) => Number(p.total) - Number(p.available);
+  const earnings = (p: Publication) => (tokensSold(p) * Number(p.price_per_token)).toFixed(2);
 
   const accentClass = (status: string) =>
-    status === "finalized" ? "listing-card-accent--finalized"
-    : status === "cancelled" ? "listing-card-accent--cancelled"
+    status === "completed" ? "listing-card-accent--finalized"
+    : status === "canceled" ? "listing-card-accent--cancelled"
     : "";
 
   const statusLabel: Record<string, string> = {
-    active: "Activa", finalized: "Finalizada", cancelled: "Cancelada",
+    active: "Activa",
+    completed: "Completada",
+    canceled: "Cancelada",
   };
 
   return (
     <DashboardLayout title="Mis Publicaciones" user={user}>
       <div className="myprojects-header">
         <span className="myprojects-count">
-          {listings.length} publicación{listings.length !== 1 ? "es" : ""}
+          {publications.length} publicación{publications.length !== 1 ? "es" : ""}
         </span>
       </div>
 
@@ -106,63 +102,67 @@ export default function MyListings() {
         </div>
       )}
 
-      {!loading && listings.length === 0 && (
+      {!loading && publications.length === 0 && (
         <div className="myprojects-empty">
           <p>No tenés publicaciones todavía.</p>
         </div>
       )}
 
       <div className="mylistings-grid">
-        {listings.map((listing) => (
-          <div key={listing.id} className="listing-card">
-            <div className={`listing-card-accent ${accentClass(listing.status)}`} />
+        {publications.map((pub) => (
+          <div key={pub.id} className="listing-card">
+            <div className={`listing-card-accent ${accentClass(pub.status)}`} />
             <div className="listing-card-body">
               <div className="listing-card-top">
                 <div>
-                  <div className="listing-card-title">Publicación #{listing.id + 1}</div>
-                  <div className="listing-card-sub">{shortAddress(listing.seller)}</div>
+                  <div className="listing-card-title">{pub.token.name}</div>
+                  <div className="listing-card-sub">DPF-{pub.token.suffix}</div>
                 </div>
-                <span className={`listing-badge listing-badge--${listing.status}`}>
-                  {statusLabel[listing.status]}
+                <span className={`listing-badge listing-badge--${pub.status}`}>
+                  {statusLabel[pub.status] ?? pub.status}
                 </span>
               </div>
 
               <div className="listing-metrics">
                 <div className="listing-metric">
                   <div className="listing-metric-label">Precio / token</div>
-                  <div className="listing-metric-value">{formatPrice(listing.price_per_token)} USDC</div>
+                  <div className="listing-metric-value">{formatPrice(pub.price_per_token)} USDC</div>
                 </div>
                 <div className="listing-metric">
                   <div className="listing-metric-label">Disponible</div>
-                  <div className="listing-metric-value">{formatTokens(listing.remaining_amount)} DPF</div>
+                  <div className="listing-metric-value">{formatTokens(pub.available)} DPF</div>
                 </div>
                 <div className="listing-metric">
                   <div className="listing-metric-label">Tokens vendidos</div>
-                  <div className="listing-metric-value listing-metric-value--highlight">{tokensSold(listing)} DPF</div>
+                  <div className="listing-metric-value listing-metric-value--highlight">
+                    {formatTokens(String(tokensSold(pub)))} DPF
+                  </div>
                 </div>
                 <div className="listing-metric">
                   <div className="listing-metric-label">Ganancias</div>
-                  <div className="listing-metric-value listing-metric-value--highlight">{earnings(listing)} USDC</div>
+                  <div className="listing-metric-value listing-metric-value--highlight">
+                    {earnings(pub)} USDC
+                  </div>
                 </div>
               </div>
 
               <div className="listing-divider" />
               <div className="listing-row">
                 <span>Total original</span>
-                <span>{formatTokens(listing.total_amount)} DPF</span>
+                <span>{formatTokens(pub.total)} DPF</span>
               </div>
               <div className="listing-row">
-                <span>Token</span>
-                <span>{shortAddress(listing.token)}</span>
+                <span>Listing ID</span>
+                <span>#{pub.listing_id !== null ? pub.listing_id + 1 : "—"}</span>
               </div>
 
-              {listing.status === "active" && (
+              {pub.status === "active" && (
                 <button
                   className="btn-cancel-listing"
-                  onClick={() => handleCancel(listing.id)}
-                  disabled={cancelingId === listing.id}
+                  onClick={() => handleCancel(pub)}
+                  disabled={cancelingId === pub.id}
                 >
-                  {cancelingId === listing.id ? "Cancelando..." : "Cancelar publicación"}
+                  {cancelingId === pub.id ? "Cancelando..." : "Cancelar publicación"}
                 </button>
               )}
             </div>

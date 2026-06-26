@@ -64,7 +64,7 @@ export default function CreateProject() {
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(value)) return "Solo se permiten letras.";
     return "";
   };
-
+  
   const handleSuffixChange = (val: string) => {
     setSuffix(val);
     setFieldErrors((prev) => ({ ...prev, suffix: validateSuffix(val) }));
@@ -135,7 +135,7 @@ export default function CreateProject() {
 
 
 
-    if(totalAmount<minCost)
+    if (parseFloat(totalAmount) <= parseFloat(minCost))
      {
       setError("La Meta Mínima debe ser menor a la Meta de Financiamiento");
      return;

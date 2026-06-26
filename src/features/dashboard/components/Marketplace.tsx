@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ethers } from "ethers";
 import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 import "./Marketplace.css";
 import "./MarketplaceInline.css";
@@ -75,9 +74,6 @@ export default function Marketplace() {
       setTokenAmount("");
     }
   };
-
-  const shortAddress = (address: string) =>
-    address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "";
 
   const activePublications = publications.filter((p) => p.status === "active");
   const myPublications = publications.filter((p) => p.seller_id === user?.id);

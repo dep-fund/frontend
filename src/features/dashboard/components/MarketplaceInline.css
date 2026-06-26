@@ -11,12 +11,41 @@
 .p2p-header-container {
   display: flex;
   align-items: center;
+  gap: 14px;
   margin-bottom: 24px;
+}
+
+.p2p-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.p2p-header-help {
+  display: flex;
+  align-items: center;
+}
+
+.p2p-header-help .ht-wrap {
+  margin-left: 0;
+}
+
+.p2p-header-help .ht-icon {
+  background: #fff8f2;
+  border-color: #f0d4b8;
+  color: #EC8F41;
+  font-size: 0.78rem;
+}
+
+.p2p-header-help .ht-icon:hover {
+  background: #EC8F41;
+  border-color: #EC8F41;
+  color: #ffffff;
 }
 
 .p2p-header-tabs-override {
   margin-bottom: 0;
-  flex: 1;
 }
 
 .btn-new-listing {

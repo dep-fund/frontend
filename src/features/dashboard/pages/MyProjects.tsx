@@ -8,6 +8,7 @@ import ProjectForm from "../components/ProjectForm";
 import { useUser } from "../hooks/useUser";
 import { useProjects } from "../hooks/useProjects";
 import type { Project } from "../types";
+import HelpTooltip from "../components/HelpTooltip";
 
 export default function MyProjects() {
   const navigate = useNavigate();
@@ -18,7 +19,14 @@ export default function MyProjects() {
   return (
     <DashboardLayout title="Mis Proyectos" user={user}>
       <div className="myprojects-header">
-        <span className="myprojects-count">{total} proyecto{total !== 1 ? "s" : ""}</span>
+        <span className="myprojects-count">
+          {total} proyecto{total !== 1 ? "s" : ""}
+          <HelpTooltip title="Mis Proyectos" side="bottom">
+            Acá ves los proyectos que publicaste como desarrollador: su estado de aprobación,
+            cuánto llevan recaudado y el acceso para editarlos mientras siguen en revisión.
+            ¿Buscás invertir en proyectos de otros? Eso está en <strong>Invertir</strong>.
+          </HelpTooltip>
+        </span>
         <button className="btn-create" onClick={() => navigate("/dashboard/projects/new")}>
           <Plus size={16} />
           Crear Proyecto

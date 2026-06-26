@@ -1,6 +1,6 @@
 .home-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   margin-bottom: 32px;
 }
@@ -186,14 +186,60 @@
   background: #2C7176;
 }
 
+.home-action-text {
+  flex: 1;
+}
+
 .home-action-title {
   font-family: "Sora", sans-serif;
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.home-action-help {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* El ícono de ayuda vive sobre fondo de color (naranja/teal), así que
+   necesita su propio contraste en vez del estilo neutro default */
+.home-action-help .ht-wrap {
+  margin-left: 7px;
+}
+
+.home-action-help .ht-icon {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.home-action-help .ht-icon:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.92);
+}
+
+.home-action-card--orange .home-action-help .ht-icon:hover {
+  color: #EC8F41;
+}
+
+.home-action-card--teal .home-action-help .ht-icon:hover {
+  color: #2C7176;
+}
+
+.home-action-help .ht-popover {
+  color: initial;
 }
 
 .home-action-sub {
   font-size: 0.82rem;
   opacity: 0.85;
+}
+
+@media (max-width: 720px) {
+  .home-stats {
+    grid-template-columns: 1fr;
+  }
 }

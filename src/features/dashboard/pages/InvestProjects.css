@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .invest-filters-title {
@@ -18,6 +18,128 @@
   cursor: pointer;
   font-family: "DM Sans", sans-serif;
 }
+
+/* ── Pill de guía permanente ── */
+
+.invest-guide-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 9px 12px;
+  margin-bottom: 16px;
+  background: #fff4ec;
+  border: 1px dashed #f5c49a;
+  border-radius: 10px;
+  color: #c4620a;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  text-align: left;
+}
+
+.invest-guide-pill:hover {
+  background: #fde8d0;
+  border-color: #EC8F41;
+}
+
+/* ── Banner de onboarding ── */
+
+.invest-onboarding-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #EC8F41;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.invest-onboarding-banner-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.invest-onboarding-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #fff4ec;
+  color: #EC8F41;
+  flex-shrink: 0;
+}
+
+.invest-onboarding-banner-title {
+  font-family: "Sora", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.invest-onboarding-banner-text {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.invest-onboarding-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.invest-onboarding-banner-cta {
+  padding: 7px 14px;
+  background: #EC8F41;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.invest-onboarding-banner-cta:hover {
+  background: #d97d32;
+}
+
+.invest-onboarding-banner-dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.invest-onboarding-banner-dismiss:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+/* ── Filtros ── */
 
 .invest-filters-more {
   border-top: 1px solid #f3f4f6;
@@ -73,4 +195,168 @@
 .invest-count-icon {
   margin-right: 8px;
   color: #ec8f41;
+}
+
+/* ── Help overlay / drawer ── */
+
+.invest-help-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 80px 24px 24px;
+  box-sizing: border-box;
+}
+
+.invest-help-panel {
+  width: 340px;
+  max-height: calc(100vh - 120px);
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.invest-help-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  flex-shrink: 0;
+}
+
+.invest-help-panel-title {
+  font-family: "Sora", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.invest-help-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.invest-help-close:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.invest-help-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.invest-help-section {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 4px 0;
+}
+
+.invest-help-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #fff4ec;
+  color: #EC8F41;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.invest-help-section-icon--green {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.invest-help-section-icon--amber {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.invest-help-section-title {
+  font-family: "Sora", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 6px;
+}
+
+.invest-help-section-text {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  color: #4b5563;
+  line-height: 1.55;
+  margin: 0 0 6px;
+}
+
+.invest-help-section-text:last-child {
+  margin-bottom: 0;
+}
+
+.invest-help-divider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 16px 0;
+}
+
+.invest-help-tip {
+  background: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  color: #4b5563;
+  line-height: 1.55;
+}
+
+.invest-help-tip span {
+  color: #2C7176;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .invest-onboarding-banner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .invest-onboarding-banner-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .invest-help-overlay {
+    padding: 0;
+    align-items: flex-end;
+    justify-content: stretch;
+  }
+
+  .invest-help-panel {
+    width: 100%;
+    max-height: 75vh;
+    border-radius: 16px 16px 0 0;
+  }
 }

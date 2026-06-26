@@ -1,0 +1,118 @@
+.wg-wrap {
+  position: relative;
+  background: linear-gradient(135deg, #fff7ed 0%, #fef4ea 100%);
+  border: 1px solid #fed7aa;
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+
+.wg-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.7);
+  color: #b8682a;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.12s;
+}
+
+.wg-close:hover {
+  background: #ffffff;
+  color: #92400e;
+}
+
+.wg-close:active {
+  transform: scale(0.92);
+}
+
+.wg-title {
+  font-family: "Sora", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.01em;
+}
+
+.wg-subtitle {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  color: #92682f;
+  margin: 0 0 22px 0;
+}
+
+.wg-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.wg-step {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+
+.wg-step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  color: white;
+}
+
+.wg-step-icon--orange {
+  background: #EC8F41;
+}
+
+.wg-step-icon--teal {
+  background: #2C7176;
+}
+
+.wg-step-title {
+  font-family: "Sora", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.wg-step-text {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.81rem;
+  line-height: 1.55;
+  color: #6b5638;
+}
+
+@media (max-width: 900px) {
+  .wg-steps {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .wg-wrap {
+    padding: 24px 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .wg-wrap {
+    padding: 20px 18px 22px;
+    border-radius: 12px;
+  }
+
+  .wg-title {
+    font-size: 1.1rem;
+  }
+}

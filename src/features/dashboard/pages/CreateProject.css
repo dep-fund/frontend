@@ -140,6 +140,12 @@
   flex-shrink: 0;
 }
 
+.cp-section-label .ht-wrap {
+  text-transform: none;
+  letter-spacing: normal;
+  margin-left: 2px;
+}
+
 .cp-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -158,6 +164,8 @@
   color: #334155;
   font-family: "DM Sans", sans-serif;
   letter-spacing: 0.005em;
+  display: inline-flex;
+  align-items: center;
 }
 
 .cp-group input,

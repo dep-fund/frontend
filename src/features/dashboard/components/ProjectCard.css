@@ -181,13 +181,27 @@
 
 .btn-edit:hover { background: #d97f35; }
 
+/* ── Badge de dividendos disponibles ──
+   Va abajo a la derecha del header, sobre la imagen de portada.
+   Acotado en ancho y en una sola línea: el monto es dinámico
+   (puede tener más dígitos que "0.01"), así que sin estos límites
+   el badge se estiraba y terminaba ocupando todo el ancho del header. */
 .badge--dividends {
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background: rgba(236, 143, 65, 0.92);
+  left: 12px;
+  max-width: calc(100% - 24px);
+  width: fit-content;
+  margin-left: auto;
+  background: rgba(236, 143, 65, 0.94);
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 8px rgba(236, 143, 65, 0.35);
 }
 
 .btn-dividends {
@@ -221,5 +235,3 @@
   .project-card-stats { gap: 12px; flex-wrap: wrap; }
   .project-card-actions { flex-direction: column; gap: 10px; }
 }
-
-

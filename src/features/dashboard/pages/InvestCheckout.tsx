@@ -6,7 +6,7 @@ import { useUser } from "../hooks/useUser";
 import { ArrowLeft, ShieldCheck, ArrowUpDown, Info, X, Coins, TrendingUp, AlertCircle } from "lucide-react";
 import "../components/Marketplace.css";
 import "./InvestCheckout.css";
-import { fetchProject, fetchTokenByProject, createInvestment } from "../services/api";
+import { fetchProject, fetchTokenByProject, createInvestment, getWalletByAddress, createWallet } from "../services/api";
 import type { Project, ProjectToken } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
 
@@ -25,6 +25,25 @@ const OFFERING_ABI = [
   "function DEADLINE() view returns (uint256)",
   "function SOFT_CAP() view returns (uint256)",
 ];
+
+/**
+ * Resuelve el wallet_id (de nuestra plataforma) a partir de la address
+ * conectada en MetaMask. Si la wallet no está registrada (404), la crea
+ * y reintenta. Se llama ANTES de ejecutar la tx on-chain, para no dejar
+ * plata movida sin poder registrar la inversión después.
+ */
+async function resolveWalletId(address: string): Promise<string> {
+  try {
+    const wallet = await getWalletByAddress(address);
+    return wallet.id;
+  } catch (err: any) {
+    if (err?.response?.status === 404) {
+      const created = await createWallet(address);
+      return created.id;
+    }
+    throw err;
+  }
+}
 
 export default function InvestCheckout() {
   const { id } = useParams<{ id: string }>();
@@ -103,6 +122,17 @@ export default function InvestCheckout() {
       const signer = await provider.getSigner();
       const walletAddress = await signer.getAddress();
 
+      // Resolvemos el wallet_id de nuestra plataforma ANTES de ejecutar
+      // cualquier tx on-chain. Si esto falla, no se movió plata todavía.
+      let walletId: string;
+      try {
+        walletId = await resolveWalletId(walletAddress);
+      } catch (walletError) {
+        console.error("Error resolviendo wallet_id:", walletError);
+        setTxError("No pudimos verificar tu wallet en la plataforma. Intentá de nuevo.");
+        return;
+      }
+
       const usdc = new ethers.Contract(USDC_ADDRESS, USDC_ABI, signer);
       const offering = new ethers.Contract(offeringAddress, OFFERING_ABI, signer);
 
@@ -145,6 +175,7 @@ export default function InvestCheckout() {
           token_quantity: Number(tokenAmount),
           unit_price: tokenPrice ?? 0,
           tx_hash: investTx.hash,
+          wallet_id: walletId,
         });
       } catch (backendError) {
         // La inversión en blockchain ya se confirmó (la plata se movió).

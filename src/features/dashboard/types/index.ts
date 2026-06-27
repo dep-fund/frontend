@@ -133,3 +133,9 @@ export type ProjectInvestmentStats = {
   investors_count: number;
   progress_pct: string;
 };
+
+export interface Wallet {
+  id: string;
+  address: string;
+  user_id: string;
+}

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../../../constants";
-import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken, Publication, Trade, Investment, ProjectInvestmentStats } from "../types";
+import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken, Publication, Trade, Investment, ProjectInvestmentStats, Wallet } from "../types";
 const authHeader = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
@@ -291,6 +291,7 @@ export const createInvestment = async (
     token_quantity: number;
     unit_price: number;
     tx_hash: string;
+    wallet_id: string;
   }
 ): Promise<Investment> => {
   const res = await axios.post(`${API_URL}/investments/${projectId}`, data, {
@@ -312,6 +313,21 @@ export const fetchMyInvestments = async (): Promise<PaginatedResponse<Investment
   const res = await axios.get(`${API_URL}/investments/me`, {
     headers: authHeader(),
     params: { page: 1, page_size: 100 },
+  });
+  return res.data;
+};
+
+export const getWalletByAddress = async (address: string): Promise<Wallet> => {
+  const res = await axios.get(`${API_URL}/wallets/by-address`, {
+    params: { address },
+    headers: authHeader(),
+  });
+  return res.data;
+};
+
+export const createWallet = async (address: string): Promise<Wallet> => {
+  const res = await axios.post(`${API_URL}/wallets`, { address }, {
+    headers: authHeader(),
   });
   return res.data;
 };

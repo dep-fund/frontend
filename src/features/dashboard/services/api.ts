@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../../../constants";
-import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken, Publication, Trade } from "../types";
+import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken, Publication, Trade, Investment, ProjectInvestmentStats } from "../types";
 const authHeader = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
@@ -282,5 +282,36 @@ export const fetchMyTrades = async (): Promise<Trade[]> => {
 
 export const fetchMyPublications = async (): Promise<Publication[]> => {
   const res = await axios.get(`${API_URL}/publications/my`, { headers: authHeader() });
+  return res.data;
+};
+
+export const createInvestment = async (
+  projectId: string,
+  data: {
+    token_quantity: number;
+    unit_price: number;
+    tx_hash: string;
+  }
+): Promise<Investment> => {
+  const res = await axios.post(`${API_URL}/investments/${projectId}`, data, {
+    headers: authHeader(),
+  });
+  return res.data;
+};
+
+export const fetchProjectInvestmentStats = async (
+  projectId: string
+): Promise<ProjectInvestmentStats> => {
+  const res = await axios.get(`${API_URL}/investments/project/${projectId}/stats`, {
+    headers: authHeader(),
+  });
+  return res.data;
+};
+
+export const fetchMyInvestments = async (): Promise<PaginatedResponse<Investment>> => {
+  const res = await axios.get(`${API_URL}/investments/me`, {
+    headers: authHeader(),
+    params: { page: 1, page_size: 100 },
+  });
   return res.data;
 };

@@ -3,7 +3,7 @@ import { Eye } from "lucide-react";
 import type { Project } from "../types";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { listProjectImages } from "../services/api";
+import { listProjectImages, fetchProjectInvestmentStats } from "../services/api";
 
 interface ProjectCardProps {
   project: Project;
@@ -17,25 +17,36 @@ const STATE_LABELS: Record<string, { label: string; className: string }> = {
   CANCELED: { label: "Completado", className: "badge--completed" },
 };
 
+const formatRaised = (amount: number) => `$${Math.round(amount / 1000)}K`;
 
-
-const getProgress = (id: string) => {
-  const seed = id.charCodeAt(0) + id.charCodeAt(1);
-  return Math.min(100, (seed % 60) + 40);
-};
-
-export default function ProjectCard({ project}: ProjectCardProps) {
+export default function ProjectCard({ project }: ProjectCardProps) {
   const navigate = useNavigate();
   const stateInfo = STATE_LABELS[project.state] ?? { label: project.state, className: "badge--pending" };
-  const progress = getProgress(project.id);
-  const raised = `$${Math.round(parseFloat(project.total_amount) * progress / 100 / 1000)}K`;
-  const investors = Math.floor(progress * 2.5);
+
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number | null>(null);
+  const [raised, setRaised] = useState<number | null>(null);
+  const [investors, setInvestors] = useState<number | null>(null);
 
   useEffect(() => {
     listProjectImages(project.id)
       .then((imgs) => imgs.length > 0 ? setCoverUrl(imgs[0].url) : null)
       .catch(() => null);
+  }, [project.id]);
+
+  useEffect(() => {
+    fetchProjectInvestmentStats(project.id)
+      .then((stats) => {
+        setProgress(Number(stats.progress_pct));
+        setRaised(Number(stats.raised_amount));
+        setInvestors(stats.investors_count);
+      })
+      .catch(() => {
+        // Si falla, dejamos los valores en null y mostramos "—" en vez de inventar un número.
+        setProgress(null);
+        setRaised(null);
+        setInvestors(null);
+      });
   }, [project.id]);
 
   return (
@@ -58,34 +69,39 @@ export default function ProjectCard({ project}: ProjectCardProps) {
 
         <div className="project-card-progress-row">
           <span>Progreso</span>
-          <span className="project-card-progress-pct">{progress}%</span>
+          <span className="project-card-progress-pct">
+            {progress !== null ? `${progress.toFixed(0)}%` : "—"}
+          </span>
         </div>
         <div className="project-card-progress-bar">
-          <div className="project-card-progress-fill" style={{ width: `${progress}%` }} />
+          <div
+            className="project-card-progress-fill"
+            style={{ width: `${progress ?? 0}%` }}
+          />
         </div>
 
         <div className="project-card-stats">
           <div>
             <span className="stat-label">Recaudado</span>
-            <span className="stat-value">{raised}</span>
+            <span className="stat-value">
+              {raised !== null ? formatRaised(raised) : "—"}
+            </span>
           </div>
           <div>
             <span className="stat-label">Inversores</span>
-            <span className="stat-value">{investors}</span>
+            <span className="stat-value">{investors !== null ? investors : "—"}</span>
           </div>
         </div>
 
-         
-          <div className="project-card-actions">
-            <button
-              className="btn-detail"
-              onClick={() => navigate(`/dashboard/projects/${project.id}`)}
-            >
-              <Eye size={15} />
-              Ver Detalle
-            </button>
-          </div>
-        
+        <div className="project-card-actions">
+          <button
+            className="btn-detail"
+            onClick={() => navigate(`/dashboard/projects/${project.id}`)}
+          >
+            <Eye size={15} />
+            Ver Detalle
+          </button>
+        </div>
       </div>
     </div>
   );

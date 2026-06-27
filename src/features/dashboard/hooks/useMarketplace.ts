@@ -56,63 +56,57 @@ export const useMarketplace = () => {
 
   const buyTokens = async (publication: Publication, amount: number): Promise<boolean> => {
     setTxError(null);
-
+  
     if (!info) {
       setTxError("No se pudo obtener la información del contrato.");
       return false;
     }
-
     if (!(window as any).ethereum) {
       setTxError("Instalá MetaMask para continuar.");
       return false;
     }
-
     if (!amount || amount <= 0) {
       setTxError("La cantidad debe ser mayor a 0.");
       return false;
     }
-
     if (publication.listing_id === null || publication.listing_id === undefined) {
       setTxError("Esta publicación no tiene un listing ID válido.");
       return false;
     }
-
+  
     let tradeId: string | null = null;
-
+    let onChainConfirmed = false; // <-- nuevo: marca si el buy() on-chain ya se confirmó
+  
     try {
       setIsProcessing(true);
-
+  
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
       const walletAddress = await signer.getAddress();
-
+  
       const amountWei = ethers.parseUnits(
         amount.toFixed(18).replace(/\.?0+$/, "") || "0",
         18
       );
       const pricePerToken = Number(publication.price_per_token);
       const totalUsdc = BigInt(Math.ceil(pricePerToken * amount * 1_000_000));
-
-      // 1. Verificar saldo USDC
+  
       const usdc = new ethers.Contract(info.usdc_address, USDC_ABI, signer);
       const balance: bigint = await usdc.balanceOf(walletAddress);
       if (balance < totalUsdc) {
         setTxError(`Saldo insuficiente. Tenés ${ethers.formatUnits(balance, 6)} USDC.`);
         return false;
       }
-
-      // 2. Crear trade en DB (pending)
+  
       const trade = await createTrade({
         publication_id: publication.id,
         amount: amount.toString(),
       });
       tradeId = trade.id;
-
-      // 3. Approve USDC al marketplace
+  
       const approveTx = await usdc.approve(info.marketplace_address, totalUsdc);
       await approveTx.wait();
-
-      // 4. Buy en blockchain usando el listing_id guardado en DB
+  
       const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);
       const buyTx = await marketplace.buy(
         BigInt(publication.listing_id),
@@ -120,19 +114,27 @@ export const useMarketplace = () => {
         { gasLimit: 300000 }
       );
       const receipt = await buyTx.wait();
-
-      // 5. Confirmar trade en DB con tx_hash
+      onChainConfirmed = true; // <-- a partir de aquí, NO se puede usar failTrade
+  
       await confirmTrade(tradeId, receipt.hash);
-
+  
       showSuccess(`¡Compra exitosa! Recibiste ${amount} DPF en tu wallet.`);
       await load();
       return true;
-
+  
     } catch (err: any) {
-      if (tradeId) {
-        await failTrade(tradeId).catch(() => {});
+      if (onChainConfirmed) {
+        // El buy() ya se ejecutó on-chain. NO revertir el trade: eso
+        // desincronizaría la DB del contrato real. Solo avisar para
+        // que se pueda reclamar/reintentar el registro manualmente.
+        setTxError(
+          "Tu compra se confirmó en la blockchain, pero hubo un error al registrarla en la plataforma. " +
+          "Contactá a soporte con este ID de operación: " + tradeId
+        );
+      } else {
+        if (tradeId) await failTrade(tradeId).catch(() => {});
+        setTxError(parseContractError(err));
       }
-      setTxError(parseContractError(err));
       return false;
     } finally {
       setIsProcessing(false);

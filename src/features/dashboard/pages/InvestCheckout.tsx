@@ -6,7 +6,7 @@ import { useUser } from "../hooks/useUser";
 import { ArrowLeft, ShieldCheck, ArrowUpDown, Info, X, Coins, TrendingUp, AlertCircle } from "lucide-react";
 import "../components/Marketplace.css";
 import "./InvestCheckout.css";
-import { fetchProject, fetchTokenByProject } from "../services/api";
+import { fetchProject, fetchTokenByProject, createInvestment } from "../services/api";
 import type { Project, ProjectToken } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
 
@@ -140,20 +140,24 @@ export default function InvestCheckout() {
       const receipt = await investTx.wait();
       console.log("Inversión confirmada. Receipt:", receipt);
 
-      const nuevaInversion = {
-        projectId: id,
-        usdcAmount: Number(usdcAmount),
-        tokenAmount: Number(tokenAmount),
-        tokenSuffix,
-        tokenPrice: tokenPrice ?? 0,
-        txHash: investTx.hash,
-        createdAt: Date.now(),
-      };
-      const historial = JSON.parse(
-        localStorage.getItem("historial_real_inversiones") || "[]"
-      );
-      historial.push(nuevaInversion);
-      localStorage.setItem("historial_real_inversiones", JSON.stringify(historial));
+      try {
+        await createInvestment(id!, {
+          token_quantity: Number(tokenAmount),
+          unit_price: tokenPrice ?? 0,
+          tx_hash: investTx.hash,
+        });
+      } catch (backendError) {
+        // La inversión en blockchain ya se confirmó (la plata se movió).
+        // Si esto falla, no podemos revertir la tx, pero hay que avisar
+        // para que se pueda reclamar/reintentar el registro manualmente.
+        console.error("La inversión se confirmó en blockchain pero falló el registro en el backend:", backendError);
+        setTxError(
+          "Tu inversión se confirmó en la blockchain, pero hubo un error al registrarla en la plataforma. " +
+          "Contactá a soporte con este hash de transacción: " + investTx.hash
+        );
+        setIsProcessing(false);
+        return;
+      }
 
       setSuccessMessage(
         `¡Inversión de ${usdcAmount} USDC procesada con éxito! Se han acreditado aproximadamente ${tokenAmount} DPF-${tokenSuffix} en tu billetera. ` +

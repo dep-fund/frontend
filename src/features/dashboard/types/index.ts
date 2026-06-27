@@ -114,3 +114,22 @@ export interface Trade {
   tx_hash: string | null;
   created_at: string;
 }
+
+export type Investment = {
+  id: string;
+  user_id: string;
+  project_id: string;
+  token_id: string;
+  token_quantity: string;
+  unit_price: string;
+  source: "offering" | "marketplace";
+  is_active: boolean;
+  tx_hash: string | null;
+  created_at: string;
+};
+
+export type ProjectInvestmentStats = {
+  raised_amount: string;
+  investors_count: number;
+  progress_pct: string;
+};

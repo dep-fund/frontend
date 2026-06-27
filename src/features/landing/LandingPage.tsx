@@ -3,11 +3,11 @@ import Navbar from "./components/Navbar";
 import WhatIsDepFund from "./components/WhatIsDepFund";
 import WhyDepFund from "./components/WhyDepFund";
 import HowItWorks from "./components/HowItWorks";
-import FeaturedProjects from "./components/FeaturedProjects";
+//import FeaturedProjects from "./components/FeaturedProjects";
 import CTA from "./components/CTA";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
-import Stats from "./components/Stats";
+//import Stats from "./components/Stats";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Login from '../../features/auth/Login';
@@ -40,11 +40,11 @@ export default function LandingPage() {
       <Navbar onLoginClick={openLoginPanel} onRegisterClick={openRegisterPanel} />
 
       <Hero />
-      <Stats />
+      {/* <Stats /> */}
       <WhatIsDepFund />
       <WhyDepFund />
       <HowItWorks />
-      <FeaturedProjects />
+      {/* <FeaturedProjects /> */}
       <CTA onRegisterClick={openRegisterPanel} />
       <Footer />
 

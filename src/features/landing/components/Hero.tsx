@@ -21,12 +21,14 @@ export default function Hero() {
             y valorización de tokens.
           </p>
           <div className="hero-buttons">
+            {/*
             <button className="btn-primary hero-btn-main">
               Comenzar ahora →
             </button>
             <button className="btn-hero-secondary">
               Ver proyectos
             </button>
+            */}
           </div>
         </div>
       </div>

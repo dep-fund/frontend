@@ -1,5 +1,6 @@
 import "./WhyDepFund.css";
-import { TrendingUp, ShoppingBag, Vote, RefreshCw, BarChart2, Star } from "lucide-react";
+//import { TrendingUp, ShoppingBag, Vote, RefreshCw, BarChart2, Star } from "lucide-react";
+import { TrendingUp, ShoppingBag, Star } from "lucide-react";
 
 const CYAN = "#2C7176";
 
@@ -15,6 +16,14 @@ const features = [
     desc: "Comprá y vendé tus tokens en cualquier momento con liquidez real.",
   },
   {
+    icon: <Star size={22} color={CYAN} />,
+    title: "Reputación de Desarrolladores",
+    desc: "Puntuación transparente basada en el feedback de los inversores.",
+  }
+];
+
+{/*
+  {
     icon: <Vote size={22} color={CYAN} />,
     title: "Gobernanza",
     desc: "Votá en decisiones clave. No sos solo un inversor, sos co-dueño con voto.",
@@ -28,13 +37,9 @@ const features = [
     icon: <BarChart2 size={22} color={CYAN} />,
     title: "Niveles de Inversor",
     desc: "Desbloqueá beneficios a medida que crecés: Seed → Growth → Gold → Whale.",
-  },
-  {
-    icon: <Star size={22} color={CYAN} />,
-    title: "Reputación de Desarrolladores",
-    desc: "Puntuación transparente basada en el feedback de los inversores.",
-  },
-];
+  }
+  */}
+  
 
 export default function WhyDepFund() {
   return (

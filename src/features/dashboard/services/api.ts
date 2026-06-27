@@ -357,21 +357,9 @@ export const listWallets = async (): Promise<{ results: Wallet[] }> => {
   return res.data;
 };
 
-
 export const getHistory = async (): Promise<TransactionResponse[]> => {
-  const token = localStorage.getItem("token");
-  
-  const response = await fetch("/api/transaction/history", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
+  const res = await axios.get(`${API_URL}/transaction/history`, {
+    headers: authHeader(),
   });
-
-  if (!response.ok) {
-    throw new Error(`Error ${response.status}: ${response.statusText}`);
-  }
-
-  return response.json();
+  return res.data;
 };

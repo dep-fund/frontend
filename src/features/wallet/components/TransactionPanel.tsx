@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
-import { useWallet } from '../hooks/useWallet';
+import type { TransactionResponse } from '../../dashboard/types';
 import './TransactionPanel.css';
-
 
 type Tab = 'history';
 
-export function TransactionPanel() {
+interface WalletHook {
+  backendTransactions: TransactionResponse[];
+  isLoadingHistory: boolean;
+  fetchHistory: () => void;
+  isConnected: boolean;
+}
+
+export function TransactionPanel({ wallet }: { wallet: WalletHook }) {
   const {
-    isConnected,
     backendTransactions,
     isLoadingHistory,
     fetchHistory,
-  } = useWallet();
+    isConnected,
+  } = wallet;
 
   const [tab, setTab] = useState<Tab>('history');
   const [feedback, setFeedback] = useState<{
@@ -68,7 +74,7 @@ export function TransactionPanel() {
           ) : backendTransactions.length === 0 ? (
             <p className="tx-panel__empty">No hay transacciones todavía.</p>
           ) : (
-            backendTransactions.map((tx) => (
+            backendTransactions.map((tx: TransactionResponse) => (
               <div key={tx.id} className="tx-panel__tx">
                 <div className="tx-panel__tx-info">
                   <span className="tx-panel__tx-to">{tx.type}</span>

@@ -11,6 +11,61 @@ interface RegisterPanelProps {
   onLoginClick: () => void;
 }
 
+const validateNombre = (v: string) => {
+  if (!v.trim()) return 'El nombre es obligatorio';
+  if (v.trim().length > 100) return 'El nombre no puede exceder 100 caracteres';
+  return '';
+};
+
+const validateApellido = (v: string) => {
+  if (!v.trim()) return 'El apellido es obligatorio';
+  if (v.trim().length > 100) return 'El apellido no puede exceder 100 caracteres';
+  return '';
+};
+
+const validateUsuario = (v: string) => {
+  if (!v.trim()) return 'El usuario es obligatorio';
+  if (v.trim().length < 3) return 'El usuario debe tener al menos 3 caracteres';
+  if (v.trim().length > 50) return 'El usuario no puede exceder 50 caracteres';
+  if (!/^[a-zA-Z0-9_.-]+$/.test(v.trim())) return 'El usuario solo puede contener letras, números, guiones y puntos';
+  return '';
+};
+
+const validateFechaNacimiento = (v: string) => {
+  if (!v) return 'La fecha de nacimiento es obligatoria';
+  const birthDate = new Date(v);
+  if (birthDate < new Date('1900-01-01')) return 'Fecha de nacimiento no válida';
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const month = today.getMonth() - birthDate.getMonth();
+  if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) age--;
+  if (age < 18) return 'Debes ser mayor de 18 años';
+  return '';
+};
+
+const validateEmail = (v: string) => {
+  if (!v.trim()) return 'El email es obligatorio';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Formato de email inválido';
+  return '';
+};
+
+const validatePassword = (v: string) => {
+  if (!v) return 'La contraseña es obligatoria';
+  if (v.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
+  if (!/[A-Z]/.test(v)) return 'La contraseña debe tener al menos una mayúscula';
+  if (!/[a-z]/.test(v)) return 'La contraseña debe tener al menos una minúscula';
+  if (!/\d/.test(v)) return 'La contraseña debe tener al menos un número';
+  return '';
+};
+
+const validateConfirmPassword = (v: string, password: string) => {
+  if (!v) return 'Debes confirmar la contraseña';
+  if (v !== password) return 'Las contraseñas no coinciden';
+  return '';
+};
+
+type FormErrors = Record<string, string>;
+
 export default function Register({ isOpen, onClose, onLoginClick }: RegisterPanelProps) {
   const [formData, setFormData] = useState({
     nombre: '',
@@ -24,16 +79,7 @@ export default function Register({ isOpen, onClose, onLoginClick }: RegisterPane
 
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-
-  const isOlderThan18 = (dateString: string) => {
-    if (!dateString) return false;
-    const today = new Date();
-    const birthDate = new Date(dateString);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const month = today.getMonth() - birthDate.getMonth();
-    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) age--;
-    return age >= 18;
-  };
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,22 +88,41 @@ export default function Register({ isOpen, onClose, onLoginClick }: RegisterPane
     const fieldsWithoutSpaces = ['usuario', 'email', 'password', 'confirmPassword'];
     if (fieldsWithoutSpaces.includes(name)) cleanValue = cleanValue.replace(/\s/g, '');
     setFormData({ ...formData, [name]: cleanValue });
+    setErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const handleBlur = (field: string) => {
+    let err = '';
+    switch (field) {
+      case 'nombre': err = validateNombre(formData.nombre); break;
+      case 'apellido': err = validateApellido(formData.apellido); break;
+      case 'usuario': err = validateUsuario(formData.usuario); break;
+      case 'fechaNacimiento': err = validateFechaNacimiento(formData.fechaNacimiento); break;
+      case 'email': err = validateEmail(formData.email); break;
+      case 'password': err = validatePassword(formData.password); break;
+      case 'confirmPassword': err = validateConfirmPassword(formData.confirmPassword, formData.password); break;
+    }
+    setErrors(prev => ({ ...prev, [field]: err }));
+  };
+
+  const validateAll = (): boolean => {
+    const e = {
+      nombre: validateNombre(formData.nombre),
+      apellido: validateApellido(formData.apellido),
+      usuario: validateUsuario(formData.usuario),
+      fechaNacimiento: validateFechaNacimiento(formData.fechaNacimiento),
+      email: validateEmail(formData.email),
+      password: validatePassword(formData.password),
+      confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password),
+    };
+    setErrors(e);
+    return !Object.values(e).some(Boolean);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isOlderThan18(formData.fechaNacimiento)) {
-      setToast({ message: 'Debes ser mayor de 18 años.', type: 'error' });
-      setTimeout(() => setToast(null), 3000);
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setToast({ message: 'Las contraseñas no coinciden.', type: 'error' });
-      setTimeout(() => setToast(null), 3000);
-      return;
-    }
+    if (!validateAll()) return;
 
     setLoading(true);
 
@@ -97,6 +162,8 @@ export default function Register({ isOpen, onClose, onLoginClick }: RegisterPane
     window.location.href = `${API_URL}/auth/google`;
   };
 
+  const hasError = (field: string) => !!errors[field];
+
   if (!isOpen) return null;
 
   return (
@@ -113,50 +180,92 @@ export default function Register({ isOpen, onClose, onLoginClick }: RegisterPane
           <div className="register-input-group">
             <label>Nombre</label>
             <div className="register-input-wrapper">
-              <input type="text" name="nombre" placeholder="Tu nombre" value={formData.nombre} onChange={handleChange} required />
+              <input
+                type="text" name="nombre" placeholder="Tu nombre"
+                value={formData.nombre} onChange={handleChange}
+                onBlur={() => handleBlur('nombre')}
+                className={hasError('nombre') ? 'input-error' : ''}
+              />
             </div>
+            {errors.nombre && <span className="field-error">{errors.nombre}</span>}
           </div>
 
           <div className="register-input-group">
             <label>Apellido</label>
             <div className="register-input-wrapper">
-              <input type="text" name="apellido" placeholder="Tu apellido" value={formData.apellido} onChange={handleChange} required />
+              <input
+                type="text" name="apellido" placeholder="Tu apellido"
+                value={formData.apellido} onChange={handleChange}
+                onBlur={() => handleBlur('apellido')}
+                className={hasError('apellido') ? 'input-error' : ''}
+              />
             </div>
+            {errors.apellido && <span className="field-error">{errors.apellido}</span>}
           </div>
 
           <div className="register-input-group">
             <label>Usuario</label>
             <div className="register-input-wrapper">
-              <input type="text" name="usuario" placeholder="Nombre de usuario" value={formData.usuario} onChange={handleChange} required />
+              <input
+                type="text" name="usuario" placeholder="Nombre de usuario"
+                value={formData.usuario} onChange={handleChange}
+                onBlur={() => handleBlur('usuario')}
+                className={hasError('usuario') ? 'input-error' : ''}
+              />
             </div>
+            {errors.usuario && <span className="field-error">{errors.usuario}</span>}
           </div>
 
           <div className="register-input-group">
             <label>Fecha de Nacimiento</label>
             <div className="register-input-wrapper">
-              <input type="date" name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleChange} required />
+              <input
+                type="date" name="fechaNacimiento"
+                value={formData.fechaNacimiento} onChange={handleChange}
+                onBlur={() => handleBlur('fechaNacimiento')}
+                className={hasError('fechaNacimiento') ? 'input-error' : ''}
+              />
             </div>
+            {errors.fechaNacimiento && <span className="field-error">{errors.fechaNacimiento}</span>}
           </div>
 
           <div className="register-input-group">
             <label>Email</label>
             <div className="register-input-wrapper">
-              <input type="email" name="email" placeholder="correo@ejemplo.com" value={formData.email} onChange={handleChange} required />
+              <input
+                type="email" name="email" placeholder="correo@ejemplo.com"
+                value={formData.email} onChange={handleChange}
+                onBlur={() => handleBlur('email')}
+                className={hasError('email') ? 'input-error' : ''}
+              />
             </div>
+            {errors.email && <span className="field-error">{errors.email}</span>}
           </div>
 
           <div className="register-input-group">
             <label>Contraseña</label>
             <div className="register-input-wrapper">
-              <input type="password" name="password" placeholder="••••••••••••" value={formData.password} onChange={handleChange} required />
+              <input
+                type="password" name="password" placeholder="••••••••••••"
+                value={formData.password} onChange={handleChange}
+                onBlur={() => handleBlur('password')}
+                className={hasError('password') ? 'input-error' : ''}
+              />
             </div>
+            {errors.password && <span className="field-error">{errors.password}</span>}
           </div>
 
           <div className="register-input-group">
             <label>Repetir Contraseña</label>
             <div className="register-input-wrapper">
-              <input type="password" name="confirmPassword" placeholder="••••••••••••" value={formData.confirmPassword} onChange={handleChange} required />
+              <input
+                type="password" name="confirmPassword" placeholder="••••••••••••"
+                value={formData.confirmPassword} onChange={handleChange}
+                onBlur={() => handleBlur('confirmPassword')}
+                className={hasError('confirmPassword') ? 'input-error' : ''}
+              />
             </div>
+            {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
           </div>
 
           {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}

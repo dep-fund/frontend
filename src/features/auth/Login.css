@@ -178,6 +178,19 @@
   width: 100%; /* Se expande a todo el ancho */
 }
 
+.field-error {
+  display: block;
+  color: #c53030;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.input-error {
+  border-color: #c53030 !important;
+  background-color: #fff5f5 !important;
+}
+
 /* --- BOTONES Y LINKS --- */
 .login-button {
   width: 100%;

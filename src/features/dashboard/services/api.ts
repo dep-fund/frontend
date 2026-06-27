@@ -1,6 +1,8 @@
 import axios from "axios";
 import { API_URL } from "../../../constants";
 import type { PaginatedResponse, Project, User, Category, Listing, MarketplaceInfo, ProjectToken, Publication, Trade, Investment, ProjectInvestmentStats, Wallet } from "../types";
+import type { TransactionResponse } from "../types/index.ts";
+
 const authHeader = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
@@ -330,4 +332,23 @@ export const createWallet = async (address: string): Promise<Wallet> => {
     headers: authHeader(),
   });
   return res.data;
+};
+
+
+export const getHistory = async (): Promise<TransactionResponse[]> => {
+  const token = localStorage.getItem("token");
+  
+  const response = await fetch("/api/transaction/history", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error ${response.status}: ${response.statusText}`);
+  }
+
+  return response.json();
 };

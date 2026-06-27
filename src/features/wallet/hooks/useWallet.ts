@@ -11,14 +11,11 @@ import {
   useBalance,
 } from "wagmi";
 import { parseEther } from "viem";
-import type { WalletTransaction, SendTransactionParams } from "../types";
+import type { WalletTransaction, SendTransactionParams, TransactionResponse } from "../types/index.ts";
+import { getHistory } from "../../dashboard/services/api"
 
 const WALLETS_ENDPOINT = `${import.meta.env.VITE_API_URL}/api/wallets`;
 
-/**
- * Registra la wallet conectada en el backend.
- * Si responde 409 (ya existe), se ignora: es un caso esperado.
- */
 async function registerWallet(address: string): Promise<void> {
   const token = localStorage.getItem("token");
 
@@ -49,9 +46,22 @@ export function useWallet() {
   const { data: balanceData } = useBalance({ address });
 
   const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+  const [backendTransactions, setBackendTransactions] = useState<TransactionResponse[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
-  // Evita registrar dos veces la misma address en la misma sesión del hook
   const registeredAddressRef = useRef<string | null>(null);
+
+  const fetchHistory = useCallback(async () => {
+    setIsLoadingHistory(true);
+    try {
+      const data = await getHistory();
+      setBackendTransactions(data);
+    } catch (err) {
+      console.error("Error cargando historial:", err);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  }, []);
 
   const ensureWalletRegistered = useCallback(async (addr: string) => {
     if (registeredAddressRef.current === addr) return;
@@ -121,18 +131,18 @@ export function useWallet() {
     currentChain,
     balance: formattedBalance,
     transactions,
-
+    backendTransactions,
+    isLoadingHistory,
+    fetchHistory,
     connect: handleConnect,
     disconnect: handleDisconnect,
     switchChain: handleSwitchChain,
     signMessage: handleSignMessage,
     sendTransaction: handleSendTransaction,
-
     isConnecting: connect.isPending,
     isSwitching: switchChain.isPending,
     isSigning: signMessage.isPending,
     isSending: sendTx.isPending,
-
     lastSignature: signMessage.data,
     lastTxHash: sendTx.data,
   };

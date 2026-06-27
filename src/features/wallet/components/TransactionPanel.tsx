@@ -1,20 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import './TransactionPanel.css';
 
-type Tab = 'send' | 'sign' | 'history';
+
+type Tab = 'history';
 
 export function TransactionPanel() {
   const {
     isConnected,
-    transactions,
+    backendTransactions,
+    isLoadingHistory,
+    fetchHistory,
   } = useWallet();
 
-  const [tab, setTab] = useState<Tab>('send');
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [tab, setTab] = useState<Tab>('history');
+  const [feedback, setFeedback] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
 
   if (!isConnected) return null;
-
 
   const tabs: { id: Tab; label: string }[] = [
     { id: 'history', label: 'Historial' },
@@ -22,53 +31,67 @@ export function TransactionPanel() {
 
   return (
     <div className="tx-panel">
-      {/* Tabs */}
       <div className="tx-panel__tabs">
         {tabs.map((t) => (
           <button
             key={t.id}
-            className={`tx-panel__tab ${tab === t.id ? 'tx-panel__tab--active' : ''}`}
-            onClick={() => { setTab(t.id); setFeedback(null); }}
+            className={`tx-panel__tab ${
+              tab === t.id ? 'tx-panel__tab--active' : ''
+            }`}
+            onClick={() => {
+              setTab(t.id);
+              setFeedback(null);
+            }}
           >
             {t.label}
-            {t.id === 'history' && transactions.length > 0 && (
-              <span className="tx-panel__badge">{transactions.length}</span>
+            {t.id === 'history' && backendTransactions.length > 0 && (
+              <span className="tx-panel__badge">
+                {backendTransactions.length}
+              </span>
             )}
           </button>
         ))}
       </div>
 
-      {/* Feedback */}
       {feedback && (
-        <div className={`tx-panel__feedback tx-panel__feedback--${feedback.type}`}>
+        <div
+          className={`tx-panel__feedback tx-panel__feedback--${feedback.type}`}
+        >
           {feedback.text}
         </div>
       )}
 
-      {/* History */}
       {tab === 'history' && (
         <div className="tx-panel__history">
-          {transactions.length === 0 ? (
+          {isLoadingHistory ? (
+            <p className="tx-panel__empty">Cargando historial...</p>
+          ) : backendTransactions.length === 0 ? (
             <p className="tx-panel__empty">No hay transacciones todavía.</p>
           ) : (
-            transactions.map((tx) => (
-              <div key={tx.hash} className="tx-panel__tx">
+            backendTransactions.map((tx) => (
+              <div key={tx.id} className="tx-panel__tx">
                 <div className="tx-panel__tx-info">
-                  <span className="tx-panel__tx-to">{tx.to.slice(0, 10)}…</span>
-                  <span className="tx-panel__tx-value">{tx.value} ETH</span>
-                </div>
-                <div className="tx-panel__tx-meta">
-                  <span className={`tx-panel__tx-status tx-panel__tx-status--${tx.status}`}>
-                    {tx.status}
+                  <span className="tx-panel__tx-to">{tx.type}</span>
+                  <span className="tx-panel__tx-value">
+                    {new Date(tx.created_at).toLocaleDateString()}
                   </span>
-                  <a
-                    className="tx-panel__tx-hash"
-                    href={`https://etherscan.io/tx/${tx.hash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {tx.hash.slice(0, 12)}…
-                  </a>
+                </div>
+
+                <div className="tx-panel__tx-meta">
+                  {tx.tx_hash ? (
+                    <a
+                      className="tx-panel__tx-hash"
+                      href={`https://sepolia.basescan.org/tx/${tx.tx_hash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ver transacción
+                    </a>
+                  ) : (
+                    <span className="tx-panel__tx-hash">
+                      Sin hash disponible
+                    </span>
+                  )}
                 </div>
               </div>
             ))

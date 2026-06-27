@@ -12,42 +12,17 @@ interface LoginPanelProps {
   onForgotPasswordClick: () => void;
 }
 
-const validateEmail = (v: string) => {
-  if (!v.trim()) return 'El email es obligatorio';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Formato de email inválido';
-  return '';
-};
-
-const validatePassword = (v: string) => {
-  if (!v) return 'La contraseña es obligatoria';
-  if (v.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
-  return '';
-};
-
 const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, onForgotPasswordClick }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   const navigate = useNavigate();
-
-  const handleBlur = (field: 'email' | 'password') => {
-    const fn = field === 'email' ? validateEmail : validatePassword;
-    const val = field === 'email' ? email : password;
-    setErrors(prev => ({ ...prev, [field]: fn(val) }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    const emailErr = validateEmail(email);
-    const passwordErr = validatePassword(password);
-    setErrors({ email: emailErr, password: passwordErr });
-
-    if (emailErr || passwordErr) return;
 
     setLoading(true);
 
@@ -101,13 +76,10 @@ const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, on
                 id="email"
                 placeholder="correo@ejemplo.com"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({ ...prev, email: '' })); }}
-                onBlur={() => handleBlur('email')}
-                className={errors.email ? 'input-error' : ''}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <span className="input-highlight"></span>
             </div>
-            {errors.email && <span className="field-error">{errors.email}</span>}
           </div>
 
           <div className="input-group">
@@ -118,13 +90,10 @@ const Login: React.FC<LoginPanelProps> = ({ isOpen, onClose, onRegisterClick, on
                 id="password"
                 placeholder="••••••••••••"
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({ ...prev, password: '' })); }}
-                onBlur={() => handleBlur('password')}
-                className={errors.password ? 'input-error' : ''}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <span className="input-highlight"></span>
             </div>
-            {errors.password && <span className="field-error">{errors.password}</span>}
             <Link to="/forgot-password" onClick={() => { onClose(); onForgotPasswordClick(); }} className="forgot-link">
               ¿Olvidaste tu contraseña?
             </Link>

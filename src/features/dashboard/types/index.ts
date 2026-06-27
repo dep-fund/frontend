@@ -23,17 +23,16 @@ export interface Project {
   categories: Category[];
   created_at: string;
   updated_at: string;
-  // Campos financieros
   min_amount: string | null;
   risk: string | null;
   annual_expenses: string | null;
   annual_gross_profit: string | null;
   roi: string | null;
   annual_benefits: string | null;
-  // Campos blockchain
   suffix: string | null;
   dividend_address: string | null;
   offering_address: string | null;
+  developer: Developer | null;
 }
 
 export interface PaginatedResponse<T> {
@@ -138,6 +137,23 @@ export interface Wallet {
   id: string;
   address: string;
   user_id: string;
+}
+
+export interface DeveloperProjectSummary {
+  id: string;
+  name: string;
+  suffix: string | null;
+}
+
+export interface Developer {
+  id: string;
+  username: string;
+  name: string;
+  last_name: string;
+  email: string;
+  image: string | null;
+  birthdate: string;
+  projects: DeveloperProjectSummary[];
 }
 
 

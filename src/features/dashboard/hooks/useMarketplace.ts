@@ -6,6 +6,10 @@ import {
   createTrade,
   confirmTrade,
   failTrade,
+  getWalletByAddress,
+  createWallet,
+  listWallets,
+  confirmMarketplaceBuy,
 } from "../services/api";
 import type { Publication, MarketplaceInfo } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
@@ -18,6 +22,34 @@ const USDC_ABI = [
 const MARKETPLACE_ABI = [
   "function buy(uint256 listingId, uint256 amount) external",
 ];
+
+/**
+ * Resuelve el wallet_id de nuestra plataforma a partir de la address de
+ * MetaMask. Normaliza a lowercase (el backend guarda así) antes de
+ * consultar, evita el 409 -> 404 mal manejado con un fallback a listWallets.
+ */
+async function resolveWalletId(rawAddress: string): Promise<string> {
+  const address = rawAddress.toLowerCase();
+
+  try {
+    const wallet = await getWalletByAddress(address);
+    return wallet.id;
+  } catch (err: any) {
+    if (err?.response?.status !== 404) throw err;
+
+    try {
+      const created = await createWallet(address);
+      return created.id;
+    } catch (createErr: any) {
+      if (createErr?.response?.status === 409) {
+        const { results } = await listWallets();
+        const match = results.find((w) => w.address.toLowerCase() === address);
+        if (match) return match.id;
+      }
+      throw createErr;
+    }
+  }
+}
 
 export const useMarketplace = () => {
   const [publications, setPublications] = useState<Publication[]>([]);
@@ -56,7 +88,7 @@ export const useMarketplace = () => {
 
   const buyTokens = async (publication: Publication, amount: number): Promise<boolean> => {
     setTxError(null);
-  
+
     if (!info) {
       setTxError("No se pudo obtener la información del contrato.");
       return false;
@@ -73,40 +105,51 @@ export const useMarketplace = () => {
       setTxError("Esta publicación no tiene un listing ID válido.");
       return false;
     }
-  
+
     let tradeId: string | null = null;
-    let onChainConfirmed = false; // <-- nuevo: marca si el buy() on-chain ya se confirmó
-  
+    let onChainConfirmed = false;
+
     try {
       setIsProcessing(true);
-  
+
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
       const walletAddress = await signer.getAddress();
-  
+
+      // Resolvemos el wallet_id ANTES de cualquier tx on-chain, igual que
+      // en InvestCheckout: si esto falla, todavía no se movió plata.
+      let walletId: string;
+      try {
+        walletId = await resolveWalletId(walletAddress);
+      } catch (walletError) {
+        console.error("Error resolviendo wallet_id:", walletError);
+        setTxError("No pudimos verificar tu wallet en la plataforma. Intentá de nuevo.");
+        return false;
+      }
+
       const amountWei = ethers.parseUnits(
         amount.toFixed(18).replace(/\.?0+$/, "") || "0",
         18
       );
       const pricePerToken = Number(publication.price_per_token);
       const totalUsdc = BigInt(Math.ceil(pricePerToken * amount * 1_000_000));
-  
+
       const usdc = new ethers.Contract(info.usdc_address, USDC_ABI, signer);
       const balance: bigint = await usdc.balanceOf(walletAddress);
       if (balance < totalUsdc) {
         setTxError(`Saldo insuficiente. Tenés ${ethers.formatUnits(balance, 6)} USDC.`);
         return false;
       }
-  
+
       const trade = await createTrade({
         publication_id: publication.id,
         amount: amount.toString(),
       });
       tradeId = trade.id;
-  
+
       const approveTx = await usdc.approve(info.marketplace_address, totalUsdc);
       await approveTx.wait();
-  
+
       const marketplace = new ethers.Contract(info.marketplace_address, MARKETPLACE_ABI, signer);
       const buyTx = await marketplace.buy(
         BigInt(publication.listing_id),
@@ -114,19 +157,25 @@ export const useMarketplace = () => {
         { gasLimit: 300000 }
       );
       const receipt = await buyTx.wait();
-      onChainConfirmed = true; // <-- a partir de aquí, NO se puede usar failTrade
-  
+      onChainConfirmed = true;
+
       await confirmTrade(tradeId, receipt.hash);
-  
+
+      // Registramos la transacción de compra en nuestra plataforma.
+      // Si esto falla, no revertimos nada (la compra ya está confirmada
+      // on-chain y en confirmTrade); solo avisamos.
+      try {
+        await confirmMarketplaceBuy(receipt.hash, walletId);
+      } catch (txRegisterError) {
+        console.error("Error registrando transacción de compra:", txRegisterError);
+      }
+
       showSuccess(`¡Compra exitosa! Recibiste ${amount} DPF en tu wallet.`);
       await load();
       return true;
-  
+
     } catch (err: any) {
       if (onChainConfirmed) {
-        // El buy() ya se ejecutó on-chain. NO revertir el trade: eso
-        // desincronizaría la DB del contrato real. Solo avisar para
-        // que se pueda reclamar/reintentar el registro manualmente.
         setTxError(
           "Tu compra se confirmó en la blockchain, pero hubo un error al registrarla en la plataforma. " +
           "Contactá a soporte con este ID de operación: " + tradeId

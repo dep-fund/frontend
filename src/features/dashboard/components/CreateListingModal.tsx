@@ -3,7 +3,14 @@ import { ethers } from "ethers";
 import { X } from "lucide-react";
 import type { MarketplaceInfo } from "../types";
 import { parseContractError } from "../utils/ParseContractError";
-import { fetchAllTokens, createPublication } from "../services/api";
+import {
+  fetchAllTokens,
+  createPublication,
+  getWalletByAddress,
+  createWallet,
+  listWallets,
+  confirmMarketplaceSell,
+} from "../services/api";
 
 const ERC20_ABI = [
   "function balanceOf(address owner) view returns (uint256)",
@@ -27,6 +34,34 @@ interface Props {
   info: MarketplaceInfo;
   onClose: () => void;
   onSuccess: () => void;
+}
+
+/**
+ * Resuelve el wallet_id de nuestra plataforma a partir de la address de
+ * MetaMask. Normaliza a lowercase (el backend guarda así), evita el 409
+ * mal manejado con un fallback a listWallets.
+ */
+async function resolveWalletId(rawAddress: string): Promise<string> {
+  const address = rawAddress.toLowerCase();
+
+  try {
+    const wallet = await getWalletByAddress(address);
+    return wallet.id;
+  } catch (err: any) {
+    if (err?.response?.status !== 404) throw err;
+
+    try {
+      const created = await createWallet(address);
+      return created.id;
+    } catch (createErr: any) {
+      if (createErr?.response?.status === 409) {
+        const { results } = await listWallets();
+        const match = results.find((w) => w.address.toLowerCase() === address);
+        if (match) return match.id;
+      }
+      throw createErr;
+    }
+  }
 }
 
 export default function CreateListingModal({ info, onClose, onSuccess }: Props) {
@@ -102,6 +137,18 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
       setIsProcessing(true);
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
+      const walletAddress = await signer.getAddress();
+
+      // Resolvemos el wallet_id ANTES de cualquier tx on-chain: si esto
+      // falla, todavía no se aprobó ni listó nada.
+      let walletId: string;
+      try {
+        walletId = await resolveWalletId(walletAddress);
+      } catch (walletError) {
+        console.error("Error resolviendo wallet_id:", walletError);
+        setError("No pudimos verificar tu wallet en la plataforma. Intentá de nuevo.");
+        return;
+      }
 
       const amountWei = ethers.parseUnits(amount, 18);
       const priceWei = ethers.parseUnits(pricePerToken, 6);
@@ -143,6 +190,15 @@ export default function CreateListingModal({ info, onClose, onSuccess }: Props) 
         price_per_token: pricePerToken,
         listing_id: listingId,
       });
+
+      // 5. Registrar la transacción de venta en nuestra plataforma.
+      // Si esto falla, no revertimos nada (el listing ya está confirmado
+      // on-chain y en createPublication); solo avisamos por consola.
+      try {
+        await confirmMarketplaceSell(listTx.hash, walletId);
+      } catch (txRegisterError) {
+        console.error("Error registrando transacción de venta:", txRegisterError);
+      }
 
       onSuccess();
       onClose();

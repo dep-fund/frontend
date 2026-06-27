@@ -334,6 +334,29 @@ export const createWallet = async (address: string): Promise<Wallet> => {
   return res.data;
 };
 
+export const confirmMarketplaceBuy = async (txHash: string, walletId: string): Promise<void> => {
+  await axios.post(
+    `${API_URL}/transaction/marketplace/buy`,
+    null,
+    { params: { tx_hash: txHash, wallet_id: walletId }, headers: authHeader() }
+  );
+};
+
+export const confirmMarketplaceSell = async (txHash: string, walletId: string): Promise<void> => {
+  await axios.post(
+    `${API_URL}/transaction/marketplace/sell`,
+    null,
+    { params: { tx_hash: txHash, wallet_id: walletId }, headers: authHeader() }
+  );
+};
+
+export const listWallets = async (): Promise<{ results: Wallet[] }> => {
+  const res = await axios.get(`${API_URL}/wallets`, {
+    headers: authHeader(),
+  });
+  return res.data;
+};
+
 
 export const getHistory = async (): Promise<TransactionResponse[]> => {
   const token = localStorage.getItem("token");

@@ -94,6 +94,7 @@ export default function ProjectDetail() {
   const raised = stats ? Number(stats.raised_amount) : null;
   const investors = stats ? stats.investors_count : null;
   const isOwner = user?.id === project.user_id;
+  const developer = project.developer;
 
   return (
     <DashboardLayout title="Detalle del Proyecto" user={user}>
@@ -167,7 +168,7 @@ export default function ProjectDetail() {
       </div>
 
       {/* ── Stats ── */}
-      <div className="pd-stats">
+      <div className={`pd-stats ${project.roi != null ? "pd-stats--4col" : ""}`}>
         <div className="pd-stat-card">
           <div className="pd-stat-label">Recaudado</div>
           <div className="pd-stat-value">
@@ -205,7 +206,7 @@ export default function ProjectDetail() {
           <p>{project.description}</p>
         </div>
 
-        <div className="pd-info-grid">
+        <div className={`pd-info-grid ${developer ? "pd-info-grid--3col" : ""}`}>
           {/* Información General */}
           <div className="pd-info-card">
             <h4>Información del Proyecto</h4>
@@ -279,6 +280,60 @@ export default function ProjectDetail() {
               </div>
             )}
           </div>
+
+          {/* Información del Desarrollador */}
+          {developer && (
+            <div className="pd-info-card pd-developer-card">
+              <h4>Información del Desarrollador</h4>
+
+              <div className="pd-developer-profile">
+                {developer.image ? (
+                  <img
+                    src={developer.image}
+                    alt={developer.username}
+                    className="pd-developer-avatar"
+                  />
+                ) : (
+                  <div className="pd-developer-avatar pd-developer-avatar--placeholder">
+                    {developer.name?.[0]?.toUpperCase() ?? "?"}
+                  </div>
+                )}
+                <div>
+                  <p className="pd-developer-name">
+                    {developer.name} {developer.last_name}
+                  </p>
+                  <p className="pd-developer-username">@{developer.username}</p>
+                </div>
+              </div>
+
+              <div className="pd-info-row">
+                <span>Email:</span>
+                <strong>{developer.email}</strong>
+              </div>
+              <div className="pd-info-row">
+                <span>Fecha de nacimiento:</span>
+                <strong>{formatDate(developer.birthdate)}</strong>
+              </div>
+
+              {developer.projects.length > 0 && (
+                <div className="pd-developer-related">
+                  <p className="pd-developer-related-title">Otros proyectos aprobados</p>
+                  <div className="pd-developer-related-list">
+                    {developer.projects.map((p) => (
+                      <button
+                        key={p.id}
+                        className="pd-developer-related-item"
+                        onClick={() => navigate(`/dashboard/projects/${p.id}`)}
+                      >
+                        {p.name}
+                        {p.suffix && <span className="pd-suffix">{p.suffix}</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <ProjectDocuments projectId={project.id} isOwner={isOwner} />

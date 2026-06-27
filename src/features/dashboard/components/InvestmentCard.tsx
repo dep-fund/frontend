@@ -130,6 +130,7 @@ export default function InvestmentCard({ investment }: { investment: any }) {
       {showDividends && dividendAddress && walletAddress && (
         <DividendsModal
           projectName={investment.projectName}
+          projectId={investment.projectId}
           dividendAddress={dividendAddress}
           walletAddress={walletAddress}
           onClose={() => setShowDividends(false)}

@@ -16,7 +16,11 @@ export interface DividendHistory {
   txHash: string;
 }
 
-export function useDividends(dividendAddress: string | null, walletAddress: string | null) {
+export function useDividends(
+  dividendAddress: string | null,
+  walletAddress: string | null,
+  projectId: string | null
+) {
   const [claimable, setClaimable] = useState<string>("0");
   const [history, setHistory] = useState<DividendHistory[]>([]);
   const [loading, setLoading] = useState(false);
@@ -25,63 +29,39 @@ export function useDividends(dividendAddress: string | null, walletAddress: stri
   const [claimSuccess, setClaimSuccess] = useState(false);
 
   const fetchData = useCallback(async () => {
-    if (!dividendAddress || !walletAddress || !(window as any).ethereum) return;
+    if (!dividendAddress || !walletAddress || !projectId || !(window as any).ethereum) return;
+
+    setLoading(true);
 
     try {
-      setLoading(true);
-      setError(null);
-
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       const contract = new ethers.Contract(dividendAddress, DIVIDENDS_ABI, provider);
-
-      // Claimable amount
       const raw: bigint = await contract.claimable(walletAddress);
       setClaimable(ethers.formatUnits(raw, 6));
-
-      // Historial: eventos Claimed del holder + todos los Distributed
-      const currentBlock = await provider.getBlockNumber();
-      const fromBlock = Math.max(0, currentBlock - 1900); // margen de seguridad bajo 2000
-
-      const [claimedEvents, distributedEvents] = await Promise.all([
-        contract.queryFilter(contract.filters.Claimed(walletAddress), fromBlock, "latest"),
-        contract.queryFilter(contract.filters.Distributed(), fromBlock, "latest"),
-      ]);
-
-      const claimed: DividendHistory[] = await Promise.all(
-        claimedEvents.map(async (e) => {
-          const block = await e.getBlock();
-          return {
-            type: "claimed" as const,
-            amount: ethers.formatUnits((e as any).args.amount, 6),
-            date: new Date(block.timestamp * 1000),
-            txHash: e.transactionHash,
-          };
-        })
-      );
-
-      const distributed: DividendHistory[] = await Promise.all(
-        distributedEvents.map(async (e) => {
-          const block = await e.getBlock();
-          return {
-            type: "distributed" as const,
-            amount: ethers.formatUnits((e as any).args.usdcAmount, 6),
-            date: new Date(block.timestamp * 1000),
-            txHash: e.transactionHash,
-          };
-        })
-      );
-
-      const all = [...claimed, ...distributed].sort(
-        (a, b) => b.date.getTime() - a.date.getTime()
-      );
-      setHistory(all);
     } catch (err: any) {
-      console.error("useDividends error:", err);
-      setError("No se pudo cargar la información de dividendos.");
+      console.error("claimable error:", err);
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/transaction/projects/${projectId}/dividends/history`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const data = await res.json();
+      const all: DividendHistory[] = data.map((tx: any) => ({
+        type: tx.type === "DIVIDEND" ? "claimed" : "distributed",
+        amount: "0",
+        date: new Date(tx.created_at),
+        txHash: tx.tx_hash,
+      }));
+      setHistory(all.sort((a, b) => b.date.getTime() - a.date.getTime()));
+    } catch (err: any) {
+      console.error("history error:", err);
     } finally {
       setLoading(false);
     }
-  }, [dividendAddress, walletAddress]);
+  }, [dividendAddress, walletAddress, projectId]);
 
   useEffect(() => {
     fetchData();
@@ -116,5 +96,5 @@ export function useDividends(dividendAddress: string | null, walletAddress: stri
     }
   }, [dividendAddress, fetchData]);
 
-  return { claimable, history, loading, claiming, error, claimSuccess, refetch: fetchData, claim};
+  return { claimable, history, loading, claiming, error, claimSuccess, refetch: fetchData, claim };
 }

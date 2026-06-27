@@ -5,6 +5,7 @@ import "./DividendsModal.css";
 
 interface DividendsModalProps {
   projectName: string;
+  projectId: string;
   dividendAddress: string;
   walletAddress: string;
   onClose: () => void;
@@ -12,12 +13,13 @@ interface DividendsModalProps {
 
 export default function DividendsModal({
   projectName,
+  projectId,
   dividendAddress,
   walletAddress,
   onClose,
 }: DividendsModalProps) {
   const { claimable, history, loading, claiming, error, claimSuccess, refetch, claim } =
-    useDividends(dividendAddress, walletAddress);
+    useDividends(dividendAddress, walletAddress, projectId);
 
   const [tab, setTab] = useState<"overview" | "history">("overview");
 
@@ -200,13 +202,6 @@ function HistoryTab({ history }: { history: DividendHistory[] }) {
             </p>
           </div>
           <div className="div-history-right">
-            <p
-              className={`div-history-amount ${
-                item.type === "claimed" ? "div-history-amount--claimed" : ""
-              }`}
-            >
-              {item.type === "claimed" ? "-" : "+"}{parseFloat(item.amount).toFixed(2)} USDC
-            </p>
             <a
               href={`https://sepolia.basescan.org/tx/${item.txHash}`}
               target="_blank"
